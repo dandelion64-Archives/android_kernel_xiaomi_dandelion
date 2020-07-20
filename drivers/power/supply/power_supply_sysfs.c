@@ -58,7 +58,7 @@ static ssize_t power_supply_show_property(struct device *dev,
 	static char *health_text[] = {
 		"Unknown", "Good", "Warm", "Overheat", "Dead", "Over voltage",
 		"Unspecified failure", "Cool", "Cold", "Watchdog timer expire",
-		"Safety timer expire"
+		"Safety timer expire", "Hot"
 	};
 	static char *battery_type[] = {
 		"Unknown", "nvt-5000mAh", "sunwoda-5000mAh"
