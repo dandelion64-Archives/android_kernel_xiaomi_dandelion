@@ -35,12 +35,8 @@
 #include "mtk_charger_intf.h"
 #include <linux/power_supply.h>
 
-#undef pr_debug
-#define pr_debug pr_err
 #undef pr_info
-#define pr_info pr_err
-#undef dev_dbg
-#define dev_dbg dev_err
+#define pr_info pr_debug
 
 /**********************************************************
  *

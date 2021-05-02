@@ -36,17 +36,8 @@
 #include "cx7601_reg.h"
 #include "cx7601.h"
 
-#if 1
-#undef pr_debug
-#define pr_debug pr_err
-#undef pr_info
-#define pr_info pr_err
-#undef dev_dbg
-#define dev_dbg dev_err
-#else
 #undef pr_info
 #define pr_info pr_debug
-#endif
 
 enum cx7601_part_no {
 	CX7601 = 0x02,
