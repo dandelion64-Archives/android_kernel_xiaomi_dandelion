@@ -781,7 +781,7 @@ static inline void kalCfg80211ScanDone(struct cfg80211_scan_request *request,
 #define WLAN_TAG                                    "[wlan]"
 #define kalPrint(_Fmt...)                           printk(WLAN_TAG _Fmt)
 #define limitedKalPrint(_Fmt...)\
-	pr_info_ratelimited(WLAN_TAG _Fmt)
+	pr_debug_ratelimited(WLAN_TAG _Fmt)
 
 #define kalBreakPoint() \
 do { \

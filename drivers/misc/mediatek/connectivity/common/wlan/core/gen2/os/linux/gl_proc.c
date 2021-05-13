@@ -725,7 +725,7 @@ static ssize_t procCountryRead(struct file *filp, char __user *buf, size_t count
 
 	u4CopySize = kalStrLen(aucProcBuf);
 	if (copy_to_user(buf, aucProcBuf, u4CopySize)) {
-		pr_info("copy to user failed\n");
+		pr_debug("copy to user failed\n");
 		return -EFAULT;
 	}
 	*f_pos += u4CopySize;
@@ -743,7 +743,7 @@ static ssize_t procCountryWrite(struct file *file, const char __user *buffer, si
 	u4CopySize = (count < u4CopySize) ? count : (u4CopySize - 1);
 
 	if (copy_from_user(aucProcBuf, buffer, u4CopySize)) {
-		pr_info("error of copy from user\n");
+		pr_debug("error of copy from user\n");
 		return -EFAULT;
 	}
 
@@ -968,7 +968,7 @@ static ssize_t procSetCamCfgWrite(struct file *file, const char *buffer, size_t 
 	u4CopySize = (count < u4CopySize) ? count : (u4CopySize - 1);
 
 	if (copy_from_user(aucProcBuf, buffer, u4CopySize)) {
-		pr_info("error of copy from user\n");
+		pr_debug("error of copy from user\n");
 		return -EFAULT;
 	}
 	aucProcBuf[u4CopySize] = '\0';
@@ -978,7 +978,7 @@ static ssize_t procSetCamCfgWrite(struct file *file, const char *buffer, size_t 
 
 		/* pick up a string and teminated after meet : */
 		if (sscanf(temp, "%4s %d", aucModule, &u4Enabled) != 2)  {
-			pr_info("read param fail, aucModule=%s\n", aucModule);
+			pr_debug("read param fail, aucModule=%s\n", aucModule);
 			break;
 		}
 

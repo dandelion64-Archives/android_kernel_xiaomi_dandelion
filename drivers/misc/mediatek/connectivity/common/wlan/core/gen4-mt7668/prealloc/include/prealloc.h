@@ -48,7 +48,7 @@ enum ENUM_MEM_ID {
 *                                 M A C R O S
 ********************************************************************************
 */
-#define PreLog(level, ...) pr_info("[wlan][MemPrealloc] " __VA_ARGS__)
+#define PreLog(level, ...) pr_debug("[wlan][MemPrealloc] " __VA_ARGS__)
 #define MP_Dbg(...) PreLog(KERN_DEBUG, __VA_ARGS__)
 #define MP_Info(...) PreLog(KERN_INFO, __VA_ARGS__)
 #define MP_Err(...) PreLog(KERN_ERR, __VA_ARGS__)

@@ -2953,7 +2953,7 @@ mtk_cfg80211_testmode_set_packet_filter(IN struct wiphy *wiphy, IN void *data, I
 	*			UINT_64    others:1;
 	*		} bits;
 	*/
-	pr_info("wlan_gen2: mtk_cfg80211_testmode_set_packet_filter\n Drop_IPv4(%02llx)\nDrop_IPv6(%02llx)\nDrop_SNAP(%02llx)\n",
+	pr_debug("wlan_gen2: mtk_cfg80211_testmode_set_packet_filter\n Drop_IPv4(%02llx)\nDrop_IPv6(%02llx)\nDrop_SNAP(%02llx)\n",
 		pCmdData->Drop_IPv4.bytes, pCmdData->Drop_IPv6.bytes, pCmdData->Drop_SNAP.bytes);
 
 	rStatus = kalIoctl(prGlueInfo,

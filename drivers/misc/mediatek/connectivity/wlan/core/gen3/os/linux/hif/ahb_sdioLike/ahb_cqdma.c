@@ -94,7 +94,7 @@
 #define DMA_TAG             "CQDMA> "
 
 #ifdef DMA_DEBUG_SUP
-#define DMA_DBG(_fmt, ...)  pr_info(DMA_TAG _fmt, ##__VA_ARGS__)
+#define DMA_DBG(_fmt, ...)  pr_debug(DMA_TAG _fmt, ##__VA_ARGS__)
 #else
 #define DMA_DBG(_fmt, ...)
 #endif /* DMA_DEBUG_SUP */

@@ -179,7 +179,7 @@ static ssize_t procDbgLevelWrite(struct file *file, const char __user *buffer, s
 
 	while (temp) {
 		if (sscanf(temp, "0x%x:0x%x", &u4NewDbgModule, &u4NewDbgLevel) != 2)  {
-			pr_info("debug module and debug level should be one byte in length\n");
+			pr_debug("debug module and debug level should be one byte in length\n");
 			break;
 		}
 		if (u4NewDbgModule == 0xFF) {
@@ -190,7 +190,7 @@ static ssize_t procDbgLevelWrite(struct file *file, const char __user *buffer, s
 
 			break;
 		} else if (u4NewDbgModule >= DBG_MODULE_NUM) {
-			pr_info("debug module index should less than %d\n", DBG_MODULE_NUM);
+			pr_debug("debug module index should less than %d\n", DBG_MODULE_NUM);
 			break;
 		}
 		aucDebugModule[u4NewDbgModule] =  u4NewDbgLevel & DBG_CLASS_MASK;
@@ -296,7 +296,7 @@ static ssize_t procPktDelayDbgCfgWrite(struct file *file, const char __user *buf
 	while (temp) {
 		/* pick up a string and teminated after meet : */
 		if (sscanf(temp, "%6s %x %hu %u", aucModule, &u4IpProto, &u2PortNum, &u4DelayThreshold) != 4)  {
-			pr_info("read param fail, aucModule=%s\n", aucModule);
+			pr_debug("read param fail, aucModule=%s\n", aucModule);
 			break;
 		}
 
@@ -307,7 +307,7 @@ static ssize_t procPktDelayDbgCfgWrite(struct file *file, const char __user *buf
 		} else if (kalStrnCmp(aucModule, aucRxArray, MODULE_NAME_LENGTH) == 0) {
 			ucTxOrRx = MODULE_RX;
 		} else {
-			pr_info("input module error!\n");
+			pr_debug("input module error!\n");
 			break;
 		}
 
@@ -355,7 +355,7 @@ static ssize_t procSetCamCfgWrite(struct file *file, const char __user *buffer, 
 	while (temp) {
 		/* pick up a string and teminated after meet : */
 		if (sscanf(temp, "%4s %d", aucModule, &u4Enabled) != 2)  {
-			pr_info("read param fail, aucModule=%s\n", aucModule);
+			pr_debug("read param fail, aucModule=%s\n", aucModule);
 			fgParamValue = FALSE;
 			break;
 		}

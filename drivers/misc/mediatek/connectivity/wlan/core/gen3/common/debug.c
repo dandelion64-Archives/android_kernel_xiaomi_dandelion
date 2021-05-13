@@ -662,7 +662,7 @@ VOID wlanPrintFwLog(PUINT_8 pucLogContent, UINT_16 u2MsgSize, UINT_8 ucMsgType)
 #undef KBUILD_MODNAME
 #undef LOG_FUNC
 #define KBUILD_MODNAME "wlan_gen3_fw"
-#define LOG_FUNC pr_info
+#define LOG_FUNC pr_debug
 
 	if (u2MsgSize > DEBUG_MSG_SIZE_MAX - 1) {
 		LOG_FUNC("Firmware Log Size(%d) is too large, type %d\n", u2MsgSize, ucMsgType);
