@@ -46,7 +46,7 @@ static DEFINE_SPINLOCK(imgsensor_drv_lock);
 static struct imgsensor_info_struct imgsensor_info = { 
 	.sensor_id = HI1337_SENSOR_ID,
 	
-	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃßÈÄ..
+	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ï¿½ï¿½ï¿½ï¿½..
 
 	.pre = {
 		.pclk = 576000000,	 //VT CLK : 72MHz * 8 = =	576000000				//record different mode's pclk
@@ -2656,14 +2656,14 @@ static void hi1337_fusion_id_read(void)
 	int i;
 	for (i=0; i<9; i++) {
 		fusion_id_main[i] = read_cmos_sensor_hi1337(0x10+i);
-		pr_info("%s %d fusion_id_front[%d]=0x%2x\n",__func__, __LINE__, i, fusion_id_main[i]);
+		pr_debug("%s %d fusion_id_front[%d]=0x%2x\n",__func__, __LINE__, i, fusion_id_main[i]);
 	}
 }
 static int hi1337_vendor_id_read(int addr)
 {
 	int  flag;
 	flag = read_cmos_sensor_hi1337(0x1);
-	pr_info("%s %d flag=0x%2x\n", __func__, __LINE__, flag);
+	pr_debug("%s %d flag=0x%2x\n", __func__, __LINE__, flag);
 	return flag;
 }
 

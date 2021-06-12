@@ -38,7 +38,7 @@ static DEFINE_SPINLOCK(imgsensor_drv_lock);
 static struct imgsensor_info_struct imgsensor_info = { 
 	.sensor_id = HYNIX_HI259_III_SENSOR_ID,
 	
-	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃßÈÄ..
+	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ï¿½ï¿½ï¿½ï¿½..
 
 	.pre = {
 		.pclk = 78400000,	 //78.4M 	//record different mode's pclk
@@ -2149,14 +2149,14 @@ static void hi259_fusion_id_read(void)
 	int i;
 	for (i=0; i<9; i++) {
 		fusion_id_back2[i] =read_cmos_sensor_hi259(0x10+i);
-		pr_info("%s %d fusion_id_front[%d]=0x%2x\n",__func__, __LINE__, i, fusion_id_back2[i]);
+		pr_debug("%s %d fusion_id_front[%d]=0x%2x\n",__func__, __LINE__, i, fusion_id_back2[i]);
 	}
 }*/
 static int hi259_vendor_id_read(int addr)
 {
 	int  flag = 0;
 	flag = read_cmos_sensor_hi259(addr);
-    pr_info("hynix_hi259_III  read vendor id , form addr 0x%x is: 0x%x\n",addr,flag);
+    pr_debug("hynix_hi259_III  read vendor id , form addr 0x%x is: 0x%x\n",addr,flag);
 	return flag;
 }
 
@@ -2170,7 +2170,7 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
     //hi259_fusion_id_read();
     flag = hi259_vendor_id_read(0x10);
     if(flag != hi259_vendor_id){
-        pr_info("hynix_hi259_II  match vendor id fail, reead vendor id is: 0x%x,expect vendor id is 0x%x \n", flag,hi259_vendor_id);
+        pr_debug("hynix_hi259_II  match vendor id fail, reead vendor id is: 0x%x,expect vendor id is 0x%x \n", flag,hi259_vendor_id);
         return ERROR_SENSOR_CONNECT_FAIL;
     }/*else{
 		hi259_fusion_id_read();
@@ -2290,7 +2290,7 @@ static kal_uint32 close(void)
 static kal_uint32 preview(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 			MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi259] preview mode start\n");
+    pr_debug("[hi259] preview mode start\n");
     spin_lock(&imgsensor_drv_lock);
     imgsensor.sensor_mode = IMGSENSOR_MODE_PREVIEW;
     imgsensor.pclk = imgsensor_info.pre.pclk;
@@ -2322,7 +2322,7 @@ static kal_uint32 preview(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 static kal_uint32 capture(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 			MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi259] capture mode start\n");
+    pr_debug("[hi259] capture mode start\n");
     spin_lock(&imgsensor_drv_lock);
     imgsensor.sensor_mode = IMGSENSOR_MODE_CAPTURE;
 
@@ -2351,7 +2351,7 @@ static kal_uint32 capture(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 static kal_uint32 normal_video(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 			  MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi259] normal video mode start\n");
+    pr_debug("[hi259] normal video mode start\n");
     spin_lock(&imgsensor_drv_lock);
     imgsensor.sensor_mode = IMGSENSOR_MODE_VIDEO;
     imgsensor.pclk = imgsensor_info.normal_video.pclk;

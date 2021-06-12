@@ -46,7 +46,7 @@ static DEFINE_SPINLOCK(imgsensor_drv_lock);
 static struct imgsensor_info_struct imgsensor_info = {
 	.sensor_id = HYNIX_HI1337_I_SENSOR_ID,
 
-	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ÃßÈÄ..
+	.checksum_value = 0xb7c53a42,       //0x6d01485c // Auto Test Mode ï¿½ï¿½ï¿½ï¿½..
 
 	.pre = {
 		.pclk = 576000000,	 //VT CLK : 72MHz * 8 = =	576000000				//record different mode's pclk
@@ -2965,7 +2965,7 @@ static int hi1337_vendor_id_read(int addr)
 {
 	int  flag = 0;
 	flag = read_cmos_sensor_hi1337(0x1);
-    pr_info("hynix_hi1337_I  read vendor id , form 0x01 is: 0x%x\n", flag);
+    pr_debug("hynix_hi1337_I  read vendor id , form 0x01 is: 0x%x\n", flag);
 	return flag;
 }
 
@@ -2977,7 +2977,7 @@ static kal_uint32 get_imgsensor_id(UINT32 *sensor_id)
     
 	flag = hi1337_vendor_id_read(0x01);
 	if(flag != hi1337_vendor_id){
-        pr_info("hynix_hi1337_I match vendor id fail, reead vendor id is: 0x%x,expect vendor id is 0x%x \n", flag,hi1337_vendor_id);
+        pr_debug("hynix_hi1337_I match vendor id fail, reead vendor id is: 0x%x,expect vendor id is 0x%x \n", flag,hi1337_vendor_id);
 		return ERROR_SENSOR_CONNECT_FAIL;
 	}else{
         hi1337_fusion_id_read();
@@ -3102,7 +3102,7 @@ static kal_uint32 close(void)
 static kal_uint32 preview(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 			MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi1337] preview mode start\n");
+    pr_debug("[hi1337] preview mode start\n");
     spin_lock(&imgsensor_drv_lock);
     imgsensor.sensor_mode = IMGSENSOR_MODE_PREVIEW;
     imgsensor.pclk = imgsensor_info.pre.pclk;
@@ -3134,7 +3134,7 @@ static kal_uint32 preview(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 static kal_uint32 capture(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 			MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi1337] capture mode start\n");
+    pr_debug("[hi1337] capture mode start\n");
     spin_lock(&imgsensor_drv_lock);
     imgsensor.sensor_mode = IMGSENSOR_MODE_CAPTURE;
 
@@ -3163,7 +3163,7 @@ static kal_uint32 capture(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 static kal_uint32 normal_video(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 			  MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi1337] normal video mode start\n");
+    pr_debug("[hi1337] normal video mode start\n");
 	spin_lock(&imgsensor_drv_lock);
 	imgsensor.sensor_mode = IMGSENSOR_MODE_VIDEO;
 	imgsensor.pclk = imgsensor_info.normal_video.pclk;
@@ -3180,7 +3180,7 @@ static kal_uint32 normal_video(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 static kal_uint32 hs_video(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 			MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi1337] hs video mode start\n");
+    pr_debug("[hi1337] hs video mode start\n");
     spin_lock(&imgsensor_drv_lock);
     imgsensor.sensor_mode = IMGSENSOR_MODE_HIGH_SPEED_VIDEO;
     imgsensor.pclk = imgsensor_info.hs_video.pclk;
@@ -3199,7 +3199,7 @@ static kal_uint32 hs_video(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 static kal_uint32 slim_video(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 		      MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi1337] slim video mode start\n");
+    pr_debug("[hi1337] slim video mode start\n");
     spin_lock(&imgsensor_drv_lock);
     imgsensor.sensor_mode = IMGSENSOR_MODE_SLIM_VIDEO;
     imgsensor.pclk = imgsensor_info.slim_video.pclk;
@@ -3218,7 +3218,7 @@ static kal_uint32 slim_video(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 static kal_uint32 custom1(MSDK_SENSOR_EXPOSURE_WINDOW_STRUCT *image_window,
 			MSDK_SENSOR_CONFIG_STRUCT *sensor_config_data)
 {
-    pr_info("[hi1337] custom1 mode start\n");
+    pr_debug("[hi1337] custom1 mode start\n");
     spin_lock(&imgsensor_drv_lock);
     imgsensor.sensor_mode = IMGSENSOR_MODE_CUSTOM1;
     imgsensor.pclk = imgsensor_info.custom1.pclk;

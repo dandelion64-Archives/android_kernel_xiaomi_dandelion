@@ -1747,14 +1747,14 @@ static void gc5035_fusion_id_read(void)
 	int i;
 	for (i=0; i<9; i++) {
 		fusion_id_front[i] = read_cmos_sensor_gc5035(0x10+i);
-		pr_info("%s %d fusion_id_front[%d]=0x%2x\n",__func__, __LINE__, i, fusion_id_front[i]);
+		pr_debug("%s %d fusion_id_front[%d]=0x%2x\n",__func__, __LINE__, i, fusion_id_front[i]);
 	}
 }
 static int gc5035_vendor_id_read(int addr)
 {
 	int  flag;
 	flag = read_cmos_sensor_gc5035(0x1);
-	pr_info("%s %d flag=0x%2x\n", __func__, __LINE__, flag);
+	pr_debug("%s %d flag=0x%2x\n", __func__, __LINE__, flag);
 	return flag;
 }
 

@@ -114,7 +114,7 @@ void IMGSENSOR_PROFILE(struct timeval *ptv, char *tag)
 	time_interval =
 	    (tv.tv_sec - ptv->tv_sec) * 1000000 + (tv.tv_usec - ptv->tv_usec);
 
-	pr_info("[%s]Profile = %lu us\n", tag, time_interval);
+	pr_debug("[%s]Profile = %lu us\n", tag, time_interval);
 }
 
 #else
@@ -125,8 +125,8 @@ void IMGSENSOR_PROFILE(struct timeval *ptv, char *tag) {}
 /************************************************************************
  * sensor function adapter
  ************************************************************************/
-#define IMGSENSOR_FUNCTION_ENTRY()    /*pr_info("[%s]:E\n",__FUNCTION__)*/
-#define IMGSENSOR_FUNCTION_EXIT()     /*pr_info("[%s]:X\n",__FUNCTION__)*/
+#define IMGSENSOR_FUNCTION_ENTRY()    /*pr_debug("[%s]:E\n",__FUNCTION__)*/
+#define IMGSENSOR_FUNCTION_EXIT()     /*pr_debug("[%s]:X\n",__FUNCTION__)*/
 struct IMGSENSOR_SENSOR *
 imgsensor_sensor_get_inst(enum IMGSENSOR_SENSOR_IDX idx)
 {
@@ -467,15 +467,15 @@ static inline int imgsensor_check_is_alive(struct IMGSENSOR_SENSOR *psensor)
 			&retLen);
 
 	if (sensorID == 0 || sensorID == 0xFFFFFFFF) {
-		pr_info("Fail to get sensor ID %x\n", sensorID);
+		pr_debug("Fail to get sensor ID %x\n", sensorID);
 		err = ERROR_SENSOR_CONNECT_FAIL;
 	} else {
-		pr_info(" Sensor found ID = 0x%x\n", sensorID);
+		pr_debug(" Sensor found ID = 0x%x\n", sensorID);
 		err = ERROR_NONE;
 	}
 
 	if (err != ERROR_NONE)
-		pr_info("ERROR: No imgsensor alive\n");
+		pr_debug("ERROR: No imgsensor alive\n");
 
 	imgsensor_hw_power(&pgimgsensor->hw,
 	    psensor,
@@ -533,7 +533,7 @@ int imgsensor_set_driver(struct IMGSENSOR_SENSOR *psensor)
 
 			*(psensor_list_config+strlen(sensor_configs)-2) = '\0';
 
-			pr_info("sensor_list %s\n", psensor_list_config);
+			pr_debug("sensor_list %s\n", psensor_list_config);
 			driver_name = strsep(&psensor_list_config, " \0");
 
 			while (driver_name != NULL) {
@@ -600,7 +600,7 @@ int imgsensor_set_driver(struct IMGSENSOR_SENSOR *psensor)
 				    psensor->pfunc->arch;
 #endif
 				if (!imgsensor_check_is_alive(psensor)) {
-					pr_info(
+					pr_debug(
 					    "[%s]:[%d][%d][%s]\n",
 					    __func__,
 					    psensor->inst.sensor_idx,
@@ -776,7 +776,7 @@ static void cam_temperature_report_wq_routine(
 	    &valid[0],
 	    &temp[0]);
 
-	pr_info("senDevId(%d), valid(%d), temperature(%d)\n",
+	pr_debug("senDevId(%d), valid(%d), temperature(%d)\n",
 				DUAL_CAMERA_MAIN_SENSOR, valid[0], temp[0]);
 
 	if (ret != ERROR_NONE)
@@ -788,7 +788,7 @@ static void cam_temperature_report_wq_routine(
 	    &valid[1],
 	    &temp[1]);
 
-	pr_info("senDevId(%d), valid(%d), temperature(%d)\n",
+	pr_debug("senDevId(%d), valid(%d), temperature(%d)\n",
 				DUAL_CAMERA_SUB_SENSOR, valid[1], temp[1]);
 
 	if (ret != ERROR_NONE)
@@ -800,7 +800,7 @@ static void cam_temperature_report_wq_routine(
 	    &valid[2],
 	    &temp[2]);
 
-	pr_info("senDevId(%d), valid(%d), temperature(%d)\n",
+	pr_debug("senDevId(%d), valid(%d), temperature(%d)\n",
 				DUAL_CAMERA_MAIN_2_SENSOR, valid[2], temp[2]);
 
 	if (ret != ERROR_NONE)
@@ -811,7 +811,7 @@ static void cam_temperature_report_wq_routine(
 	    &valid[3],
 	    &temp[3]);
 
-	pr_info("senDevId(%d), valid(%d), temperature(%d)\n",
+	pr_debug("senDevId(%d), valid(%d), temperature(%d)\n",
 				DUAL_CAMERA_SUB_2_SENSOR, valid[3], temp[3]);
 
 	if (ret != ERROR_NONE)
@@ -845,13 +845,13 @@ static inline int adopt_CAMERA_HW_GetInfo2(void *pBuf)
 	if (pSensorGetInfo == NULL ||
 	    pSensorGetInfo->pInfo == NULL ||
 	    pSensorGetInfo->pSensorResolution == NULL) {
-		pr_info("[adopt_CAMERA_HW_GetInfo2] NULL arg.\n");
+		pr_debug("[adopt_CAMERA_HW_GetInfo2] NULL arg.\n");
 		return -EFAULT;
 	}
 
 	psensor = imgsensor_sensor_get_inst(pSensorGetInfo->SensorId);
 	if (psensor == NULL) {
-		pr_info("[adopt_CAMERA_HW_GetInfo2] NULL psensor.\n");
+		pr_debug("[adopt_CAMERA_HW_GetInfo2] NULL psensor.\n");
 		return -EFAULT;
 	}
 
@@ -2680,7 +2680,7 @@ static int imgsensor_open(struct inode *a_pstInode, struct file *a_pstFile)
 		imgsensor_clk_enable_all(&pgimgsensor->clk);
 
 	atomic_inc(&pgimgsensor->imgsensor_open_cnt);
-	pr_info(
+	pr_debug(
 	    "%s %d\n",
 	    __func__,
 	    atomic_read(&pgimgsensor->imgsensor_open_cnt));
@@ -2704,7 +2704,7 @@ static int imgsensor_release(struct inode *a_pstInode, struct file *a_pstFile)
 		imgsensor_dfs_ctrl(DFS_RELEASE, NULL);
 #endif
 	}
-	pr_info(
+	pr_debug(
 	    "%s %d\n",
 	    __func__,
 	    atomic_read(&pgimgsensor->imgsensor_open_cnt));
@@ -2889,20 +2889,20 @@ static ssize_t imgsensor_name_show(struct device *dev, struct device_attribute *
 	    if(src_name != NULL)
 	    {
 		len = strlen(src_name);
-		pr_info("[chenxy] len:%d\n", len);
+		pr_debug("[chenxy] len:%d\n", len);
 		if(len > 0){
 		    for(i=0; ((i < 4) && (src_name != NULL)); i++) {
-			pr_info("[chenxy] src_name :%s \n", src_name);
+			pr_debug("[chenxy] src_name :%s \n", src_name);
 			dst[i] = strsep(&src_name, ";");
-			pr_info("[chenxy] dst[%d]:%s \n", i,  dst[i]);
+			pr_debug("[chenxy] dst[%d]:%s \n", i,  dst[i]);
 		    }
 		}
 	    
-		pr_info("[chenxy] i:%d\n", i);
+		pr_debug("[chenxy] i:%d\n", i);
 		    for(j=0; j < i; j++) {
 			if(!strcmp("hynix_hi1337_i", dst[j]) || !strcmp("hynix_hi1337_ii", dst[j]) || !strcmp("hynix_hi1337_iii", dst[j]) || !strcmp("hynix_hi1337_iiii", dst[j])){
 			    num1 = sprintf(buf, "WIDE=%s\n", dst[j]);
-			    pr_info("[chenxy] WIDE=%s\n", dst[j]);
+			    pr_debug("[chenxy] WIDE=%s\n", dst[j]);
 			    break;
 			}
 		    }
@@ -2910,7 +2910,7 @@ static ssize_t imgsensor_name_show(struct device *dev, struct device_attribute *
 		    for(j=0; j < i; j++) {
 			if(!strcmp("gc_gc5035_i", dst[j]) || !strcmp("gc_gc5035_ii", dst[j]) || !strcmp("gc_gc5035_iii", dst[j]) || !strcmp("gc_gc5035_iiii", dst[j])){
 			    num2 = sprintf(buf + num1, "FRONT=%s\n", dst[j]);
-			    pr_info("[chenxy] FRONT=%s\n", dst[j]);
+			    pr_debug("[chenxy] FRONT=%s\n", dst[j]);
 			    break;
 			}
 		    }
@@ -2918,7 +2918,7 @@ static ssize_t imgsensor_name_show(struct device *dev, struct device_attribute *
 		    for(j=0; j < i; j++) {
 			if(!strcmp("hynix_hi259_i", dst[j]) || !strcmp("hynix_hi259_ii", dst[j]) || !strcmp("hynix_hi259_iii", dst[j]) || !strcmp("hynix_hi259_iv", dst[j])){
 			    num3 = sprintf(buf+num1+num2, "MACRO=%s\n", dst[j]);
-			    pr_info("[chenxy] MACRO=%s\n", dst[j]);
+			    pr_debug("[chenxy] MACRO=%s\n", dst[j]);
 			    break;
 			}
 		    }
@@ -2926,13 +2926,13 @@ static ssize_t imgsensor_name_show(struct device *dev, struct device_attribute *
 		    for(j=0; j < i; j++) {
 			if(!strcmp("ov_ov02b_i", dst[j]) || !strcmp("gc_gc02m1_ii", dst[j]) || !strcmp("ov_ov02b_iii", dst[j])){
 			    num4 = sprintf(buf+num1+num2+num3, "DEPTH=%s\n", dst[j]);
-			    pr_info("[chenxy] DEPTH=%s\n", dst[j]);
+			    pr_debug("[chenxy] DEPTH=%s\n", dst[j]);
 			    break;
 			} 
 		    }
 		
 	    } else {
-		pr_info("[chenxy] imgsensorname is NULL");
+		pr_debug("[chenxy] imgsensorname is NULL");
 	    }
 	}
     ret = strlen(buf) + 1;
@@ -2976,7 +2976,7 @@ static DEVICE_ATTR(sensorid, 0664, sensorid_show, NULL);
 static int __init imgsensor_init(void)
 {
 	int ret;
-	pr_info("[camerahw_probe] start\n");
+	pr_debug("[camerahw_probe] start\n");
 
 	if (platform_driver_register(&gimgsensor_platform_driver)) {
 		pr_err("failed to register CAMERA_HW driver\n");
@@ -2996,12 +2996,12 @@ static int __init imgsensor_init(void)
 #endif
     sensor_kobject = kobject_create_and_add("android_camera", NULL);
     if (sensor_kobject == NULL) {
-        pr_info("[imgsensor_init]Big error: sensor_kobject_create_sysfs_ failed\n");
+        pr_debug("[imgsensor_init]Big error: sensor_kobject_create_sysfs_ failed\n");
     } else {
         ret = sysfs_create_file(sensor_kobject, &dev_attr_sensor.attr);
 		ret = sysfs_create_file(sensor_kobject, &dev_attr_sensorid.attr);
         if (ret) {
-        	pr_info("%s failed \n", __func__);
+        	pr_debug("%s failed \n", __func__);
         	kobject_del(sensor_kobject);
         }
     }
