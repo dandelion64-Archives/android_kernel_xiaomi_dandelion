@@ -221,7 +221,7 @@ static void pmic_clk_buf_ctrl(enum CLK_BUF_SWCTRL_STATUS_T *status)
 			    PMIC_REG_MASK, PMIC_REG_SHIFT);
 	pmic_read_interface(PMIC_DCXO_CW11, &pmic_cw11,
 			    PMIC_REG_MASK, PMIC_REG_SHIFT);
-	pr_info("%s DCXO_CW00=0x%x, CW11=0x%x, clk_buf_swctrl=[%u %u %u %u %u %u %u]\n",
+	pr_debug("%s DCXO_CW00=0x%x, CW11=0x%x, clk_buf_swctrl=[%u %u %u %u %u %u %u]\n",
 		__func__, pmic_cw00, pmic_cw11, status[0], status[1],
 		status[2], status[3], status[4], status[5], status[6]);
 }
@@ -318,7 +318,7 @@ static void clk_buf_ctrl_internal(enum clk_buf_id id, bool onoff)
 			pmic_clk_buf_swctrl[XO_WCN] = 0;
 			CLK_BUF2_STATUS_PMIC = CLOCK_BUFFER_DISABLE;
 		}
-		pr_info("%s: id=%d, onoff=%d, DCXO_ENABLE=0x%x, pwrap_dcxo_en_flag=0x%x\n",
+		pr_debug("%s: id=%d, onoff=%d, DCXO_ENABLE=0x%x, pwrap_dcxo_en_flag=0x%x\n",
 			     __func__, id, onoff, clkbuf_readl(DCXO_ENABLE),
 			     pwrap_dcxo_en_flag);
 		break;
@@ -344,7 +344,7 @@ static void clk_buf_ctrl_internal(enum clk_buf_id id, bool onoff)
 			pmic_clk_buf_swctrl[XO_NFC] = 0;
 			CLK_BUF3_STATUS_PMIC = CLOCK_BUFFER_DISABLE;
 		}
-		pr_info("%s: id=%d, onoff=%d, DCXO_ENABLE=0x%x, pwrap_dcxo_en_flag=0x%x\n",
+		pr_debug("%s: id=%d, onoff=%d, DCXO_ENABLE=0x%x, pwrap_dcxo_en_flag=0x%x\n",
 			     __func__, id, onoff, clkbuf_readl(DCXO_ENABLE),
 			     pwrap_dcxo_en_flag);
 		break;
@@ -364,7 +364,7 @@ static void clk_buf_ctrl_internal(enum clk_buf_id id, bool onoff)
 			pmic_clk_buf_swctrl[XO_CEL] = 0;
 			CLK_BUF4_STATUS_PMIC = CLOCK_BUFFER_DISABLE;
 		}
-		pr_info("%s: id=%d, onoff=%d\n", __func__, id, onoff);
+		pr_debug("%s: id=%d, onoff=%d\n", __func__, id, onoff);
 		break;
 	case CLK_BUF_UFS:
 		if (onoff) {
@@ -376,7 +376,7 @@ static void clk_buf_ctrl_internal(enum clk_buf_id id, bool onoff)
 			pmic_clk_buf_swctrl[XO_EXT] = 0;
 			CLK_BUF7_STATUS_PMIC = CLOCK_BUFFER_DISABLE;
 		}
-		pr_info("%s: id=%d, onoff=%d\n", __func__, id, onoff);
+		pr_debug("%s: id=%d, onoff=%d\n", __func__, id, onoff);
 		break;
 	default:
 		pr_err("%s: id=%d isn't supported\n", __func__, id);
@@ -410,7 +410,7 @@ bool clk_buf_ctrl(enum clk_buf_id id, bool onoff)
 	case CLK_BUF_BB_MD:
 		if (CLK_BUF1_STATUS_PMIC != CLOCK_BUFFER_SW_CONTROL) {
 			ret = -1;
-			pr_info("%s: id=%d isn't controlled by SW\n",
+			pr_debug("%s: id=%d isn't controlled by SW\n",
 				__func__, id);
 			break;
 		}
@@ -418,7 +418,7 @@ bool clk_buf_ctrl(enum clk_buf_id id, bool onoff)
 	case CLK_BUF_CONN:
 		if (CLK_BUF2_STATUS_PMIC != CLOCK_BUFFER_SW_CONTROL) {
 			ret = -1;
-			pr_info("%s: id=%d isn't controlled by SW\n",
+			pr_debug("%s: id=%d isn't controlled by SW\n",
 				__func__, id);
 			break;
 		}
@@ -436,7 +436,7 @@ bool clk_buf_ctrl(enum clk_buf_id id, bool onoff)
 	case CLK_BUF_NFC:
 		if (CLK_BUF3_STATUS_PMIC != CLOCK_BUFFER_SW_CONTROL) {
 			ret = -1;
-			pr_info("%s: id=%d isn't controlled by SW\n",
+			pr_debug("%s: id=%d isn't controlled by SW\n",
 				__func__, id);
 			break;
 		}
@@ -446,7 +446,7 @@ bool clk_buf_ctrl(enum clk_buf_id id, bool onoff)
 	case CLK_BUF_RF:
 		if (CLK_BUF4_STATUS_PMIC != CLOCK_BUFFER_SW_CONTROL) {
 			ret = -1;
-			pr_info("%s: id=%d isn't controlled by SW\n",
+			pr_debug("%s: id=%d isn't controlled by SW\n",
 				__func__, id);
 			break;
 		}
@@ -454,7 +454,7 @@ bool clk_buf_ctrl(enum clk_buf_id id, bool onoff)
 	case CLK_BUF_AUDIO:
 		if (CLK_BUF6_STATUS_PMIC != CLOCK_BUFFER_SW_CONTROL) {
 			ret = -1;
-			pr_info("%s: id=%d isn't controlled by SW\n",
+			pr_debug("%s: id=%d isn't controlled by SW\n",
 				__func__, id);
 			break;
 		}
@@ -467,7 +467,7 @@ bool clk_buf_ctrl(enum clk_buf_id id, bool onoff)
 	case CLK_BUF_CHG:
 		if (CLK_BUF6_STATUS_PMIC != CLOCK_BUFFER_SW_CONTROL) {
 			ret = -1;
-			pr_info("%s: id=%d isn't controlled by SW\n",
+			pr_debug("%s: id=%d isn't controlled by SW\n",
 				__func__, id);
 			break;
 		}
@@ -480,7 +480,7 @@ bool clk_buf_ctrl(enum clk_buf_id id, bool onoff)
 	case CLK_BUF_UFS:
 		if (CLK_BUF7_STATUS_PMIC != CLOCK_BUFFER_SW_CONTROL) {
 			ret = -1;
-			pr_info("%s: id=%d isn't controlled by SW\n",
+			pr_debug("%s: id=%d isn't controlled by SW\n",
 				__func__, id);
 			break;
 		}
@@ -549,7 +549,7 @@ static void clk_buf_get_drv_curr(void)
 	clkbuf_drv_curr_auxout[XO_PD] = (rg_auxout & (0x3 << 7)) >> 7;
 	clkbuf_drv_curr_auxout[XO_EXT] = (rg_auxout & (0x3 << 12)) >> 12;
 
-	pr_info("%s: PMIC_CLK_BUF?_DRV_CURR_AUXOUT=%d %d %d %d %d %d %d\n",
+	pr_debug("%s: PMIC_CLK_BUF?_DRV_CURR_AUXOUT=%d %d %d %d %d %d %d\n",
 		__func__,
 		clkbuf_drv_curr_auxout[XO_SOC],
 		clkbuf_drv_curr_auxout[XO_WCN],
@@ -608,7 +608,7 @@ static void clk_buf_set_manual_drv_curr(u32 *drv_curr_vals)
 
 	pmic_config_interface(PMIC_XO_EXTBUF1_ISET_M_ADDR, drv_curr_val,
 			      drv_curr_mask, drv_curr_shift);
-	pr_info("%s: drv_curr_val/mask/shift=0x%x %x %x\n", __func__,
+	pr_debug("%s: drv_curr_val/mask/shift=0x%x %x %x\n", __func__,
 		     drv_curr_val, drv_curr_mask, drv_curr_shift);
 }
 
@@ -635,7 +635,7 @@ static void clk_buf_get_xo_en(void)
 	/* xo_en_stat[XO_AUD] = (rg_auxout & (0x1 << 0)) >> 0; */
 	xo_en_stat[XO_PD] = (rg_auxout & (0x1 << 6)) >> 6;
 
-	pr_info("%s: PMIC_CLK_BUF?_EN_STAT=%d %d %d %d %d %d %d\n", __func__,
+	pr_debug("%s: PMIC_CLK_BUF?_EN_STAT=%d %d %d %d %d %d %d\n", __func__,
 		xo_en_stat[XO_SOC],
 		xo_en_stat[XO_WCN],
 		xo_en_stat[XO_NFC],
@@ -647,12 +647,12 @@ static void clk_buf_get_xo_en(void)
 
 void clk_buf_dump_dts_log(void)
 {
-	pr_info("%s: PMIC_CLK_BUF?_STATUS=%d %d %d %d %d %d %d\n", __func__,
+	pr_debug("%s: PMIC_CLK_BUF?_STATUS=%d %d %d %d %d %d %d\n", __func__,
 		     CLK_BUF1_STATUS_PMIC, CLK_BUF2_STATUS_PMIC,
 		     CLK_BUF3_STATUS_PMIC, CLK_BUF4_STATUS_PMIC,
 		     CLK_BUF5_STATUS_PMIC, CLK_BUF6_STATUS_PMIC,
 		     CLK_BUF7_STATUS_PMIC);
-	pr_info("%s: PMIC_CLK_BUF?_DRV_CURR=%d %d %d %d %d %d %d\n", __func__,
+	pr_debug("%s: PMIC_CLK_BUF?_DRV_CURR=%d %d %d %d %d %d %d\n", __func__,
 		     PMIC_CLK_BUF1_DRIVING_CURR,
 		     PMIC_CLK_BUF2_DRIVING_CURR,
 		     PMIC_CLK_BUF3_DRIVING_CURR,
@@ -686,23 +686,23 @@ void clk_buf_dump_clkbuf_log(void)
 			    PMIC_REG_MASK, PMIC_REG_SHIFT);
 	pmic_read_interface(PMIC_RG_SRCLKEN_IN3_EN_ADDR, &top_spi_con1,
 			    PMIC_REG_MASK, PMIC_REG_SHIFT);
-	pr_info("%s DCXO_CW00/02/11/13/14/15/16/20/top_spi_con1=0x%x %x %x %x %x %x %x %x %x\n",
+	pr_debug("%s DCXO_CW00/02/11/13/14/15/16/20/top_spi_con1=0x%x %x %x %x %x %x %x %x %x\n",
 		     __func__, pmic_cw00, pmic_cw02, pmic_cw11, pmic_cw13,
 		     pmic_cw14, pmic_cw15, pmic_cw16, pmic_cw20,
 		     top_spi_con1);
 
 	if (is_clkbuf_initiated) {
 		clk_buf_get_xo_en();
-		pr_info("%s XO_RS=%u %u %u %u %u %u %u\n", __func__,
+		pr_debug("%s XO_RS=%u %u %u %u %u %u %u\n", __func__,
 				xo_en_stat[XO_SOC], xo_en_stat[XO_WCN],
 				xo_en_stat[XO_NFC], xo_en_stat[XO_CEL],
 				xo_en_stat[XO_AUD], xo_en_stat[XO_PD],
 				xo_en_stat[XO_EXT]);
-		pr_info("%s bblpm_switch=%u, bblpm_cnt=%u, bblpm_cond=0x%x\n",
+		pr_debug("%s bblpm_switch=%u, bblpm_cnt=%u, bblpm_cond=0x%x\n",
 				__func__, bblpm_switch, bblpm_cnt,
 				clk_buf_bblpm_enter_cond());
 
-		pr_info("%s MD1_PWR_CON=0x%x, PWR_STATUS=0x%x, PCM_REG13_DATA=0x%x, SPARE_ACK_MASK=0x%x\n",
+		pr_debug("%s MD1_PWR_CON=0x%x, PWR_STATUS=0x%x, PCM_REG13_DATA=0x%x, SPARE_ACK_MASK=0x%x\n",
 				__func__,
 				mtk_spm_read_register(SPM_MD1_PWR_CON),
 				mtk_spm_read_register(SPM_PWRSTA),
@@ -872,11 +872,11 @@ void clk_buf_show_status_info(void)
 		len = clk_buf_show_status_info_internal(buf);
 		str = buf;
 		while ((str_sep = strsep(&str, ".")) != NULL)
-			pr_info("%s\n", str_sep);
+			pr_debug("%s\n", str_sep);
 
 		vfree(buf);
 	} else
-		pr_info("%s: allocate memory fail\n", __func__);
+		pr_debug("%s: allocate memory fail\n", __func__);
 }
 
 #ifdef CONFIG_PM
@@ -927,7 +927,7 @@ static ssize_t clk_buf_ctrl_store(struct kobject *kobj,
 		}
 
 		clkbuf_writel(DCXO_ENABLE, pwrap_dcxo_en_flag);
-		pr_info("%s: DCXO_ENABLE=0x%x, pwrap_dcxo_en_flag=0x%x\n",
+		pr_debug("%s: DCXO_ENABLE=0x%x, pwrap_dcxo_en_flag=0x%x\n",
 			__func__, clkbuf_readl(DCXO_ENABLE),
 			pwrap_dcxo_en_flag);
 
@@ -1013,7 +1013,7 @@ static ssize_t clk_buf_debug_store(struct kobject *kobj,
 		else if (debug == 21)
 			clk_buf_ctrl_internal(CLK_BUF_RF, true);
 		else
-			pr_info("bad argument!! should be 0 or 1[0: disable, 1: enable]\n");
+			pr_debug("bad argument!! should be 0 or 1[0: disable, 1: enable]\n");
 	} else
 		return -EPERM;
 
@@ -1196,11 +1196,11 @@ void clk_buf_init_pmic_wrap(void)
 
 	clkbuf_writel(DCXO_ENABLE, DCXO_CONN_ENABLE | DCXO_NFC_ENABLE);
 
-	pr_info("%s: DCXO_CONN_ADR0/WDATA0/ADR1/WDATA1=0x%x/%x/%x/%x\n",
+	pr_debug("%s: DCXO_CONN_ADR0/WDATA0/ADR1/WDATA1=0x%x/%x/%x/%x\n",
 		__func__, clkbuf_readl(DCXO_CONN_ADR0),
 		clkbuf_readl(DCXO_CONN_WDATA0), clkbuf_readl(DCXO_CONN_ADR1),
 		clkbuf_readl(DCXO_CONN_WDATA1));
-	pr_info("%s: DCXO_NFC_ADR0/WDATA0/ADR1/WDATA1/EN=0x%x/%x/%x/%x/%x\n",
+	pr_debug("%s: DCXO_NFC_ADR0/WDATA0/ADR1/WDATA1/EN=0x%x/%x/%x/%x/%x\n",
 		__func__, clkbuf_readl(DCXO_NFC_ADR0),
 		clkbuf_readl(DCXO_NFC_WDATA0), clkbuf_readl(DCXO_NFC_ADR1),
 		clkbuf_readl(DCXO_NFC_WDATA1), clkbuf_readl(DCXO_ENABLE));
@@ -1240,7 +1240,7 @@ void clk_buf_init_pmic_swctrl(void)
 short is_clkbuf_bringup(void)
 {
 #ifdef CLKBUF_BRINGUP
-	pr_info("%s: skipped for bring up\n", __func__);
+	pr_debug("%s: skipped for bring up\n", __func__);
 	return 1;
 #else
 	return 0;
