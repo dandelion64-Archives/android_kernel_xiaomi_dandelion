@@ -298,7 +298,7 @@ int charger_manager_enable_high_voltage_charging(
 	else if (en && consumer->hv_charging_disabled == true)
 		consumer->hv_charging_disabled = false;
 	else {
-		pr_info("[%s] already set: %d %d\n", __func__,
+		pr_debug("[%s] already set: %d %d\n", __func__,
 			consumer->hv_charging_disabled, en);
 		return 0;
 	}
@@ -315,7 +315,7 @@ int charger_manager_enable_high_voltage_charging(
 	}
 	mutex_unlock(&consumer_mutex);
 
-	pr_info("%s: user: %s, en = %d\n", __func__, dev_name(consumer->dev),
+	pr_debug("%s: user: %s, en = %d\n", __func__, dev_name(consumer->dev),
 		info->enable_hv_charging);
 	_wake_up_charger(info);
 
@@ -356,7 +356,7 @@ int charger_manager_enable_power_path(struct charger_consumer *consumer,
 		return 0;
 	}
 
-	pr_info("%s: enable power path = %d\n", __func__, en);
+	pr_debug("%s: enable power path = %d\n", __func__, en);
 	return charger_dev_enable_powerpath(chg_dev, en);
 }
 
@@ -747,7 +747,7 @@ int charger_manager_get_ibus(int *ibus)
 
 int charger_manager_set_input_suspend(int suspend)
 {
-	pr_info("%s suspend: %d.\n", __func__, suspend);
+	pr_debug("%s suspend: %d.\n", __func__, suspend);
 
 	if (pinfo == NULL)
 		return false;
@@ -822,7 +822,7 @@ void charger_manager_set_prop_system_temp_level(int temp_level)
 	if (pinfo->system_temp_level == 0)
 		thermal_icl_ua = -1;
 
-	pr_info("%s, system_temp_level:%d thermal_icl_ua:%d usb_type:%d\n", __func__,
+	pr_debug("%s, system_temp_level:%d thermal_icl_ua:%d usb_type:%d\n", __func__,
 			pinfo->system_temp_level, thermal_icl_ua, pinfo->usb_psy->desc->type);
 
 	_charger_manager_set_input_current_limit(pinfo, MAIN_CHARGER, thermal_icl_ua);
@@ -1021,7 +1021,7 @@ void mtk_charger_get_atm_mode(struct charger_manager *info)
 	} else
 		info->atm_enabled = false;
 
-	pr_info("%s: atm_enabled = %d\n", __func__, info->atm_enabled);
+	pr_debug("%s: atm_enabled = %d\n", __func__, info->atm_enabled);
 }
 
 /* internal algorithm common function */
