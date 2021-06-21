@@ -1197,7 +1197,7 @@ static int mtkfb_ioctl(struct fb_info *info, unsigned int cmd,
 
 		if (copy_to_user(argp, &power_state,
 				sizeof(power_state))) {
-			pr_info("MTKFB_GET_POWERSTATE failed\n");
+			pr_debug("MTKFB_GET_POWERSTATE failed\n");
 			return -EFAULT;
 		}
 
@@ -1377,14 +1377,14 @@ static int mtkfb_ioctl(struct fb_info *info, unsigned int cmd,
 	}
 	case MTKFB_ERROR_INDEX_UPDATE_TIMEOUT:
 	{
-		pr_info("[DDP] mtkfb_ioctl():MTKFB_ERROR_INDEX_UPDATE_TIMEOUT\n");
+		pr_debug("[DDP] mtkfb_ioctl():MTKFB_ERROR_INDEX_UPDATE_TIMEOUT\n");
 		/* call info dump function here */
 		/* mtkfb_dump_layer_info(); */
 		return r;
 	}
 	case MTKFB_ERROR_INDEX_UPDATE_TIMEOUT_AEE:
 	{
-		pr_info("[DDP] mtkfb_ioctl():MTKFB_ERROR_INDEX_UPDATE_TIMEOUT\n");
+		pr_debug("[DDP] mtkfb_ioctl():MTKFB_ERROR_INDEX_UPDATE_TIMEOUT\n");
 		/* call info dump function here */
 		/* mtkfb_dump_layer_info(); */
 		return r;
@@ -1656,7 +1656,7 @@ static int mtkfb_compat_ioctl(struct fb_info *info, unsigned int cmd,
 		data32 = compat_ptr(arg);
 		data = (__u32) fb_pa;
 		if (put_user(data, data32)) {
-			pr_info("MTKFB_FRAMEBUFFER_MVA failed\n");
+			pr_debug("MTKFB_FRAMEBUFFER_MVA failed\n");
 			ret = -EFAULT;
 		}
 		DISPDBG("MTKFB_FRAMEBUFFER_MVA success 0x%lx\n", fb_pa);
@@ -1669,11 +1669,11 @@ static int mtkfb_compat_ioctl(struct fb_info *info, unsigned int cmd,
 
 		data32 = compat_ptr(arg);
 		if (get_user(displayid, data32)) {
-			pr_info("COMPAT_MTKFB_GET_DISPLAY_IF_INFORMATION failed\n");
+			pr_debug("COMPAT_MTKFB_GET_DISPLAY_IF_INFORMATION failed\n");
 			return -EFAULT;
 		}
 		if (displayid >= MTKFB_MAX_DISPLAY_COUNT) {
-			pr_info("[FB]: invalid display id:%d\n", displayid);
+			pr_debug("[FB]: invalid display id:%d\n", displayid);
 			return -EFAULT;
 		}
 		if (displayid == 0) {
@@ -1696,7 +1696,7 @@ static int mtkfb_compat_ioctl(struct fb_info *info, unsigned int cmd,
 
 		if (copy_to_user((void __user *)arg, &(dispif_info[displayid]),
 			sizeof(struct compat_mtk_dispif_info))) {
-			pr_info("[FB]: copy_to_user failed! line:%d\n",
+			pr_debug("[FB]: copy_to_user failed! line:%d\n",
 				__LINE__);
 			return -EFAULT;
 		}
@@ -1723,7 +1723,7 @@ static int mtkfb_compat_ioctl(struct fb_info *info, unsigned int cmd,
 		else
 			power_state = 1;
 		if (put_user(power_state, data32)) {
-			pr_info("MTKFB_GET_POWERSTATE failed\n");
+			pr_debug("MTKFB_GET_POWERSTATE failed\n");
 			ret = -EFAULT;
 		}
 		DISPDBG("MTKFB_GET_POWERSTATE success %d\n", power_state);
@@ -1845,7 +1845,7 @@ static int mtkfb_compat_ioctl(struct fb_info *info, unsigned int cmd,
 
 		data32 = compat_ptr(arg);
 		if (put_user(dal_en, data32)) {
-			pr_info("MTKFB_GET_POWERSTATE failed\n");
+			pr_debug("MTKFB_GET_POWERSTATE failed\n");
 			ret = -EFAULT;
 		}
 		break;
@@ -1859,7 +1859,7 @@ static int mtkfb_compat_ioctl(struct fb_info *info, unsigned int cmd,
 		result = mtkfb_fm_auto_test();
 		data32 = compat_ptr(arg);
 		if (put_user(result, data32)) {
-			pr_info("MTKFB_GET_POWERSTATE failed\n");
+			pr_debug("MTKFB_GET_POWERSTATE failed\n");
 			ret = -EFAULT;
 		}
 		break;
@@ -2537,7 +2537,7 @@ static ssize_t fb_lcd_name(struct device *dev,
 static int __init lockdown_info(char *str)
 {
 	strcpy(lcd_lockdown_info, str);
-	pr_info("lcd_lockdown_info : %s\n", lcd_lockdown_info);
+	pr_debug("lcd_lockdown_info : %s\n", lcd_lockdown_info);
 	return 1;
 }
 __setup("androidboot.lockdown=", lockdown_info);
@@ -2551,7 +2551,7 @@ static ssize_t lockdown_color_show(struct device *dev,
 	sprintf(buf,"%s\n","4231323435050501");
 	else
 	sprintf(buf,"%s\n",lcd_lockdown_info);
-	pr_info("lcd_lockdown_info : %s,buf:%d\n", lcd_lockdown_info,buf);
+	pr_debug("lcd_lockdown_info : %s,buf:%d\n", lcd_lockdown_info,buf);
 	ret = strlen(buf) + 1;
 	return ret;
 }
@@ -2568,31 +2568,31 @@ static int lcd_ntc_create_sysfs(void)
 
    backlight_therm = kobject_create_and_add("thermal", NULL);
    if(backlight_therm == NULL) {
-     pr_info(" temp_create_sysfs_ failed\n");
+     pr_debug(" temp_create_sysfs_ failed\n");
      ret=-ENOMEM;
      return ret;
    }
    ret=sysfs_create_file(backlight_therm, &dev_attr_backlight_therm.attr);
    if(ret) {
-    pr_info("%s failed \n", __func__);
+    pr_debug("%s failed \n", __func__);
     kobject_del(backlight_therm);
    }
 
    lcd_name = kobject_create_and_add("android_lcd", NULL);
    if(lcd_name == NULL) {
-     pr_info(" lcd_name_create_sysfs_ failed\n");
+     pr_debug(" lcd_name_create_sysfs_ failed\n");
      ret=-ENOMEM;
      return ret;
    }
    ret=sysfs_create_file(lcd_name, &dev_attr_lcd_name.attr);
    if(ret) {
-    pr_info("%s failed \n", __func__);
+    pr_debug("%s failed \n", __func__);
     kobject_del(lcd_name);
    }
 
    ret=sysfs_create_file(lcd_name, &dev_attr_lcd_lockdown.attr);
    if(ret) {
-    pr_info("%s failed \n", __func__);
+    pr_debug("%s failed \n", __func__);
     kobject_del(lcd_name);
    }
    return 0;
@@ -2798,13 +2798,13 @@ static int mtkfb_probe(struct platform_device *pdev)
 	}
 
 	MSG_FUNC_LEAVE();
-	pr_info("disp driver(2) mtkfb_probe end\n");
+	pr_debug("disp driver(2) mtkfb_probe end\n");
 	return 0;
 
 cleanup:
 	mtkfb_free_resources(fbdev, init_state);
 
-	pr_info("disp driver(2) mtkfb_probe end\n");
+	pr_debug("disp driver(2) mtkfb_probe end\n");
 	return r;
 }
 
