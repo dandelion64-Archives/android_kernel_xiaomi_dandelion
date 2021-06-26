@@ -158,25 +158,25 @@ int devmpu_print_violation(uint64_t vio_addr, uint32_t vio_id,
 	vio_axi_id = (vio_id >> 3) & 0x1FFF;
 	vio_port_id = vio_id & 0x7;
 
-	pr_info("Device MPU violation\n");
-	pr_info("current process is \"%s \" (pid: %i)\n",
+	pr_debug("Device MPU violation\n");
+	pr_debug("current process is \"%s \" (pid: %i)\n",
 			current->comm, current->pid);
-	pr_info("corrupted address is 0x%llx\n",
+	pr_debug("corrupted address is 0x%llx\n",
 			vio_addr);
-	pr_info("master ID: 0x%x, AXI ID: 0x%x, port ID: 0x%x\n",
+	pr_debug("master ID: 0x%x, AXI ID: 0x%x, port ID: 0x%x\n",
 			vio_id, vio_axi_id, vio_port_id);
-	pr_info("violation master is %s, from domain 0x%x\n",
+	pr_debug("violation master is %s, from domain 0x%x\n",
 			id2name(vio_axi_id, vio_port_id), vio_domain);
 
 	if (vio_rw == 1)
-		pr_info("write violation\n");
+		pr_debug("write violation\n");
 	else if (vio_rw == 2)
-		pr_info("read violation\n");
+		pr_debug("read violation\n");
 	else
-		pr_info("strange read/write violation (%u)\n", vio_rw);
+		pr_debug("strange read/write violation (%u)\n", vio_rw);
 
 	if (!from_emimpu) {
-		pr_info("%s transaction\n",
+		pr_debug("%s transaction\n",
 				(vio.is_ns) ? "non-secure" : "secure");
 	}
 
@@ -241,11 +241,11 @@ static ssize_t devmpu_config_store(struct device_driver *driver,
 		return -EINVAL;
 	}
 
-	pr_info("Page#  RD/WR permissions\n");
+	pr_debug("Page#  RD/WR permissions\n");
 
 	for (i = 0; i < pages; ++i) {
 		if (i && i % 16 == 0) {
-			pr_info("%04x:  %08x/%08x %08x/%08x %08x/%08x %08x/%08x\n",
+			pr_debug("%04x:  %08x/%08x %08x/%08x %08x/%08x %08x/%08x\n",
 				i - 16,
 				*((uint32_t *)rd_perm_bmp),
 				*((uint32_t *)wr_perm_bmp),
@@ -293,7 +293,7 @@ static int devmpu_probe(struct platform_device *pdev)
 	struct device_node *dn = pdev->dev.of_node;
 	struct resource *res;
 
-	pr_info("Device MPU probe\n");
+	pr_debug("Device MPU probe\n");
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	if (!res) {
@@ -342,11 +342,11 @@ static int devmpu_probe(struct platform_device *pdev)
 	devmpu_ctx->page_size = page_size;
 	devmpu_ctx->virq = virq;
 
-	pr_info("reg_base=0x%pK\n", devmpu_ctx->reg_base);
-	pr_info("prot_base=0x%llx\n", devmpu_ctx->prot_base);
-	pr_info("prot_size=0x%llx\n", devmpu_ctx->prot_size);
-	pr_info("page_size=0x%x\n", devmpu_ctx->page_size);
-	pr_info("virq=0x%x\n", devmpu_ctx->virq);
+	pr_debug("reg_base=0x%pK\n", devmpu_ctx->reg_base);
+	pr_debug("prot_base=0x%llx\n", devmpu_ctx->prot_base);
+	pr_debug("prot_size=0x%llx\n", devmpu_ctx->prot_size);
+	pr_debug("page_size=0x%x\n", devmpu_ctx->page_size);
+	pr_debug("virq=0x%x\n", devmpu_ctx->virq);
 
 	return 0;
 }

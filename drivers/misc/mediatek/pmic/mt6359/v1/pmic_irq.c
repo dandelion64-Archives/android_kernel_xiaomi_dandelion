@@ -389,7 +389,7 @@ static void oc_int_work(struct work_struct *work)
 	upmu_set_reg_value((sp_interrupts[spNo].status + 0x2 * sp_conNo),
 			   1 << sp_irqNo);
 	pmic_enable_interrupt(intNo, 1, "PMIC");
-	pr_info("[%s] %s is resolved\n", __func__, name);
+	pr_debug("[%s] %s is resolved\n", __func__, name);
 }
 
 #if ENABLE_ALL_OC_IRQ
@@ -536,7 +536,7 @@ static void md_oc_int_handler(enum PMIC_IRQ_ENUM intNo, const char *int_name)
 	if (ret)
 		pr_notice("[%s] - exec_ccci_kern_func_by_md_id - msg fail\n"
 			  , __func__);
-	pr_info("[%s]Send msg pass\n", __func__);
+	pr_debug("[%s]Send msg pass\n", __func__);
 }
 #endif
 
@@ -575,7 +575,7 @@ void pmic_enable_interrupt(enum PMIC_IRQ_ENUM intNo, unsigned int en, char *str)
 
 	if (pmic_check_intNo(intNo, &spNo, &sp_conNo, &sp_irqNo)) {
 		if (intNo == INT_ENUM_MAX) {
-			pr_info(PMICTAG "[%s] disable intNo=%d\n", __func__,
+			pr_debug(PMICTAG "[%s] disable intNo=%d\n", __func__,
 				intNo);
 			return;
 		}
@@ -750,7 +750,7 @@ static void pmic_sp_irq_handler(unsigned int spNo,
 	for (i = 0; i < PMIC_INT_WIDTH; i++) {
 		if (sp_int_status & (1 << i)) {
 			sp_irq = &(sp_interrupts[spNo].sp_irqs[sp_conNo][i]);
-			pr_info("[PMIC_INT][%s]\n", sp_irq->name);
+			pr_debug("[PMIC_INT][%s]\n", sp_irq->name);
 			sp_irq->times++;
 			if (sp_irq->callback != NULL)
 				sp_irq->callback();

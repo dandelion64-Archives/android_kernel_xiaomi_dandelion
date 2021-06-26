@@ -83,15 +83,15 @@ static void mtkpasr_debug_channel_switch(void)
 
 	which = 16;
 	do {
-		pr_info("(@)%s: MASK[0x%lx]\n", __func__, mtkpasr_on);
+		pr_debug("(@)%s: MASK[0x%lx]\n", __func__, mtkpasr_on);
 		for (chc = 1; chc <= 4; chc <<= 1) {
-			pr_info("(@@@)chconfig[%d]\n", chc);
+			pr_debug("(@@@)chconfig[%d]\n", chc);
 			if (fill_pasr_on_by_chconfig(chc, vec, mtkpasr_on)) {
-				pr_info("Bad chconfig!\n");
+				pr_debug("Bad chconfig!\n");
 				continue;
 			}
 			for (i = 0; i < get_channel_num(); i++)
-				pr_info("%d[%d][0x%lx]\n", i, vec[i].channel,
+				pr_debug("%d[%d][0x%lx]\n", i, vec[i].channel,
 						vec[i].pasr_on);
 		}
 		mtkpasr_on = ((mtkpasr_on >> 15) | (mtkpasr_on << 1)) & 0xFFFF;
@@ -106,7 +106,7 @@ static void restore_pasr(void)
 retry:
 	/* APMCU flow */
 	if (exit_pasr_dpd_config() != 0)
-		pr_info("%s: failed to program DRAMC!\n", __func__);
+		pr_debug("%s: failed to program DRAMC!\n", __func__);
 	else
 		mtkpasr_on = 0x0;
 
@@ -121,7 +121,7 @@ static void restore_dcs_pasr(void)
 retry:
 	/* APMCU flow */
 	if (exit_dcs_pasr_dpd_config() != 0)
-		pr_info("%s: failed to program DRAMC!\n", __func__);
+		pr_debug("%s: failed to program DRAMC!\n", __func__);
 	else
 		mtkpasr_on = 0x0;
 
@@ -145,12 +145,12 @@ static void enable_dcs_pasr(void)
 #ifdef DCS_SCREENOFF_ONLY_MODE
 	ret = dcs_exit_perf(DCS_KICKER_DEBUG);
 	if (ret)
-		pr_info("exit perf failed, kick=%d\n", DCS_KICKER_DEBUG);
+		pr_debug("exit perf failed, kick=%d\n", DCS_KICKER_DEBUG);
 #endif
 
 	ret = dcs_switch_to_lowpower();
 	if (ret != 0) {
-		pr_info("%s: failed to swtich to lowpower mode, error (%d)\n",
+		pr_debug("%s: failed to swtich to lowpower mode, error (%d)\n",
 				__func__, ret);
 		return;
 	}
@@ -158,7 +158,7 @@ static void enable_dcs_pasr(void)
 	/* Step1 - Acquire DCS status */
 	ret = dcs_get_dcs_status_lock(&chconfig, &dcs_status);
 	if (ret != 0) {
-		pr_info("%s: failed to get DCS status, error (%d)\n",
+		pr_debug("%s: failed to get DCS status, error (%d)\n",
 				__func__, ret);
 		return;
 	}
@@ -169,7 +169,7 @@ static void enable_dcs_pasr(void)
 
 	/* Sanity check */
 	if (dcs_status == DCS_NORMAL && chconfig != max_channel_num) {
-		pr_info("%s: max_channel_num(%u) DCS status (%d, %d) mismatched\n",
+		pr_debug("%s: max_channel_num(%u) DCS status (%d, %d) mismatched\n",
 				__func__, max_channel_num,
 				chconfig, dcs_status);
 		goto err;
@@ -179,13 +179,13 @@ static void enable_dcs_pasr(void)
 	if (dcs_status == DCS_NORMAL) {
 bypass_dcs:
 		if (enter_pasr_dpd_config(mtkpasr_on & 0xFF, mtkpasr_on >> 0x8))
-			pr_info("%s: failed to program DRAMC!\n", __func__);
+			pr_debug("%s: failed to program DRAMC!\n", __func__);
 	} else if (dcs_status == DCS_LOWPOWER) {
 		/* Get channel-based PASR configuration */
 		ret = fill_pasr_on_by_chconfig(chconfig, mtkpasr_vec,
 				mtkpasr_on);
 		if (ret != 0) {
-			pr_info("%s: failed to configure PASR, error (%d)\n",
+			pr_debug("%s: failed to configure PASR, error (%d)\n",
 					__func__, ret);
 			goto err;
 		}
@@ -196,7 +196,7 @@ bypass_dcs:
 					mtkpasr_vec[chid].pasr_on & 0xFF,
 					mtkpasr_vec[chid].pasr_on >> 0x8, chid);
 	} else {
-		pr_info("%s: should not be here\n", __func__);
+		pr_debug("%s: should not be here\n", __func__);
 		goto err;
 	}
 
@@ -222,7 +222,7 @@ static void disable_dcs_pasr(void)
 	else if (dcs_status == DCS_LOWPOWER)
 		restore_dcs_pasr();
 	else
-		pr_info("%s: should not be here\n", __func__);
+		pr_debug("%s: should not be here\n", __func__);
 
 	/* Unlock DCS */
 	dcs_acquired = 0;
@@ -234,7 +234,7 @@ static void disable_dcs_pasr(void)
 	/* enter performance mode */
 	ret = dcs_enter_perf(DCS_KICKER_DEBUG);
 	if (ret)
-		pr_info("enter perf failed, kick=%d\n", DCS_KICKER_DEBUG);
+		pr_debug("enter perf failed, kick=%d\n", DCS_KICKER_DEBUG);
 #endif
 }
 #endif

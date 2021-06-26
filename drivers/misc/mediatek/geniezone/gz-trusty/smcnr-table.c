@@ -221,14 +221,14 @@ int init_smcnr_table(struct device *dev, enum tee_id_t tee_id)
 		ver = 0;
 
 	if (ver < TRUSTY_API_VERSION_SMCNR_TABLE) {
-		pr_info("GZ using legacy smc number %u < %u for MTEE %d\n",
+		pr_debug("GZ using legacy smc number %u < %u for MTEE %d\n",
 			ver, TRUSTY_API_VERSION_SMCNR_TABLE, tee_id);
 		smcnr_version[tee_id] = ver;
 		return 0;
 	}
 
 	smcnr_version[tee_id] = ver;
-	pr_info("New smcall table ver %d support for MTEE %d\n", ver, tee_id);
+	pr_debug("New smcall table ver %d support for MTEE %d\n", ver, tee_id);
 
 	return 0;
 }
@@ -247,7 +247,7 @@ inline uint32_t get_smcnr_teeid(enum smc_functions fid, enum tee_id_t tee_id)
 		smcnr = gz_smcnr_table[fid][tee_id];
 
 	if (unlikely(smcnr == SMC_UNDEFINED))
-		pr_info("ERROR smcnr retrieving failed %d, %d\n", fid, tee_id);
+		pr_debug("ERROR smcnr retrieving failed %d, %d\n", fid, tee_id);
 
 	return smcnr;
 }

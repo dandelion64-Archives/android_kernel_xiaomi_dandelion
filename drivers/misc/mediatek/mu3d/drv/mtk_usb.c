@@ -642,7 +642,7 @@ static bool saving_mode;
 ssize_t musb_saving_mode_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	if (!dev) {
-		pr_info("dev is null!!\n");
+		pr_debug("dev is null!!\n");
 		return 0;
 	}
 	return scnprintf(buf, PAGE_SIZE, "%d\n", saving_mode);
@@ -655,12 +655,12 @@ ssize_t musb_saving_mode_store(struct device *dev, struct device_attribute *attr
 	long tmp_val;
 
 	if (!dev) {
-		pr_info("dev is null!!\n");
+		pr_debug("dev is null!!\n");
 		return count;
 	/* } else if (1 == sscanf(buf, "%d", &saving)) { */
 	} else if (kstrtol(buf, 10, (long *)&tmp_val) == 0) {
 		saving = tmp_val;
-		pr_info("old=%d new=%d\n", saving, saving_mode);
+		pr_debug("old=%d new=%d\n", saving, saving_mode);
 		if (saving_mode == (!saving))
 			saving_mode = !saving_mode;
 	}
@@ -669,7 +669,7 @@ ssize_t musb_saving_mode_store(struct device *dev, struct device_attribute *attr
 
 bool is_saving_mode(void)
 {
-	pr_info("saving_mode : %d\n", saving_mode);
+	pr_debug("saving_mode : %d\n", saving_mode);
 	return saving_mode;
 }
 

@@ -128,8 +128,8 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 		u32 all_spend_sec = 0; \
 		u32 all_spend_msec = 0; \
 		struct ut_test_suite_statistics *t_statistics; \
-		pr_info("[UT_SUITE]Test Results: RUN %s\n", (run_all_suites?"ALL":"ONE")); \
-		pr_info("[UT_SUITE] CASE     PASS       FAIL     TIME\n"); \
+		pr_debug("[UT_SUITE]Test Results: RUN %s\n", (run_all_suites?"ALL":"ONE")); \
+		pr_debug("[UT_SUITE] CASE     PASS       FAIL     TIME\n"); \
 		list_for_each_entry_safe(suite, tmp, &g_test_suite_list.list, \
 									list) { \
 			for (cmd_idx = suite->item.cmd_start; \
@@ -138,7 +138,7 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 				t_statistics = &suite->item.cmds_last_run_statistics[cmd_off]; \
 				if (t_statistics->ret != UT_STATE_UNSUPPORTED_CMD) { \
 					if (cmd == cmd_idx || run_all_suites) \
-						pr_info("[UT_SUITE]%5lld     %-9d  %-7d  %05d.%06d sec\n", \
+						pr_debug("[UT_SUITE]%5lld     %-9d  %-7d  %05d.%06d sec\n", \
 							cmd_idx, t_statistics->pass_cnt, \
 							t_statistics->fail_cnt, t_statistics->spend_sec, \
 							t_statistics->spend_msec); \
@@ -152,8 +152,8 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 		if (run_all_suites) { \
 			all_spend_sec += (all_spend_msec / 1000000); \
 			all_spend_msec = (all_spend_msec % 1000000); \
-			pr_info("[UT_SUITE] Summary:\n"); \
-			pr_info("[UT_SUITE]  ALL     %-9d  %-7d  %05d.%06d sec\n", \
+			pr_debug("[UT_SUITE] Summary:\n"); \
+			pr_debug("[UT_SUITE]  ALL     %-9d  %-7d  %05d.%06d sec\n", \
 				all_pass_cnt, all_fail_cnt, all_spend_sec, all_spend_msec); \
 		} \
 	} \
@@ -167,7 +167,7 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 		list_for_each_entry_safe(suite, tmp, &g_test_suite_list.list, \
 					 list) { \
 			if (run_all_suites) { \
-				pr_info("[UT_SUITE]Running UT Suites: %s\n", \
+				pr_debug("[UT_SUITE]Running UT Suites: %s\n", \
 							suite->item.test_suite_name); \
 				for (cmd_idx = suite->item.cmd_start; \
 					cmd_idx <= suite->item.cmd_end; cmd_idx++) { \
@@ -181,7 +181,7 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 				} \
 			} else if ((suite->item.cmd_start <= cmd) \
 							&& (cmd <= suite->item.cmd_end)) { \
-				pr_info("[UT_SUITE]Running UT Suites: %s\n", \
+				pr_debug("[UT_SUITE]Running UT Suites: %s\n", \
 							suite->item.test_suite_name); \
 				case_ret = run_one_test_case(suite, cmd, param1, \
 						param2, param3); \
@@ -189,8 +189,8 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 			} \
 		} \
 		if (case_ret == UT_STATE_UNSUPPORTED_CMD) { \
-			pr_info("[UT_SUITE]No UT Suite is Founded!\n"); \
-			pr_info("[UT_SUITE]UT case:%lld is unsupported!\n", cmd); \
+			pr_debug("[UT_SUITE]No UT Suite is Founded!\n"); \
+			pr_debug("[UT_SUITE]UT case:%lld is unsupported!\n", cmd); \
 		} else { \
 			dump_run_suites_results(cmd, run_all_suites); \
 		} \
@@ -227,9 +227,9 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 	} \
 	static int __init server_main##_ut_agent(void) \
 	{ \
-		pr_info("%s:%d\n", __func__, __LINE__); \
+		pr_debug("%s:%d\n", __func__, __LINE__); \
 		ut_test_framework_init(); \
-		pr_info("%s:%d (end)\n", __func__, __LINE__); \
+		pr_debug("%s:%d (end)\n", __func__, __LINE__); \
 		return 0; \
 	} \
 	subsys_initcall(server_main##_ut_agent);
@@ -286,22 +286,22 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 	static void ut_status_dump(void) \
 	{ \
 		do_gettimeofday(&ut_##suite##_end_time); \
-		pr_info("[UT_CASE]================================================\n"); \
-		pr_info("[UT_CASE]Executing UT command: %lld\n", ut_##suite##_command); \
-		pr_info("[UT_CASE]  TOTAL TEST ITEMS: %d\n", \
+		pr_debug("[UT_CASE]================================================\n"); \
+		pr_debug("[UT_CASE]Executing UT command: %lld\n", ut_##suite##_command); \
+		pr_debug("[UT_CASE]  TOTAL TEST ITEMS: %d\n", \
 			ut_##suite##_pass_count + ut_##suite##_fail_count); \
-		pr_info("[UT_CASE]  PASS TEST ITEMS: %d\n", ut_##suite##_pass_count); \
-		pr_info("[UT_CASE]  FAIL TEST ITEMS: %d\n", ut_##suite##_fail_count); \
+		pr_debug("[UT_CASE]  PASS TEST ITEMS: %d\n", ut_##suite##_pass_count); \
+		pr_debug("[UT_CASE]  FAIL TEST ITEMS: %d\n", ut_##suite##_fail_count); \
 		if (ut_##suite##_fail_count == 0) \
-			pr_info("[UT_CASE]all UT test items are passed!!!\n"); \
+			pr_debug("[UT_CASE]all UT test items are passed!!!\n"); \
 		else \
-			pr_info("[UT_CASE]some items are failed, please check!!!\n"); \
-		pr_info("[UT_CASE]  Spend time: %d.%d seconds\n", \
+			pr_debug("[UT_CASE]some items are failed, please check!!!\n"); \
+		pr_debug("[UT_CASE]  Spend time: %d.%d seconds\n", \
 			GET_TIME_DIFF_SEC(ut_##suite##_start_time, \
 				ut_##suite##_end_time), \
 			GET_TIME_DIFF_USEC(ut_##suite##_start_time, \
 				ut_##suite##_end_time)); \
-		pr_info("[UT_CASE]================================================\n"); \
+		pr_debug("[UT_CASE]================================================\n"); \
 	}
 
 #define UT_HALT_CHECK() \
@@ -312,7 +312,7 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 
 #define BEGIN_UT_TEST \
 	do { \
-		pr_info("%s:%d\n", __func__, __LINE__); \
+		pr_debug("%s:%d\n", __func__, __LINE__); \
 		UT_HALT_CHECK(); \
 	} while (0)
 
@@ -426,14 +426,14 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 
 #define DEFINE_TEST_CASE(cmd, func) \
 		case cmd: \
-			pr_info("[UT_SUITE]        UT case:%d .....\n", cmd); \
+			pr_debug("[UT_SUITE]        UT case:%d .....\n", cmd); \
 			func_ret = func(&params); \
 			break;
 
 #define DEFINE_TEST_CASE_PARAM1(cmd, func, p1) \
 		case cmd: \
 			params.param1 = p1; \
-			pr_info("[UT_SUITE]        UT case:%d .....\n", cmd); \
+			pr_debug("[UT_SUITE]        UT case:%d .....\n", cmd); \
 			func_ret = func(&params); \
 			break;
 
@@ -441,7 +441,7 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 		case cmd: \
 			params.param1 = p1; \
 			params.param2 = p2; \
-			pr_info("[UT_SUITE]        UT case:%d .....\n", cmd); \
+			pr_debug("[UT_SUITE]        UT case:%d .....\n", cmd); \
 			func_ret = func(&params); \
 			break;
 
@@ -450,7 +450,7 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 			params.param1 = p1; \
 			params.param2 = p2; \
 			params.param3 = p3; \
-			pr_info("[UT_SUITE]        UT case:%d .....\n", cmd); \
+			pr_debug("[UT_SUITE]        UT case:%d .....\n", cmd); \
 			func_ret = func(&params); \
 			break;
 
@@ -475,10 +475,10 @@ void invoke_ut_test_suite(u64 cmd, u64 param1, u64 param2, u64 param3);
 #define REGISTER_TEST_SUITE(cmd_start, cmd_end, suite_main) \
 	static int __init suite_main##_register(void) \
 	{ \
-		pr_info("%s:%d\n", __func__, __LINE__); \
+		pr_debug("%s:%d\n", __func__, __LINE__); \
 		register_ut_test_suite(#suite_main, cmd_start, cmd_end, \
 				       suite_main); \
-		pr_info("%s:%d (end)\n", __func__, __LINE__); \
+		pr_debug("%s:%d (end)\n", __func__, __LINE__); \
 		return 0; \
 	} \
 	late_initcall(suite_main##_register);

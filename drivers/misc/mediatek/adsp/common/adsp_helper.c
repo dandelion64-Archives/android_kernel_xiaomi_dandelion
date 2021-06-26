@@ -186,7 +186,7 @@ void adsp_sys_reset_ws(struct work_struct *ws)
 	/* wake lock AP*/
 	__pm_stay_awake(&adsp_reset_lock);
 
-	pr_info("%s(): adsp_aed_reset\n", __func__);
+	pr_debug("%s(): adsp_aed_reset\n", __func__);
 	if (adsp_reset_type == ADSP_RESET_TYPE_AWAKE)
 		adsp_aed_reset(EXCEP_KERNEL, ADSP_A_ID);
 	else
@@ -195,7 +195,7 @@ void adsp_sys_reset_ws(struct work_struct *ws)
 	/*wait adsp ee finished in 10s*/
 	if (wait_for_completion_interruptible_timeout(&adsp_sys_reset_cp,
 					msecs_to_jiffies(10000)) == 0) {
-		pr_info("%s: adsp ee time out\n", __func__);
+		pr_debug("%s: adsp ee time out\n", __func__);
 		/*timeout check adsp status again*/
 		if (is_adsp_ready(ADSP_A_ID) != -1)
 			goto END;
@@ -215,7 +215,7 @@ void adsp_sys_reset_ws(struct work_struct *ws)
 	}
 
 	if (adsp_reset_type == ADSP_RESET_TYPE_AWAKE)
-		pr_info("%s(): adsp awake fail, wait system back\n", __func__);
+		pr_debug("%s(): adsp awake fail, wait system back\n", __func__);
 
 	/* make sure adsp is in idle state */
 	while (--timeout) {
@@ -232,7 +232,7 @@ void adsp_sys_reset_ws(struct work_struct *ws)
 
 	if (!adsp_reset_flag) {
 		if (readl(ADSP_DBG_PEND_CNT))
-			pr_info("%s(): failed, bypass and wait\n", __func__);
+			pr_debug("%s(): failed, bypass and wait\n", __func__);
 		else
 			adsp_reset();
 	}
@@ -341,7 +341,7 @@ void adsp_A_ready_ipi_handler(int id, void *data, unsigned int len)
 	}
 	/* verify adsp image size */
 	if (adsp_image_size != ADSP_A_TCM_SIZE) {
-		pr_info("[ADSP]image size ERROR! AP=0x%zx,ADSP=0x%x\n",
+		pr_debug("[ADSP]image size ERROR! AP=0x%zx,ADSP=0x%x\n",
 			ADSP_A_TCM_SIZE, adsp_image_size);
 		WARN_ON(1);
 	}

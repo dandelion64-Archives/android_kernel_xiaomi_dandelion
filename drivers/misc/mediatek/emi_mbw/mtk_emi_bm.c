@@ -22,16 +22,16 @@
 
 #ifdef EMI_ENABLE_DEBUG
 #define EMI_DBG(fmt, args...) \
-	pr_info("[%s@%d]"fmt, __func__, __LINE__, ##args)
+	pr_debug("[%s@%d]"fmt, __func__, __LINE__, ##args)
 #else
 #define EMI_DBG(fmt, args...)
 #endif
 
-/* we just use pr_info for EMI_ERR, because generally,
- * pr_info log can output
+/* we just use pr_debug for EMI_ERR, because generally,
+ * pr_debug log can output
  */
 #define EMI_ERR(fmt, args...) \
-	pr_info("[%s@%d]"fmt, __func__, __LINE__, ##args)
+	pr_debug("[%s@%d]"fmt, __func__, __LINE__, ##args)
 
 static unsigned char g_cBWL;
 /* not initialise statics to 0 or NULL */

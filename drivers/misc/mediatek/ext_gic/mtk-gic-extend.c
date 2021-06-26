@@ -157,7 +157,7 @@ void mt_irq_set_pending_for_sleep(unsigned int irq)
 	dist_base = GIC_DIST_BASE;
 
 	if (irq < 16) {
-		pr_info("Fail to set a pending on interrupt %d\n", irq);
+		pr_debug("Fail to set a pending on interrupt %d\n", irq);
 		return;
 	}
 
@@ -193,7 +193,7 @@ u32 mt_irq_get_pol_hw(u32 hwirq)
 	void __iomem *base = INT_POL_CTL0;
 
 	if (hwirq < 32) {
-		pr_info("Fail to set polarity of interrupt %d\n", hwirq);
+		pr_debug("Fail to set polarity of interrupt %d\n", hwirq);
 		return 0;
 	}
 
@@ -250,7 +250,7 @@ void mt_irq_unmask_for_sleep(unsigned int virq)
 	dist_base = GIC_DIST_BASE;
 
 	if (irq < 16) {
-		pr_info("Fail to enable interrupt %d\n", irq);
+		pr_debug("Fail to enable interrupt %d\n", irq);
 		return;
 	}
 
@@ -276,7 +276,7 @@ void mt_irq_mask_for_sleep(unsigned int virq)
 	dist_base = GIC_DIST_BASE;
 
 	if (irq < 16) {
-		pr_info("Fail to enable interrupt %d\n", irq);
+		pr_debug("Fail to enable interrupt %d\n", irq);
 		return;
 	}
 
@@ -343,7 +343,7 @@ static void mt_irq_mask(struct irq_data *data)
 	if (irq < NR_GIC_SGI) {
 	/*Note: workaround for false alarm:"Fail to disable interrupt 14"*/
 		if (irq != FIQ_DBG_SGI)
-			pr_info("Fail to disable interrupt %d\n", irq);
+			pr_debug("Fail to disable interrupt %d\n", irq);
 		return;
 	}
 
@@ -364,7 +364,7 @@ static void mt_irq_unmask(struct irq_data *data)
 	if (irq < NR_GIC_SGI) {
 	/*Note: workaround for false alarm:"Fail to enable interrupt 14"*/
 		if (irq != FIQ_DBG_SGI)
-			pr_info("Fail to enable interrupt %d\n", irq);
+			pr_debug("Fail to enable interrupt %d\n", irq);
 		return;
 	}
 
@@ -384,7 +384,7 @@ static void mt_irq_set_sens(unsigned int irq, unsigned int sens)
 	u32 config;
 
 	if (irq < (NR_GIC_SGI + NR_GIC_PPI)) {
-		pr_info("Fail to set sensitivity of interrupt %d\n", irq);
+		pr_debug("Fail to set sensitivity of interrupt %d\n", irq);
 		return;
 	}
 
@@ -420,7 +420,7 @@ static void mt_irq_set_polarity(unsigned int irq, unsigned int polarity)
 	u32 offset, reg_index, value;
 
 	if (irq < (NR_GIC_SGI + NR_GIC_PPI)) {
-		pr_info("Fail to set polarity of interrupt %d\n", irq);
+		pr_debug("Fail to set polarity of interrupt %d\n", irq);
 		return;
 	}
 
@@ -733,14 +733,14 @@ static void fiq_isr(struct fiq_glue_handler *h, void *regs, void *svc_sp)
 				(irqs_to_fiq[i].handler)
 				(irqs_to_fiq[i].arg, regs, svc_sp);
 			} else {
-				pr_info(
+				pr_debug(
 	"Interrupt %d triggers FIQ but no handler is registered\n", irq);
 			}
 			break;
 		}
 	}
 	if (i == ARRAY_SIZE(irqs_to_fiq))
-		pr_info("Interrupt %d triggers FIQ but it is not registered\n",
+		pr_debug("Interrupt %d triggers FIQ but it is not registered\n",
 			irq);
 
 	mt_fiq_eoi(iar);
@@ -788,7 +788,7 @@ static int __init_fiq(void)
 
 	ret = fiq_glue_register_handler(&fiq_handler);
 	if (ret)
-		pr_info("fail to register fiq_glue_handler\n");
+		pr_debug("fail to register fiq_glue_handler\n");
 	else
 		fiq_glued = 1;
 
@@ -923,7 +923,7 @@ static int __init mtk_gic_ext_init(void)
 	if (!node) {
 		node = of_find_compatible_node(NULL, NULL, "arm,cortex-a7-gic");
 		if (!node) {
-			pr_info("[gic_ext] find arm,gic node failed\n");
+			pr_debug("[gic_ext] find arm,gic node failed\n");
 			return -EINVAL;
 		}
 	}
@@ -937,7 +937,7 @@ static int __init mtk_gic_ext_init(void)
 		return -EINVAL;
 	node = of_find_compatible_node(NULL, NULL, "mediatek,mt6577-sysirq");
 	if (!node) {
-		pr_info("[gic_ext] find mediatek,mt6577-sysirq node failed\n");
+		pr_debug("[gic_ext] find mediatek,mt6577-sysirq node failed\n");
 		return -EINVAL;
 	}
 

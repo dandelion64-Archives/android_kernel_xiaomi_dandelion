@@ -97,7 +97,7 @@ void adsp_A_ipi_handler(void)
 			if (ipi_msg->magic == IPI_MSG_MAGIC_NUMBER)
 				DUMP_IPI_MSG("ipi queue not ready!", ipi_msg);
 			else
-				pr_info("ipi queue not ready!! opendsp_id: %u, ipi_id: %u, buf: %p, len: %u, ipi_handler: %p",
+				pr_debug("ipi queue not ready!! opendsp_id: %u, ipi_id: %u, buf: %p, len: %u, ipi_handler: %p",
 					AUDIO_OPENDSP_USE_HIFI3_A,
 					ipi_id, share_buf, len,
 					adsp_ipi_desc[ipi_id].handler);
@@ -204,7 +204,7 @@ enum adsp_ipi_status adsp_ipi_send_ipc(enum adsp_ipi_id id, void *buf,
 	static u8 share_buf[SHARE_BUF_SIZE - 16];
 
 	if (in_interrupt() && wait) {
-		pr_info("adsp_ipi_send: cannot use in isr");
+		pr_debug("adsp_ipi_send: cannot use in isr");
 		return ADSP_IPI_ERROR;
 	}
 	if (is_adsp_ready(adsp_id) != 1) {
@@ -214,13 +214,13 @@ enum adsp_ipi_status adsp_ipi_send_ipc(enum adsp_ipi_id id, void *buf,
 	}
 
 	if (len > sizeof(adsp_send_obj[adsp_id]->share_buf) || buf == NULL) {
-		pr_info("adsp_ipi_send: %s buffer error",
+		pr_debug("adsp_ipi_send: %s buffer error",
 			adsp_core_ids[adsp_id]);
 		return ADSP_IPI_ERROR;
 	}
 
 	if (mutex_trylock(&adsp_ipi_mutex[adsp_id]) == 0) {
-		pr_info("adsp_ipi_send:%s %d mutex_trylock busy,owner=%d",
+		pr_debug("adsp_ipi_send:%s %d mutex_trylock busy,owner=%d",
 			adsp_core_ids[adsp_id], id,
 			adsp_ipi_mutex_owner[adsp_id]);
 		return ADSP_IPI_BUSY;
@@ -236,7 +236,7 @@ enum adsp_ipi_status adsp_ipi_send_ipc(enum adsp_ipi_id id, void *buf,
 			if (p_ipi_msg->magic == IPI_MSG_MAGIC_NUMBER)
 				DUMP_IPI_MSG("busy. ipc owner", p_ipi_msg);
 			else
-				pr_info("adsp_ipi_send: %s %d host to adsp busy, ipi last time = %d",
+				pr_debug("adsp_ipi_send: %s %d host to adsp busy, ipi last time = %d",
 					adsp_core_ids[adsp_id], id,
 					adsp_ipi_owner[adsp_id]);
 		}

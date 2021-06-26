@@ -67,7 +67,7 @@ static int __init secmem_init(void)
 	struct trusted_mem_device *t_shared_device;
 #endif /* end of CONFIG_MTK_CAM_SECURITY_SUPPORT */
 
-	pr_info("%s:%d\n", __func__, __LINE__);
+	pr_debug("%s:%d\n", __func__, __LINE__);
 
 	t_device = create_trusted_mem_device(TRUSTED_MEM_SVP, &secmem_configs);
 	if (INVALID(t_device)) {
@@ -108,7 +108,7 @@ static int __init secmem_init(void)
 	t_shared_device->mem_type = TRUSTED_MEM_SVP_VIRT_2D_FR;
 #endif /* end of CONFIG_MTK_CAM_SECURITY_SUPPORT */
 
-	pr_info("%s:%d (end)\n", __func__, __LINE__);
+	pr_debug("%s:%d (end)\n", __func__, __LINE__);
 	return TMEM_OK;
 }
 

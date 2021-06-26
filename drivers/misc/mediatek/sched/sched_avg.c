@@ -356,7 +356,7 @@ int sched_get_nr_running_avg(int *avg, int *iowait_avg)
 	if (clk_faulty) {
 		*avg = 0;
 		*iowait_avg = 0;
-		pr_info("[%s] **** CPU (0x%08x)clock may unstable !!\n",
+		pr_debug("[%s] **** CPU (0x%08x)clock may unstable !!\n",
 					__func__, cpumask);
 		return 0;
 	}
@@ -391,14 +391,14 @@ int reset_heavy_task_stats(int cpu)
 	spin_lock_irqsave(&per_cpu(nr_heavy_lock, cpu), flags);
 	nr_heavy_tasks = per_cpu(nr_heavy, cpu);
 	if (nr_heavy_tasks) {
-		pr_info(
+		pr_debug(
 		"[heavy_task] %s: nr_heavy_tasks=%d in cpu%d\n", __func__,
 		nr_heavy_tasks, cpu);
 		per_cpu(nr_heavy, cpu) = 0;
 	}
 	if (cpu_overutil->nr_overutil_l != 0 ||
 		cpu_overutil->nr_overutil_h != 0) {
-		pr_info("[over-utiled task] %s: nr_overutil_l=%d nr_overutil_h=%d\n",
+		pr_debug("[over-utiled task] %s: nr_overutil_l=%d nr_overutil_h=%d\n",
 			__func__,
 			cpu_overutil->nr_overutil_l,
 			cpu_overutil->nr_overutil_h);
@@ -500,7 +500,7 @@ void overutil_thresh_chg_notify(void)
 					overutil_threshold)/100;
 			cpu_overutil->overutil_thresh_h = INT_MAX;
 		} else
-			pr_info("%s: cid=%d is out of nr=%d\n", __func__,
+			pr_debug("%s: cid=%d is out of nr=%d\n", __func__,
 				cid, cluster_nr);
 		spin_unlock(&per_cpu(nr_heavy_lock, cpu)); /* heavy-unlock */
 
@@ -565,7 +565,7 @@ int sched_get_nr_heavy_running_avg(int cluster_id, int *avg)
 	/* cluster_id  need reasonale. */
 	cluster_nr = arch_get_nr_clusters();
 	if (cluster_id < 0 || cluster_id >= cluster_nr) {
-		pr_info("[%s] invalid cluster id %d\n", __func__, cluster_id);
+		pr_debug("[%s] invalid cluster id %d\n", __func__, cluster_id);
 		return -1;
 	}
 
@@ -709,7 +709,7 @@ int sched_get_nr_overutil_avg(int cluster_id, int *l_avg, int *h_avg)
 	/* cluster_id  need reasonale. */
 	cluster_nr = arch_get_nr_clusters();
 	if (cluster_id < 0 || cluster_id >= cluster_nr) {
-		pr_info("[%s] invalid cluster id %d\n", __func__, cluster_id);
+		pr_debug("[%s] invalid cluster id %d\n", __func__, cluster_id);
 		return -1;
 	}
 
@@ -1106,7 +1106,7 @@ static int init_heavy_tlb(void)
 #else
 		int overutil_threshold = 1024;
 #endif
-		pr_info("%s start.\n", __func__);
+		pr_debug("%s start.\n", __func__);
 
 		gb_task_util = 0;
 		gb_task_pid = 0;
@@ -1165,10 +1165,10 @@ static int init_heavy_tlb(void)
 					overutil_threshold)/100;
 				cpu_overutil->overutil_thresh_h = INT_MAX;
 			} else
-				pr_info("%s: cid=%d is out of nr=%d\n",
+				pr_debug("%s: cid=%d is out of nr=%d\n",
 					__func__, cid, cluster_nr);
 
-			pr_info("%s: cpu=%d thresh_l=%d thresh_h=%d max_capaicy=%lu\n",
+			pr_debug("%s: cpu=%d thresh_l=%d thresh_h=%d max_capaicy=%lu\n",
 				__func__, tmp_cpu,
 				cpu_overutil->overutil_thresh_l,
 				cpu_overutil->overutil_thresh_h,

@@ -752,7 +752,7 @@ static int cqdma_probe(struct platform_device *pdev)
 		if (keep_clk_ao_str && !strncmp(keep_clk_ao_str, "yes", 3)) {
 			ret = clk_prepare_enable(clk_cqdma);
 			if (ret)
-				pr_info("enable CQDMA clk fail!\n");
+				pr_debug("enable CQDMA clk fail!\n");
 			else
 				keep_clock_ao = 1;
 		}

@@ -174,7 +174,7 @@ static int mtk_xhci_hcd_init(void)
 
 	retval = xhci_mtk_register_plat();
 	if (retval < 0) {
-		pr_info("Problem registering platform driver.\n");
+		pr_debug("Problem registering platform driver.\n");
 		return retval;
 	}
 
@@ -256,7 +256,7 @@ static int usbotg_boost_manager_probe(struct platform_device *pdev)
 
 	info->primary_charger = get_charger_by_name("primary_chg");
 	if (!info->primary_charger) {
-		pr_info("%s: get primary charger device failed\n", __func__);
+		pr_debug("%s: get primary charger device failed\n", __func__);
 		return -ENODEV;
 	}
 
@@ -335,15 +335,15 @@ static int set_option(const char *val, const struct kernel_param *kp)
 	if (rv != 0)
 		return rv;
 
-	pr_info("option:%d, local_option:%d\n", option, local_option);
+	pr_debug("option:%d, local_option:%d\n", option, local_option);
 
 	switch (local_option) {
 	case 0:
-		pr_info("mtk_enable_otg_mode %d\n", local_option);
+		pr_debug("mtk_enable_otg_mode %d\n", local_option);
 		mtk_enable_otg_mode();
 		break;
 	case 1:
-		pr_info("mtk_disable_otg_mode %d\n", local_option);
+		pr_debug("mtk_disable_otg_mode %d\n", local_option);
 		mtk_disable_otg_mode();
 		break;
 	default:
@@ -579,7 +579,7 @@ static int __init xhci_hcd_init(void)
 #if CONFIG_MTK_GAUGE_VERSION == 30
 	primary_charger = get_charger_by_name("primary_chg");
 	if (!primary_charger) {
-		pr_info("%s: get primary charger device failed\n", __func__);
+		pr_debug("%s: get primary charger device failed\n", __func__);
 		return -ENODEV;
 	}
 	platform_driver_register(&boost_manager_driver);

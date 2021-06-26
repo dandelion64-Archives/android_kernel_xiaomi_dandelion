@@ -112,7 +112,7 @@ unsigned int mtk_kbase_report_gpu_memory_usage(void)
 		pages = atomic_read(&(kbdev->memdev.used_pages));
 	}
 	kbase_dev_list_put(kbdev_list);
-	pr_info("gpu total memory %d\n", pages*4096);
+	pr_debug("gpu total memory %d\n", pages*4096);
 #endif
 	return (atomic_read(&g_mtk_gpu_total_memory_usage_in_pages)*4096);
 }

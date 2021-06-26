@@ -112,7 +112,7 @@ static int pmic_lp_golden_set(
 
     /*--op_cfg 0:SW_OFF, 1:SW_EN, 3: SW_LP (SPM)--*/
 	if (op_en > 1 || op_cfg > 3) {
-		pr_info("p\n");
+		pr_debug("p\n");
 		return -1;
 	}
 
@@ -143,7 +143,7 @@ static int pmic_lp_type_set(
 	}
 
 	if (op_en > 1 || op_cfg > max_cfg) {
-		pr_info("p\n");
+		pr_debug("p\n");
 		return -1;
 	}
 
@@ -171,7 +171,7 @@ static int pmic_lp_type_set(
 
 	((!ret_en) && (!ret_cfg)) ? (ret = 0) : (ret = -1);
 	if (ret)
-		pr_info("%d, %d, %d\n", user, ret_en, ret_cfg);
+		pr_debug("%d, %d, %d\n", user, ret_en, ret_cfg);
 	return ret;
 }
 

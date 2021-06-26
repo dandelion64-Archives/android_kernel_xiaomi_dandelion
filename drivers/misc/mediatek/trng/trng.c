@@ -38,9 +38,9 @@ static int mtk_trng_dump(struct seq_file *m, void *v)
 	if ((BIT_STREAM_LEN > 0) && ((BIT_STREAM_LEN % 128) != 0))
 		loop += 1;
 
-	pr_info("[TRNG] loop %d times!\n", loop);
+	pr_debug("[TRNG] loop %d times!\n", loop);
 	while (loop > 0) {
-		pr_info("[TRNG] dump 4 sets of 32 bits rnd!\n");
+		pr_debug("[TRNG] dump 4 sets of 32 bits rnd!\n");
 
 		val[0] = mt_secure_call_ret4(
 				MTK_SIP_KERNEL_GET_RND,
@@ -52,7 +52,7 @@ static int mtk_trng_dump(struct seq_file *m, void *v)
 			);
 
 		for (i = 0 ; i < 4 ; i++) {
-			pr_info("val[%d] = 0x%08x\n", i, (uint32_t)val[i]);
+			pr_debug("val[%d] = 0x%08x\n", i, (uint32_t)val[i]);
 			seq_printf(m, "0x%08x\n", (uint32_t)val[i]);
 		}
 
@@ -109,7 +109,7 @@ static int __init trng_init(void)
 {
 	struct task_struct *task;
 
-	pr_info("[TRNG] module init\n");
+	pr_debug("[TRNG] module init\n");
 	task = kthread_create(add_crng_entropy, NULL, "trng_entropy");
 	if (!IS_ERR(task))
 		wake_up_process(task);
@@ -129,7 +129,7 @@ static int __init trng_init(void)
  */
 static void __exit trng_exit(void)
 {
-	pr_info("[TRNG] module exit\n");
+	pr_debug("[TRNG] module exit\n");
 }
 
 arch_initcall(trng_init);

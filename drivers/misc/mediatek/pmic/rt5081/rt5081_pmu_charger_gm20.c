@@ -1232,7 +1232,7 @@ static int rt5081_run_aicl(struct mtk_charger_info *mchr_info, void *data)
 	/* Check if there's a suitable AICL_VTH */
 	aicl_vth = mivr + 200;
 	if (aicl_vth > RT5081_AICL_VTH_MAX) {
-		pr_info("%s: no suitable VTH, vth = %d\n", __func__, aicl_vth);
+		pr_debug("%s: no suitable VTH, vth = %d\n", __func__, aicl_vth);
 		ret = -EINVAL;
 		goto out;
 	}
@@ -1352,7 +1352,7 @@ static int rt5081_get_charger_type(struct mtk_charger_info *mchr_info, void *dat
 	}
 
 	*(enum charger_type *)data = chg_data->chg_type;
-	pr_info("%s: chg_type = %d\n", __func__, chg_data->chg_type);
+	pr_debug("%s: chg_type = %d\n", __func__, chg_data->chg_type);
 	return ret;
 }
 
@@ -3360,7 +3360,7 @@ static int rt5081_pmu_charger_probe(struct platform_device *pdev)
 	struct rt5081_pmu_charger_data *chg_data;
 	bool use_dt = pdev->dev.of_node;
 
-	pr_info("%s: (%s)\n", __func__, RT5081_PMU_CHARGER_DRV_VERSION);
+	pr_debug("%s: (%s)\n", __func__, RT5081_PMU_CHARGER_DRV_VERSION);
 
 	chg_data = devm_kzalloc(&pdev->dev, sizeof(*chg_data), GFP_KERNEL);
 	if (!chg_data)

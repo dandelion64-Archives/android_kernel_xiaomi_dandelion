@@ -66,7 +66,7 @@
 		if (DEVAPC_LOG_LEVEL & DEVAPC_LOG_DBG) { \
 			pr_debug(fmt, ##args); \
 		} else if (DEVAPC_LOG_LEVEL & DEVAPC_LOG_INFO) { \
-			pr_info(fmt, ##args); \
+			pr_debug(fmt, ##args); \
 		} \
 	} while (0)
 
@@ -78,7 +78,7 @@
 		if (DEVAPC_VIO_LEVEL & DEVAPC_LOG_DBG) { \
 			pr_debug_ratelimited(fmt, ##args); \
 		} else if (DEVAPC_VIO_LEVEL & DEVAPC_LOG_INFO) { \
-			pr_info_ratelimited(fmt, ##args); \
+			pr_debug_ratelimited(fmt, ##args); \
 		} \
 	} while (0)
 
@@ -425,7 +425,7 @@ static void unmask_infra_module_irq(unsigned int module)
 	unsigned int apc_bit_index = 0;
 
 	if (module > PD_INFRA_VIO_MASK_MAX_INDEX) {
-		pr_info("[DEVAPC] unmask_infra_module_irq: module overflow!\n");
+		pr_debug("[DEVAPC] unmask_infra_module_irq: module overflow!\n");
 		return;
 	}
 
@@ -443,7 +443,7 @@ static void mask_infra_module_irq(unsigned int module)
 	unsigned int apc_bit_index = 0;
 
 	if (module > PD_INFRA_VIO_MASK_MAX_INDEX) {
-		pr_info("[DEVAPC] mask_infra_module_irq: module overflow!\n");
+		pr_debug("[DEVAPC] mask_infra_module_irq: module overflow!\n");
 		return;
 	}
 
@@ -460,7 +460,7 @@ static int clear_infra_vio_status(unsigned int module)
 	unsigned int apc_bit_index = 0;
 
 	if (module > PD_INFRA_VIO_STA_MAX_INDEX) {
-		pr_info("[DEVAPC] clear_infra_vio_status: module overflow!\n");
+		pr_debug("[DEVAPC] clear_infra_vio_status: module overflow!\n");
 		return -1;
 	}
 
@@ -478,7 +478,7 @@ static int check_infra_vio_status(unsigned int module)
 	unsigned int apc_bit_index = 0;
 
 	if (module > PD_INFRA_VIO_STA_MAX_INDEX) {
-		pr_info("[DEVAPC] check_infra_vio_status: module overflow!\n");
+		pr_debug("[DEVAPC] check_infra_vio_status: module overflow!\n");
 		return -1;
 	}
 
@@ -887,7 +887,7 @@ static int devapc_probe(struct platform_device *pdev)
 			DEVAPC_MSG("[DEVAPC] PD_INFRA_ADDRESS: %p, IRQ: %d\n",
 				devapc_pd_infra_base, devapc_infra_irq);
 		} else {
-			pr_info("[DEVAPC] %s\n",
+			pr_debug("[DEVAPC] %s\n",
 				"can't find DAPC_INFRA_PD compatible node");
 			return -1;
 		}
@@ -898,7 +898,7 @@ static int devapc_probe(struct platform_device *pdev)
 			IRQF_TRIGGER_LOW | IRQF_SHARED,
 			"devapc", &g_devapc_ctrl);
 	if (ret) {
-		pr_info("[DEVAPC] Failed to request infra irq! (%d)\n", ret);
+		pr_debug("[DEVAPC] Failed to request infra irq! (%d)\n", ret);
 		return ret;
 	}
 #endif
@@ -907,7 +907,7 @@ static int devapc_probe(struct platform_device *pdev)
 #if DEVAPC_USE_CCF
 	dapc_infra_clk = devm_clk_get(&pdev->dev, "devapc-infra-clock");
 	if (IS_ERR(dapc_infra_clk)) {
-		pr_info("[DEVAPC] (Infra) %s\n",
+		pr_debug("[DEVAPC] (Infra) %s\n",
 			"Cannot get devapc clock from common clock framework.");
 		return PTR_ERR(dapc_infra_clk);
 	}
@@ -966,16 +966,16 @@ static ssize_t devapc_dbg_read(struct file *file, char __user *buffer,
 	if (*ppos >= strlen(msg))
 		return 0;
 
-	pr_info("enter %s...\n", __func__);
-	pr_info("call smc to ATF.\n");
+	pr_debug("enter %s...\n", __func__);
+	pr_debug("call smc to ATF.\n");
 
 	retval = simple_read_from_buffer(buffer, count, ppos, msg, strlen(msg));
 
 	ret = mt_secure_call(MTK_SIP_KERNEL_DAPC_DUMP, 0, 0, 0, 0);
 	if (ret == 0)
-		pr_info("dump devapc reg success !\n");
+		pr_debug("dump devapc reg success !\n");
 	else
-		pr_info("dump devapc reg failed !\n");
+		pr_debug("dump devapc reg failed !\n");
 
 	return retval;
 }
@@ -1068,13 +1068,13 @@ static int __init devapc_init(void)
 
 	ret = platform_driver_register(&devapc_driver);
 	if (ret) {
-		pr_info("[DEVAPC] Unable to register driver (%d)\n", ret);
+		pr_debug("[DEVAPC] Unable to register driver (%d)\n", ret);
 		return ret;
 	}
 
 	g_devapc_ctrl = cdev_alloc();
 	if (!g_devapc_ctrl) {
-		pr_info("[DEVAPC] Failed to add devapc device! (%d)\n", ret);
+		pr_debug("[DEVAPC] Failed to add devapc device! (%d)\n", ret);
 		platform_driver_unregister(&devapc_driver);
 		return ret;
 	}

@@ -638,7 +638,7 @@ unsigned int sched_get_nr_heavy_task_by_threshold(int cluster_id,
 		return 0;
 	clusters = arch_get_nr_clusters();
 	if (cluster_id < 0 || cluster_id >= clusters) {
-		pr_info("[%s] invalid cluster id %d\n", __func__, cluster_id);
+		pr_debug("[%s] invalid cluster id %d\n", __func__, cluster_id);
 		return 0;
 	}
 

@@ -3715,7 +3715,7 @@ static int rt5081_pmu_charger_probe(struct platform_device *pdev)
 	struct rt5081_pmu_charger_data *chg_data;
 	bool use_dt = pdev->dev.of_node;
 
-	pr_info("%s: (%s)\n", __func__, RT5081_PMU_CHARGER_DRV_VERSION);
+	pr_debug("%s: (%s)\n", __func__, RT5081_PMU_CHARGER_DRV_VERSION);
 
 	chg_data = devm_kzalloc(&pdev->dev, sizeof(*chg_data), GFP_KERNEL);
 	if (!chg_data)

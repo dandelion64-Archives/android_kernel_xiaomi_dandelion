@@ -173,7 +173,7 @@ static inline int rt5081_fled_parse_dt(struct device *dev,
 	u32 val = 0;
 	unsigned char regval;
 
-	pr_info("%s start\n", __func__);
+	pr_debug("%s start\n", __func__);
 	if (!np) {
 		pr_debug("%s cannot rt5081 fled dts node\n", __func__);
 		return -ENODEV;
@@ -200,7 +200,7 @@ static inline int rt5081_fled_parse_dt(struct device *dev,
 	if (ret < 0)
 		pr_debug("%s use default torch cur\n", __func__);
 	else {
-		pr_info("%s use torch cur %d\n", __func__, val);
+		pr_debug("%s use torch cur %d\n", __func__, val);
 		regval = (val > 400000) ? 30 : (val - 25000)/12500;
 		rt5081_pmu_reg_update_bits(fi->chip,
 				fi->fled_tor_cur_reg,
@@ -212,7 +212,7 @@ static inline int rt5081_fled_parse_dt(struct device *dev,
 	if (ret < 0)
 		pr_debug("%s use default strobe cur\n", __func__);
 	else {
-		pr_info("%s use strobe cur %d\n", __func__, val);
+		pr_debug("%s use strobe cur %d\n", __func__, val);
 		regval = (val > 1500000) ? 112 : (val - 100000)/12500;
 		rt5081_pmu_reg_update_bits(fi->chip,
 				fi->fled_strb_cur_reg,
@@ -224,7 +224,7 @@ static inline int rt5081_fled_parse_dt(struct device *dev,
 	if (ret < 0)
 		pr_debug("%s use default strobe timeout\n", __func__);
 	else {
-		pr_info("%s use strobe timeout %d\n", __func__, val);
+		pr_debug("%s use strobe timeout %d\n", __func__, val);
 		regval = (val > 2432) ? 74 : (val - 64)/32;
 		rt5081_pmu_reg_update_bits(fi->chip,
 				RT5081_PMU_REG_FLEDSTRBCTRL,
@@ -638,7 +638,7 @@ static int rt5081_pmu_fled_probe(struct platform_device *pdev)
 	bool use_dt = pdev->dev.of_node;
 	int ret;
 
-	pr_info("%s (%s) id = %d\n", __func__, RT5081_PMU_FLED_DRV_VERSION, pdev->id);
+	pr_debug("%s (%s) id = %d\n", __func__, RT5081_PMU_FLED_DRV_VERSION, pdev->id);
 	fled_data = rt5081_find_info(pdev->id);
 	if (fled_data == NULL) {
 		dev_dbg(&pdev->dev, "invalid fled ID Specified\n");
@@ -659,7 +659,7 @@ static int rt5081_pmu_fled_probe(struct platform_device *pdev)
 	else
 		fled_data->base.name = "rt-flash-led2";
 	fled_data->base.chip_name = "rt5081_pmu_fled";
-	pr_info("%s flash name = %s\n", __func__, fled_data->base.name);
+	pr_debug("%s flash name = %s\n", __func__, fled_data->base.name);
 	fled_data->rt_flash_dev = platform_device_register_resndata(
 			fled_data->dev, "rt-flash-led",
 			fled_data->id, NULL, 0, NULL, 0);

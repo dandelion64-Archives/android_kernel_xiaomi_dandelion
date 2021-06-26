@@ -64,7 +64,7 @@ static int __init pmem_init(void)
 	int ret = TMEM_OK;
 	struct trusted_mem_device *t_device;
 
-	pr_info("%s:%d\n", __func__, __LINE__);
+	pr_debug("%s:%d\n", __func__, __LINE__);
 
 	t_device = create_trusted_mem_device(TRUSTED_MEM_PROT, &pmem_configs);
 	if (INVALID(t_device)) {
@@ -89,7 +89,7 @@ static int __init pmem_init(void)
 		return ret;
 	}
 
-	pr_info("%s:%d (end)\n", __func__, __LINE__);
+	pr_debug("%s:%d (end)\n", __func__, __LINE__);
 	return TMEM_OK;
 }
 

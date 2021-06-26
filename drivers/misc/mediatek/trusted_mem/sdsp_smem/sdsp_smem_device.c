@@ -63,7 +63,7 @@ static int __init sdsp_smem_init(void)
 	int ret = TMEM_OK;
 	struct trusted_mem_device *t_device;
 
-	pr_info("%s:%d\n", __func__, __LINE__);
+	pr_debug("%s:%d\n", __func__, __LINE__);
 
 	t_device = create_trusted_mem_device(TRUSTED_MEM_SDSP_SHARED,
 					     &sdsp_smem_configs);
@@ -90,7 +90,7 @@ static int __init sdsp_smem_init(void)
 		return ret;
 	}
 
-	pr_info("%s:%d (end)\n", __func__, __LINE__);
+	pr_debug("%s:%d (end)\n", __func__, __LINE__);
 	return TMEM_OK;
 }
 

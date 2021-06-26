@@ -58,7 +58,7 @@ do { \
 	if (evt) \
 		seq_printf(evt, fmt, ##args); \
 	if (!buff && !evt) { \
-		pr_info(fmt, ##args); \
+		pr_debug(fmt, ##args); \
 	} \
 } while (0)
 
@@ -312,11 +312,11 @@ void mtk_btag_mictx_dump(void)
 	ret = mtk_btag_mictx_get_data(&iostat);
 
 	if (ret) {
-		pr_info("[BLOCK_TAG] Mictx: Get data failed %d\n", ret);
+		pr_debug("[BLOCK_TAG] Mictx: Get data failed %d\n", ret);
 		return;
 	}
 
-	pr_info("[BLOCK_TAG] Mictx: %llu|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u\n",
+	pr_debug("[BLOCK_TAG] Mictx: %llu|%u|%u|%u|%u|%u|%u|%u|%u|%u|%u\n",
 		iostat.duration, iostat.q_depth, iostat.wl,
 		iostat.tp_req_r, iostat.tp_req_w,
 		iostat.tp_all_r, iostat.tp_all_w,
@@ -904,7 +904,7 @@ static ssize_t mtk_btag_mictx_sub_write(struct file *file,
 	else if (cmd[0] == '4')
 		mtk_btag_mictx_debug = 0;
 	else {
-		pr_info("[pidmap] invalid arg: 0x%x\n", cmd[0]);
+		pr_debug("[pidmap] invalid arg: 0x%x\n", cmd[0]);
 		goto err;
 	}
 
@@ -1030,7 +1030,7 @@ struct mtk_blocktag *mtk_btag_alloc(const char *name,
 		btag->dentry.droot, (void *)0, &mtk_btag_mictx_sub_fops);
 
 	if (IS_ERR(btag->dentry.dlog_mictx))
-		pr_info("[BLOCK_TAG] %s: fail to create blockio_mictx at debugfs\n",
+		pr_debug("[BLOCK_TAG] %s: fail to create blockio_mictx at debugfs\n",
 			name);
 
 out:
@@ -1085,7 +1085,7 @@ init:
 	if (mtk_btag_pagelogger)
 		memset(mtk_btag_pagelogger, -1, size);
 	else
-		pr_info(
+		pr_debug(
 		"[BLOCK_TAG] blockio: fail to allocate mtk_btag_pagelogger\n");
 }
 
@@ -1346,7 +1346,7 @@ void mtk_btag_mictx_enable(int enable)
 		mtk_btag_mictx =
 			kzalloc(sizeof(struct mtk_btag_mictx_struct), GFP_NOFS);
 		if (!mtk_btag_mictx) {
-			pr_info("[BLOCK_TAG] mtk_btag_mictx allocation fail, disabled.\n");
+			pr_debug("[BLOCK_TAG] mtk_btag_mictx allocation fail, disabled.\n");
 			return;
 		}
 

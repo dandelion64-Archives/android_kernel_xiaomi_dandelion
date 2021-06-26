@@ -1106,7 +1106,7 @@ static struct thermal_cooling_device_ops mtk_cl_adp_mutt_ops = {
  *
  *	_d = debugfs_create_dir("cl_adp_mutt", NULL);
  *	if (IS_ERR_OR_NULL(_d)) {
- *		pr_info("unable to create debugfs directory\n");
+ *		pr_debug("unable to create debugfs directory\n");
  *		return;
  *	}
  *

@@ -76,19 +76,19 @@ unsigned int pmic_ipi_to_sspm(void *buffer, void *retbuf, unsigned char lock)
 		if (ret_val) {
 			if (ret_val == IPI_BUSY || ret_val == IPI_TIMEOUT_ACK) {
 				if (ipi_ret != 0)
-					pr_info("%s ap_ret_w = %d ipi_ret_w =%d\n"
+					pr_debug("%s ap_ret_w = %d ipi_ret_w =%d\n"
 						, __func__
 						, ret_val, ipi_ret);
 			} else
 				/* Real PMIC service execution result
 				 * ,by each PMIC service
 				 */
-				pr_info("%s ap_ret_w = %d ipi_ret_w =%d\n"
+				pr_debug("%s ap_ret_w = %d ipi_ret_w =%d\n"
 					, __func__
 					, ret_val, ipi_ret);
 		} else {
 			if (ipi_ret != 0)
-				pr_info("%s ap_ret_w = %d ipi_ret_w =%d\n"
+				pr_debug("%s ap_ret_w = %d ipi_ret_w =%d\n"
 					, __func__
 					, ret_val, ipi_ret);
 		}
@@ -100,19 +100,19 @@ unsigned int pmic_ipi_to_sspm(void *buffer, void *retbuf, unsigned char lock)
 		if (ret_val) {
 			if (ret_val == IPI_BUSY || ret_val == IPI_TIMEOUT_ACK) {
 				if (ipi_ret != 0)
-					pr_info("%s ap_ret_r = %d ipi_ret_r =%d\n"
+					pr_debug("%s ap_ret_r = %d ipi_ret_r =%d\n"
 						, __func__
 						, ret_val, ipi_ret);
 			} else
 				/* Real PMIC service execution result
 				 * ,by each PMIC service
 				 */
-				pr_info("%s ap_ret_r = %d ipi_ret_r =%d\n"
+				pr_debug("%s ap_ret_r = %d ipi_ret_r =%d\n"
 					, __func__
 					, ret_val, ipi_ret);
 		} else {
 			if (ipi_ret != 0)
-				pr_info("%s ap_ret_r = %d ipi_ret_r =%d\n"
+				pr_debug("%s ap_ret_r = %d ipi_ret_r =%d\n"
 					, __func__
 					, ret_val, ipi_ret);
 		}
@@ -123,17 +123,17 @@ unsigned int pmic_ipi_to_sspm(void *buffer, void *retbuf, unsigned char lock)
 		if (ret_val) {
 			if (ret_val == IPI_BUSY || ret_val == IPI_TIMEOUT_ACK) {
 				if (ipi_ret != 0)
-					pr_info("%s ap_ret_mreg = %d ipi_ret_mreg =%d\n"
+					pr_debug("%s ap_ret_mreg = %d ipi_ret_mreg =%d\n"
 						, __func__, ret_val, ipi_ret);
 			} else
 				/* Real PMIC service execution result
 				 * ,by each PMIC service
 				 */
-				pr_info("%s ap_ret_mreg = %d ipi_ret_mreg =%d\n"
+				pr_debug("%s ap_ret_mreg = %d ipi_ret_mreg =%d\n"
 					, __func__, ret_val, ipi_ret);
 		} else {
 			if (ipi_ret != 0)
-				pr_info("%s ap_ret_mreg = %d ipi_ret_mreg =%d\n"
+				pr_debug("%s ap_ret_mreg = %d ipi_ret_mreg =%d\n"
 					, __func__, ret_val, ipi_ret);
 		}
 		ret_val = ipi_ret;
@@ -143,7 +143,7 @@ unsigned int pmic_ipi_to_sspm(void *buffer, void *retbuf, unsigned char lock)
 		break;
 
 	default:
-		pr_info("%s(%d) cmd(%d) wrong!!!\n", __func__, __LINE__, cmd);
+		pr_debug("%s(%d) cmd(%d) wrong!!!\n", __func__, __LINE__, cmd);
 
 		break;
 	}
@@ -226,7 +226,7 @@ static unsigned int pmic_interface_test_code(void)
 					      , test_data[i], 0xffff, 0, 1);
 
 		if (ret_val != 0) {
-			pr_info("%s config failed: test_data[%d]=%x ret_val=%x\n"
+			pr_debug("%s config failed: test_data[%d]=%x ret_val=%x\n"
 				, __func__, i, test_data[i], ret_val);
 			error++;
 			break;
@@ -236,7 +236,7 @@ static unsigned int pmic_interface_test_code(void)
 						  , &rdata, 0xffff, 0, 1);
 
 		if (ret_val != 0 || rdata != test_data[i]) {
-			pr_info("%s read failed: test_data[%d]=%x rdata =%x ret_val=%x\n"
+			pr_debug("%s read failed: test_data[%d]=%x rdata =%x ret_val=%x\n"
 				, __func__, i, test_data[i], rdata, ret_val);
 			error++;
 			break;
@@ -278,7 +278,7 @@ unsigned int stf_val;
  */
 int stf_pmic_test(void *data)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	stf_val = 0;
 	stf_val = sspm_ipi_send_sync_ex(IPI_ID_PMIC, IPI_OPT_DEFAUT
 					, &stf_send
@@ -294,7 +294,7 @@ int stf_pmic_chk(void *data)
 	/* Real PMIC service execution result, by each PMIC service */
 	if (stf_val) {
 		ret_val = ((struct pmic_ipi_ret_datas *)(&stf_recv))->data[0];
-		pr_info("%s = %d\n", __func__, ret_val);
+		pr_debug("%s = %d\n", __func__, ret_val);
 	}
 
 	return ret_val;

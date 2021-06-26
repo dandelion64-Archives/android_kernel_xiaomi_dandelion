@@ -72,16 +72,16 @@ void sys_timer_timesync_print_base(void)
 {
 	u64 temp_u64[2];
 
-	pr_info("timebase:\n");
-	pr_info(" enabled  : %d\n", timesync_cxt.enabled);
-	pr_info(" base_tick: 0x%llx\n", timesync_cxt.base_tick);
+	pr_debug("timebase:\n");
+	pr_debug(" enabled  : %d\n", timesync_cxt.enabled);
+	pr_debug(" base_tick: 0x%llx\n", timesync_cxt.base_tick);
 
 	temp_u64[0] = timesync_cxt.base_ts;
 	temp_u64[1] = do_div(temp_u64[0], NSEC_PER_SEC);
 
-	pr_info(" base_ts  : %llu.%llu\n", temp_u64[0], temp_u64[1]);
-	pr_info(" base_fz  : %d\n", timesync_cxt.base_fz);
-	pr_info(" base_ver : %d\n", timesync_cxt.base_ver);
+	pr_debug(" base_ts  : %llu.%llu\n", temp_u64[0], temp_u64[1]);
+	pr_debug(" base_fz  : %d\n", timesync_cxt.base_fz);
+	pr_debug(" base_ver : %d\n", timesync_cxt.base_ver);
 }
 
 #ifdef CONFIG_MTK_TINYSYS_SSPM_SUPPORT
@@ -172,7 +172,7 @@ void sys_timer_timesync_verify_sspm(void)
 
 	temp_u64[0] = ts_ap1;
 	temp_u64[1] = do_div(temp_u64[0], NSEC_PER_SEC);
-	pr_info("verify-sspm:ts-ap-1=%llu.%llu\n", temp_u64[0], temp_u64[1]);
+	pr_debug("verify-sspm:ts-ap-1=%llu.%llu\n", temp_u64[0], temp_u64[1]);
 
 	/* send ipi to sspm to trigger test */
 	ipi_data.cmd = PLT_TIMESYNC_SRAM_TEST;
@@ -188,7 +188,7 @@ void sys_timer_timesync_verify_sspm(void)
 		if (ts_l || ts_h)
 			break;
 
-		pr_info("verify-sspm:polling sspm mbox ...\n");
+		pr_debug("verify-sspm:polling sspm mbox ...\n");
 		cpu_relax();
 	}
 
@@ -198,14 +198,14 @@ void sys_timer_timesync_verify_sspm(void)
 
 	temp_u64[0] = ts_sspm;
 	temp_u64[1] = do_div(temp_u64[0], NSEC_PER_SEC);
-	pr_info("verify-sspm:ts-sspm=%llu.%llu\n", temp_u64[0], temp_u64[1]);
+	pr_debug("verify-sspm:ts-sspm=%llu.%llu\n", temp_u64[0], temp_u64[1]);
 
 	temp_u64[0] = ts_ap2;
 	temp_u64[1] = do_div(temp_u64[0], NSEC_PER_SEC);
-	pr_info("verify-sspm:ts-ap-2=%llu.%llu\n", temp_u64[0], temp_u64[1]);
+	pr_debug("verify-sspm:ts-ap-2=%llu.%llu\n", temp_u64[0], temp_u64[1]);
 
 	if (ts_ap1 >= ts_sspm || ts_ap2 <= ts_sspm)
-		pr_info("verify-sspm:ERROR!");
+		pr_debug("verify-sspm:ERROR!");
 
 	sys_timer_timesync_print_base();
 }
@@ -386,7 +386,7 @@ static int sys_timer_work_init(void)
 	sys_timer_workqueue = create_workqueue("sys_timer_wq");
 
 	if (!sys_timer_workqueue) {
-		pr_info("workqueue create failed\n");
+		pr_debug("workqueue create failed\n");
 		return -1;
 	}
 
@@ -452,7 +452,7 @@ static int sys_timer_timesync_init(struct platform_device *pdev)
 
 	if (IS_ERR((void const *)timesync_cxt.ram_base)) {
 
-		pr_info("unable to ioremap sysram base, might be disabled\n");
+		pr_debug("unable to ioremap sysram base, might be disabled\n");
 
 		/* ensure sysram support is disabled */
 		timesync_cxt.support_sysram = 0;
@@ -461,14 +461,14 @@ static int sys_timer_timesync_init(struct platform_device *pdev)
 
 		if (of_property_read_u32(node,
 			"mediatek,sysram-size", &sysram_size)) {
-			pr_info("unable to get sysram-size\n");
+			pr_debug("unable to get sysram-size\n");
 			goto fail_out;
 		}
 
 		/* check if we have enough sysram size */
 
 		if (sysram_size < 20) {
-			pr_info("not enough sram size %d\n", sysram_size);
+			pr_debug("not enough sram size %d\n", sysram_size);
 			goto fail_out;
 		}
 
@@ -480,7 +480,7 @@ static int sys_timer_timesync_init(struct platform_device *pdev)
 	clocks_calc_mult_shift(&timesync_cxt.mult, &timesync_cxt.shift,
 		SYS_TIMER_CLK_RATE, NSEC_PER_SEC, TIMESYNC_MAX_SEC);
 
-	pr_info("mult=%u, shift=%u, maxsec=%u\n",
+	pr_debug("mult=%u, shift=%u, maxsec=%u\n",
 		timesync_cxt.mult, timesync_cxt.shift, TIMESYNC_MAX_SEC);
 
 	timesync_cxt.enabled = 1;
@@ -500,7 +500,7 @@ fail_out:
 	ret = -1;
 
 out:
-	pr_info("enabled: %d, support_sysram: %d\n",
+	pr_debug("enabled: %d, support_sysram: %d\n",
 		timesync_cxt.enabled, timesync_cxt.support_sysram);
 
 	return ret;
@@ -516,7 +516,7 @@ static ssize_t sys_timer_dbgfs_debug_write(struct file *filp,
 
 	ret = kstrtoint_from_user(ubuf, cnt, 0, &val);
 	if (ret) {
-		pr_info("invalid argument\n");
+		pr_debug("invalid argument\n");
 		return ret;
 	}
 
@@ -541,7 +541,7 @@ static ssize_t sys_timer_dbgfs_debug_write(struct file *filp,
 		sys_timer_timesync_sync_base(SYS_TIMER_TIMESYNC_FLAG_ASYNC |
 			SYS_TIMER_TIMESYNC_FLAG_FREEZE);
 	} else
-		pr_info("unsupported value %d\n", val);
+		pr_debug("unsupported value %d\n", val);
 
 	return cnt;
 }
@@ -582,7 +582,7 @@ static void sys_timer_init_debugfs(void)
 		 * complain -- debugfs is enabled, but it failed to
 		 * create the directory
 		 */
-		pr_info("null debugfs root directory, exiting\n");
+		pr_debug("null debugfs root directory, exiting\n");
 		goto err_no_root;
 	}
 
@@ -591,7 +591,7 @@ static void sys_timer_init_debugfs(void)
 			timesync_cxt.dbgfs_root, &timesync_cxt,
 				&sys_timer_dbgfs_debug_fops);
 	if (!timesync_cxt.dbgfs_debug) {
-		pr_info("null err_stats file, exiting\n");
+		pr_debug("null err_stats file, exiting\n");
 		goto err;
 	}
 
@@ -602,7 +602,7 @@ err:
 	timesync_cxt.dbgfs_root = NULL;
 
 err_no_root:
-	pr_info("failed to initialize debugfs\n");
+	pr_debug("failed to initialize debugfs\n");
 }
 #else
 #define sys_timer_init_debugfs()
@@ -623,7 +623,7 @@ static int sys_timer_device_probe(struct platform_device *pdev)
 	sys_timer_base = devm_ioremap_resource(dev, res);
 
 	if (IS_ERR((void const *)sys_timer_base)) {
-		pr_info("unable to ioremap sys timer base\n");
+		pr_debug("unable to ioremap sys timer base\n");
 		ret = -1;
 		goto out;
 	}
@@ -645,7 +645,7 @@ out:
 static int __init sys_timer_device_init(void)
 {
 	if (platform_driver_register(&sys_timer_driver)) {
-		pr_info("device register fail\n");
+		pr_debug("device register fail\n");
 		return -1;
 	}
 

@@ -21,7 +21,7 @@
 
 #define FH_MSG_ERROR(fmt, args...)	pr_err(FHTAG fmt, ##args)
 #define FH_MSG_NOTICE(fmt, args...)	pr_notice(FHTAG fmt, ##args)
-#define FH_MSG_INFO(fmt, args...)	/* pr_info(FHTAG fmt, ##args) */
+#define FH_MSG_INFO(fmt, args...)	/* pr_debug(FHTAG fmt, ##args) */
 
 #define FH_MIN_PLLID		0u	/* FH_MIN_PLLID = FH_ARMCA7_PLLID is for current design */
 #define FH_ARMCA7_PLLID		0u

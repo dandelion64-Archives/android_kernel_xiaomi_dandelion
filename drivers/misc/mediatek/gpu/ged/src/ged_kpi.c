@@ -1882,7 +1882,7 @@ GED_ERROR ged_kpi_dequeue_buffer_ts(int pid, u64 ullWdnd, int i32FrameID,
 	psMonitor = (GED_KPI_GPU_TS *)ged_alloc(sizeof(GED_KPI_GPU_TS));
 
 	if (!psMonitor) {
-		pr_info_ratelimited("[GED_KPI]: GED_ERROR_OOM in %s\n", __func__);
+		pr_debug_ratelimited("[GED_KPI]: GED_ERROR_OOM in %s\n", __func__);
 		return GED_ERROR_OOM;
 	}
 
@@ -1930,7 +1930,7 @@ GED_ERROR ged_kpi_queue_buffer_ts(int pid, u64 ullWdnd, int i32FrameID,
 	psMonitor = (GED_KPI_GPU_TS *)ged_alloc(sizeof(GED_KPI_GPU_TS));
 
 	if (!psMonitor) {
-		pr_info_ratelimited("[GED_KPI]: GED_ERROR_OOM in %s\n", __func__);
+		pr_debug_ratelimited("[GED_KPI]: GED_ERROR_OOM in %s\n", __func__);
 		return GED_ERROR_OOM;
 	}
 

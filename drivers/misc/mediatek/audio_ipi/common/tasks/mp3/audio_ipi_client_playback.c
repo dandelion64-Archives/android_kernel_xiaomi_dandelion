@@ -143,7 +143,7 @@ void playback_open_dump_file(void)
 
 	file_decode_pcm = filp_open(path_decode_pcm, O_CREAT | O_WRONLY, 0);
 	if (IS_ERR(file_decode_pcm)) {
-		pr_info("file_decode_pcm < 0,path_decode_pcm = %s\n",
+		pr_debug("file_decode_pcm < 0,path_decode_pcm = %s\n",
 			path_decode_pcm);
 		return;
 	}
@@ -314,7 +314,7 @@ static int dump_kthread(void *data)
 			break;
 		}
 		default: {
-			pr_info("current_idx = %d, idx_r = %d, idx_w = %d, type = %d\n",
+			pr_debug("current_idx = %d, idx_r = %d, idx_w = %d, type = %d\n",
 				current_idx,
 				dump_queue->idx_r, dump_queue->idx_w,
 				dump_package->dump_data_type);

@@ -60,7 +60,7 @@ static void fiq_glue_clear_handler(void)
 			MTEE_SMCNR(SMCF_FC64_SET_FIQ_HANDLER, trusty_dev),
 			cpu, 0, 0);
 		if (ret) {
-			pr_info("%s: SET_FIQ_HANDLER(%d, 0, 0) failed 0x%x\n",
+			pr_debug("%s: SET_FIQ_HANDLER(%d, 0, 0) failed 0x%x\n",
 			       __func__, cpu, ret);
 			continue;
 		}
@@ -94,7 +94,7 @@ static int fiq_glue_set_handler(void)
 			(uintptr_t)stack);
 		local_irq_restore(irqflags);
 		if (ret) {
-			pr_info("%s: SET_FIQ_HANDLER(%d, %p, %p) failed 0x%x\n",
+			pr_debug("%s: SET_FIQ_HANDLER(%d, %p, %p) failed 0x%x\n",
 			       __func__, cpu, trusty_fiq_glue_arm64,
 			       stack, ret);
 			ret = -EINVAL;
@@ -151,7 +151,7 @@ err_set_fiq_handler:
 err_no_trusty:
 	mutex_unlock(&fiq_glue_lock);
 err_bad_arg:
-	pr_info("%s: failed, %d\n", __func__, ret);
+	pr_debug("%s: failed, %d\n", __func__, ret);
 	return ret;
 }
 

@@ -65,11 +65,11 @@ static void aee_exception_reboot(void)
 
 	res = get_wd_api(&wd_api);
 	if (res < 0) {
-		pr_info("arch_reset, get wd api error %d\n", res);
+		pr_debug("arch_reset, get wd api error %d\n", res);
 		while (1)
 			cpu_relax();
 	} else {
-		pr_info("exception reboot\n");
+		pr_debug("exception reboot\n");
 		mode += WD_SW_RESET_KEEP_DDR_RESERVE;
 		wd_api->wd_sw_reset(mode);
 	}

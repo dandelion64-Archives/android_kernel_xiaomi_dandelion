@@ -30,7 +30,7 @@ extern unsigned int _mtk_mali_ged_log;
 #define pr_MTK_err(...) \
 	do { _MTK_MALI_PRINT(__VA_ARGS__); pr_err(__VA_ARGS__); } while (0)
 #define pr_MTK_info(...) \
-	do { _MTK_MALI_PRINT(__VA_ARGS__); pr_info(__VA_ARGS__); } while (0)
+	do { _MTK_MALI_PRINT(__VA_ARGS__); pr_debug(__VA_ARGS__); } while (0)
 
 #else
 

@@ -224,13 +224,13 @@ static int mpu_i2c_read_block(struct i2c_client *client, u8 addr,
 		return -EINVAL;
 	} else if (len > C_I2C_FIFO_SIZE) {
 		mutex_unlock(&lsm6ds3h_init_mutex);
-		pr_info("[accel] length %d exceeds %d\n", len, C_I2C_FIFO_SIZE);
+		pr_debug("[accel] length %d exceeds %d\n", len, C_I2C_FIFO_SIZE);
 		return -EINVAL;
 	}
 
 	err = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
 	if (err != 2) {
-		pr_info("[accel] i2c_transfer error: (%d %p %d) %d\n",
+		pr_debug("[accel] i2c_transfer error: (%d %p %d) %d\n",
 			addr, data, len, err);
 		err = -EIO;
 	} else
@@ -257,7 +257,7 @@ static int mpu_i2c_write_block(struct i2c_client *client, u8 addr, u8 *data,
 		return -EINVAL;
 	} else if (len >= C_I2C_FIFO_SIZE) {
 		mutex_unlock(&lsm6ds3h_init_mutex);
-		pr_info("[accel]  length %d exceeds %d\n",
+		pr_debug("[accel]  length %d exceeds %d\n",
 			len, C_I2C_FIFO_SIZE);
 		return -EINVAL;
 	}
@@ -270,7 +270,7 @@ static int mpu_i2c_write_block(struct i2c_client *client, u8 addr, u8 *data,
 	err = i2c_master_send(client, buf, num);
 	if (err < 0) {
 		mutex_unlock(&lsm6ds3h_init_mutex);
-		pr_info("[accel] i2c send command error!!\n");
+		pr_debug("[accel] i2c send command error!!\n");
 		return -EFAULT;
 	}
 	mutex_unlock(&lsm6ds3h_init_mutex);
@@ -280,7 +280,7 @@ static int mpu_i2c_write_block(struct i2c_client *client, u8 addr, u8 *data,
 int LSM6DS3H_hwmsen_read_block(u8 addr, u8 *buf, u8 len)
 {
 	if (lsm6ds3h_acc_i2c_client == NULL) {
-		pr_info("[accel] %s null ptr!!\n", __func__);
+		pr_debug("[accel] %s null ptr!!\n", __func__);
 		return LSM6DS3H_ERR_I2C;
 	}
 	return mpu_i2c_read_block(lsm6ds3h_acc_i2c_client, addr, buf, len);
@@ -290,7 +290,7 @@ EXPORT_SYMBOL(LSM6DS3H_hwmsen_read_block);
 int LSM6DS3H_hwmsen_write_block(u8 addr, u8 *buf, u8 len)
 {
 	if (lsm6ds3h_acc_i2c_client == NULL) {
-		pr_info("[accel] %s null ptr!!\n", __func__);
+		pr_debug("[accel] %s null ptr!!\n", __func__);
 		return LSM6DS3H_ERR_I2C;
 	}
 	return mpu_i2c_write_block(lsm6ds3h_acc_i2c_client, addr, buf, len);
@@ -305,7 +305,7 @@ static int LSM6DS3H_set_bank(struct i2c_client *client, u8 bank)
 	databuf[0] = bank;
 	res = mpu_i2c_write_block(client, LSM6DS3H_WHO_AM_I, databuf, 0x1);
 	if (res < 0) {
-		pr_info("[accel] %s fail at %x", __func__, bank);
+		pr_debug("[accel] %s fail at %x", __func__, bank);
 		return LSM6DS3H_ERR_I2C;
 	}
 
@@ -339,10 +339,10 @@ static void LSM6DS3H_power(struct acc_hw *hw, unsigned int on)
 		pr_debug("[accel] ignore power control: %d\n", on);
 	else if (on) {		/* power on*/
 		if (!hwPowerOn(hw->power_id, hw->power_vol, "LSM6DS3H"))
-			pr_info("[accel] power on fails!!\n");
+			pr_debug("[accel] power on fails!!\n");
 	} else {			/* power off*/
 		if (!hwPowerDown(hw->power_id, "LSM6DS3H"))
-			pr_info("[accel] power off fail!!\n");
+			pr_debug("[accel] power off fail!!\n");
 	}
 #endif
 	power_on = on;
@@ -423,7 +423,7 @@ static int LSM6DS3H_WriteCalibration(struct i2c_client *client,
 
 	GSE_FUN();
 	if (!obj || !dat) {
-		pr_info("[accel] null ptr!!\n");
+		pr_debug("[accel] null ptr!!\n");
 		return -EINVAL;
 	}
 	cali[obj->cvt.map[LSM6DS3H_AXIS_X]] =
@@ -482,7 +482,7 @@ static int LSM6DS3H_SetPowerMode(struct i2c_client *client, bool enable)
 	}
 
 	if (mpu_i2c_read_block(client, LSM6DS3H_CTRL1_XL, databuf, 0x01)) {
-		pr_info("[accel] read lsm6ds3h power ctl register err!\n");
+		pr_debug("[accel] read lsm6ds3h power ctl register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 	pr_debug("[accel] LSM6DS3H_CTRL1_XL:databuf[0] =  %x!\n", databuf[0]);
@@ -524,7 +524,7 @@ static int LSM6DS3H_SetFullScale(struct i2c_client *client, u8 acc_fs)
 	GSE_FUN();
 
 	if (mpu_i2c_read_block(client, LSM6DS3H_CTRL1_XL, databuf, 0x01)) {
-		pr_info("[accel] read LSM6DS3H_CTRL1_XL err!\n");
+		pr_debug("[accel] read LSM6DS3H_CTRL1_XL err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 	pr_debug("[accel] read  LSM6DS3H_CTRL1_XL register: 0x%x\n",
@@ -538,7 +538,7 @@ static int LSM6DS3H_SetFullScale(struct i2c_client *client, u8 acc_fs)
 
 	res = mpu_i2c_write_block(client, LSM6DS3H_CTRL1_XL, databuf, 0x1);
 	if (res < 0) {
-		pr_info("[accel] write full scale register err!\n");
+		pr_debug("[accel] write full scale register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 	switch (acc_fs) {
@@ -560,7 +560,7 @@ static int LSM6DS3H_SetFullScale(struct i2c_client *client, u8 acc_fs)
 	}
 
 	if (mpu_i2c_read_block(client, LSM6DS3H_CTRL9_XL, databuf, 0x01)) {
-		pr_info("[accel] read LSM6DS3H_CTRL9_XL err!\n");
+		pr_debug("[accel] read LSM6DS3H_CTRL9_XL err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 	pr_debug("[accel] read  LSM6DS3H_CTRL9_XL register: 0x%x\n",
@@ -576,7 +576,7 @@ static int LSM6DS3H_SetFullScale(struct i2c_client *client, u8 acc_fs)
 
 	res = mpu_i2c_write_block(client, LSM6DS3H_CTRL9_XL, databuf, 0x1);
 	if (res < 0) {
-		pr_info("[accel] write full scale register err!\n");
+		pr_debug("[accel] write full scale register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 
@@ -597,7 +597,7 @@ static int LSM6DS3H_SetSampleRate(struct i2c_client *client, u8 sample_rate)
 		return res;
 
 	if (mpu_i2c_read_block(client, LSM6DS3H_CTRL1_XL, databuf, 0x01)) {
-		pr_info("[accel] read acc data format register err!\n");
+		pr_debug("[accel] read acc data format register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 	pr_debug("[accel] read  acc data format register: 0x%x\n", databuf[0]);
@@ -610,7 +610,7 @@ static int LSM6DS3H_SetSampleRate(struct i2c_client *client, u8 sample_rate)
 
 	res = mpu_i2c_write_block(client, LSM6DS3H_CTRL1_XL, databuf, 0x1);
 	if (res < 0) {
-		pr_info("[accel] write sample rate register err!\n");
+		pr_debug("[accel] write sample rate register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 
@@ -631,7 +631,7 @@ static int LSM6DS3H_Int_Ctrl(struct i2c_client *client,
 	/*config latch int or no latch*/
 	op_reg = LSM6DS3H_TAP_CFG;
 	if (mpu_i2c_read_block(client, op_reg, databuf, 0x01)) {
-		pr_info("[accel] %s read data format register err!\n",
+		pr_debug("[accel] %s read data format register err!\n",
 			__func__);
 		return LSM6DS3H_ERR_I2C;
 	}
@@ -644,13 +644,13 @@ static int LSM6DS3H_Int_Ctrl(struct i2c_client *client,
 	/*databuf[0] = op_reg;*/
 	res = mpu_i2c_write_block(client, op_reg, databuf, 0x01);
 	if (res < 0) {
-		pr_info("[accel] write enable tilt func register err!\n");
+		pr_debug("[accel] write enable tilt func register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 	/* config high or low active*/
 	op_reg = LSM6DS3H_CTRL3_C;
 	if (mpu_i2c_read_block(client, op_reg, databuf, 0x01)) {
-		pr_info("[accel] %s read data format register err!\n",
+		pr_debug("[accel] %s read data format register err!\n",
 			__func__);
 		return LSM6DS3H_ERR_I2C;
 	}
@@ -663,7 +663,7 @@ static int LSM6DS3H_Int_Ctrl(struct i2c_client *client,
 	/*databuf[0] = op_reg;*/
 	res = mpu_i2c_write_block(client, op_reg, databuf, 0x1);
 	if (res < 0) {
-		pr_info("[accel] write enable tilt func register err!\n");
+		pr_debug("[accel] write enable tilt func register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 
@@ -679,7 +679,7 @@ static int LSM6DS3H_Enable_Func(struct i2c_client *client,
 	GSE_FUN();
 
 	if (mpu_i2c_read_block(client, LSM6DS3H_CTRL10_C, databuf, 0x01)) {
-		pr_info("[accel] %s read LSM6DS3H_CTRL10_C register err!\n",
+		pr_debug("[accel] %s read LSM6DS3H_CTRL10_C register err!\n",
 			__func__);
 		return LSM6DS3H_ERR_I2C;
 	}
@@ -692,7 +692,7 @@ static int LSM6DS3H_Enable_Func(struct i2c_client *client,
 	/*databuf[0] = LSM6DS3H_CTRL10_C;*/
 	res = mpu_i2c_write_block(client, LSM6DS3H_CTRL10_C, databuf, 0x01);
 	if (res < 0) {
-		pr_info("[accel] %s write LSM6DS3H_CTRL10_C register err!\n",
+		pr_debug("[accel] %s write LSM6DS3H_CTRL10_C register err!\n",
 			__func__);
 		return LSM6DS3H_ERR_I2C;
 	}
@@ -742,13 +742,13 @@ static int LSM6DS3H_ReadAccData(struct i2c_client *client, char *buf,
 	if (sensor_power == false) {
 		res = LSM6DS3H_SetPowerMode(client, true);
 		if (res)
-			pr_info("[accel] Power on lsm6ds3h error %d!\n", res);
+			pr_debug("[accel] Power on lsm6ds3h error %d!\n", res);
 		msleep(20);
 	}
 
 	res = LSM6DS3H_ReadAccRawData(client, obj->data);
 	if (res < 0) {
-		pr_info("[accel] I2C error: ret value=%d", res);
+		pr_debug("[accel] I2C error: ret value=%d", res);
 		return -3;
 	}
 #if 1
@@ -816,7 +816,7 @@ static int LSM6DS3H_ReadAccRawData(struct i2c_client *client,
 		err = -EINVAL;
 	else {
 		if (hwmsen_read_block(client, LSM6DS3H_OUTX_L_XL, databuf, 6)) {
-			pr_info("[accel] LSM6DS3H read acc data  error\n");
+			pr_debug("[accel] LSM6DS3H read acc data  error\n");
 			return -2;
 		}
 		data[LSM6DS3H_AXIS_X] =
@@ -859,7 +859,7 @@ static ssize_t show_chipinfo_value(struct device_driver *ddri, char *buf)
 	char strbuf[LSM6DS3H_BUFSIZE];
 
 	if (client == NULL) {
-		pr_info("[accel] i2c client is null!!\n");
+		pr_debug("[accel] i2c client is null!!\n");
 		return 0;
 	}
 
@@ -875,7 +875,7 @@ static ssize_t show_sensordata_value(struct device_driver *ddri, char *buf)
 	int x, y, z;
 
 	if (client == NULL) {
-		pr_info("[accel] i2c client is null!!\n");
+		pr_debug("[accel] i2c client is null!!\n");
 		return 0;
 	}
 
@@ -891,7 +891,7 @@ static ssize_t show_sensorrawdata_value(struct device_driver *ddri, char *buf)
 	s16 data[LSM6DS3H_AXES_NUM] = { 0 };
 
 	if (client == NULL) {
-		pr_info("[accel] i2c client is null!!\n");
+		pr_debug("[accel] i2c client is null!!\n");
 		return 0;
 	}
 
@@ -907,7 +907,7 @@ static ssize_t show_trace_value(struct device_driver *ddri, char *buf)
 	struct lsm6ds3h_i2c_data *obj = obj_i2c_data;
 
 	if (obj == NULL) {
-		pr_info("[accel] i2c_data obj is null!!\n");
+		pr_debug("[accel] i2c_data obj is null!!\n");
 		return 0;
 	}
 
@@ -923,14 +923,14 @@ static ssize_t store_trace_value(struct device_driver *ddri, const char *buf,
 	int trace;
 
 	if (obj == NULL) {
-		pr_info("[accel] i2c_data obj is null!!\n");
+		pr_debug("[accel] i2c_data obj is null!!\n");
 		return count;
 	}
 
 	if (kstrtos32(buf, 10, &trace) == 0)
 		atomic_set(&obj->trace, trace);
 	else
-		pr_info("[accel] invalid content: '%s', length = %zu\n",
+		pr_debug("[accel] invalid content: '%s', length = %zu\n",
 			buf, count);
 
 	return count;
@@ -942,7 +942,7 @@ static ssize_t show_chipinit_value(struct device_driver *ddri, char *buf)
 	struct lsm6ds3h_i2c_data *obj = obj_i2c_data;
 
 	if (obj == NULL) {
-		pr_info("[accel] i2c_data obj is null!!\n");
+		pr_debug("[accel] i2c_data obj is null!!\n");
 		return 0;
 	}
 
@@ -957,7 +957,7 @@ static ssize_t store_chipinit_value(struct device_driver *ddri,
 	struct lsm6ds3h_i2c_data *obj = obj_i2c_data;
 
 	if (obj == NULL) {
-		pr_info("[accel] i2c_data obj is null!!\n");
+		pr_debug("[accel] i2c_data obj is null!!\n");
 		return count;
 	}
 
@@ -974,7 +974,7 @@ static ssize_t show_status_value(struct device_driver *ddri, char *buf)
 	struct lsm6ds3h_i2c_data *obj = obj_i2c_data;
 
 	if (obj == NULL) {
-		pr_info("[accel] i2c_data obj is null!!\n");
+		pr_debug("[accel] i2c_data obj is null!!\n");
 		return 0;
 	}
 
@@ -995,7 +995,7 @@ static ssize_t show_layout_value(struct device_driver *ddri, char *buf)
 	struct lsm6ds3h_i2c_data *data = obj_i2c_data;
 
 	if (data == NULL) {
-		pr_info("[accel] lsm6ds3h_i2c_data is null!!\n");
+		pr_debug("[accel] lsm6ds3h_i2c_data is null!!\n");
 		return -1;
 	}
 
@@ -1016,27 +1016,27 @@ static ssize_t store_layout_value(struct device_driver *ddri,
 	int ret = 0;
 
 	if (data == NULL) {
-		pr_info("[accel] lsm6ds3h_i2c_data is null!!\n");
+		pr_debug("[accel] lsm6ds3h_i2c_data is null!!\n");
 		return count;
 	}
 
 	if (kstrtos32(buf, 10, &layout) == 0) {
 		atomic_set(&data->layout, layout);
 		if (!hwmsen_get_convert(layout, &data->cvt)) {
-			pr_info("[accel] HWMSEN_GET_CONVERT function error!\r\n");
+			pr_debug("[accel] HWMSEN_GET_CONVERT function error!\r\n");
 		} else if (!hwmsen_get_convert(data->hw->direction,
 				&data->cvt)) {
-			pr_info("[accel] invalid layout: %d, restore to %d\n",
+			pr_debug("[accel] invalid layout: %d, restore to %d\n",
 				layout, data->hw->direction);
 		} else {
-			pr_info("[accel] invalid layout: (%d, %d)\n",
+			pr_debug("[accel] invalid layout: (%d, %d)\n",
 				layout, data->hw->direction);
 			ret = hwmsen_get_convert(0, &data->cvt);
 			if (!ret)
-				pr_info("[accel] HWMSEN_GET_CONVERT function error!\r\n");
+				pr_debug("[accel] HWMSEN_GET_CONVERT function error!\r\n");
 		}
 	} else {
-		pr_info("[accel] invalid format = '%s'\n", buf);
+		pr_debug("[accel] invalid format = '%s'\n", buf);
 	}
 
 	return count;
@@ -1075,7 +1075,7 @@ static int lsm6ds3h_create_attr(struct device_driver *driver)
 	for (idx = 0; idx < num; idx++) {
 		err = driver_create_file(driver, LSM6DS3H_attr_list[idx]);
 		if (err != 0) {
-			pr_info("[accel] driver_create_file (%s) = %d\n",
+			pr_debug("[accel] driver_create_file (%s) = %d\n",
 				LSM6DS3H_attr_list[idx]->attr.name, err);
 			break;
 		}
@@ -1103,7 +1103,7 @@ static int LSM6DS3H_Set_RegInc(struct i2c_client *client, bool inc)
 	int res = 0;
 
 	if (mpu_i2c_read_block(client, LSM6DS3H_CTRL3_C, databuf, 0x01)) {
-		pr_info("[accel] read LSM6DS3H_CTRL3_XL err!\n");
+		pr_debug("[accel] read LSM6DS3H_CTRL3_XL err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 	pr_debug("[accel] read  LSM6DS3H_CTRL3_C register: 0x%x\n", databuf[0]);
@@ -1116,7 +1116,7 @@ static int LSM6DS3H_Set_RegInc(struct i2c_client *client, bool inc)
 		res = mpu_i2c_write_block(client, LSM6DS3H_CTRL3_C,
 					databuf, 0x1);
 		if (res < 0) {
-			pr_info("[accel] write full scale register err!\n");
+			pr_debug("[accel] write full scale register err!\n");
 			return LSM6DS3H_ERR_I2C;
 		}
 	}
@@ -1179,7 +1179,7 @@ static int lsm6ds3h_enable_nodata(int en)
 	struct lsm6ds3h_i2c_data *priv = obj_i2c_data;
 
 	if (priv == NULL) {
-		pr_info("[accel] obj_i2c_data is NULL!\n");
+		pr_debug("[accel] obj_i2c_data is NULL!\n");
 		return -1;
 	}
 
@@ -1213,7 +1213,7 @@ static int lsm6ds3h_set_delay(u64 ns)
 	value = (int)ns / 1000 / 1000;
 
 	if (priv == NULL) {
-		pr_info("[accel] obj_i2c_data is NULL!\n");
+		pr_debug("[accel] obj_i2c_data is NULL!\n");
 		return -1;
 	}
 
@@ -1227,7 +1227,7 @@ static int lsm6ds3h_set_delay(u64 ns)
 	priv->sample_rate = sample_delay;
 	err = LSM6DS3H_SetSampleRate(priv->client, sample_delay);
 	if (err != LSM6DS3H_SUCCESS)
-		pr_info("[accel] Set delay parameter error!\n");
+		pr_debug("[accel] Set delay parameter error!\n");
 
 
 	if (value >= 50)
@@ -1267,7 +1267,7 @@ static int lsm6ds3h_get_data(int *x, int *y, int *z, int *status)
 	struct lsm6ds3h_i2c_data *priv = obj_i2c_data;
 
 	if (priv == NULL) {
-		pr_info("[accel] obj_i2c_data is NULL!\n");
+		pr_debug("[accel] obj_i2c_data is NULL!\n");
 		return -1;
 	}
 	if (atomic_read(&priv->trace) & ACCEL_TRC_DATA)
@@ -1292,7 +1292,7 @@ static int lsm6ds3h_open(struct inode *inode, struct file *file)
 	file->private_data = lsm6ds3h_acc_i2c_client;
 
 	if (file->private_data == NULL) {
-		pr_info("[accel] null pointer!!\n");
+		pr_debug("[accel] null pointer!!\n");
 		return -EINVAL;
 	}
 	return nonseekable_open(inode, file);
@@ -1328,7 +1328,7 @@ static long lsm6ds3h_unlocked_ioctl(struct file *file,
 
 
 	if (err) {
-		pr_info("[accel] access error: %08X, (%2d, %2d)\n",
+		pr_debug("[accel] access error: %08X, (%2d, %2d)\n",
 			cmd, _IOC_DIR(cmd), _IOC_SIZE(cmd));
 		return -EFAULT;
 	}
@@ -1409,7 +1409,7 @@ static long lsm6ds3h_unlocked_ioctl(struct file *file,
 			break;
 		}
 		if (atomic_read(&obj->suspend)) {
-			pr_info("[accel] Perform calibration in suspend state!!\n");
+			pr_debug("[accel] Perform calibration in suspend state!!\n");
 			err = -EINVAL;
 		} else {
 #if 0
@@ -1466,7 +1466,7 @@ static long lsm6ds3h_unlocked_ioctl(struct file *file,
 		break;
 
 	default:
-		pr_info("[accel] unknown IOCTL: 0x%08x\n", cmd);
+		pr_debug("[accel] unknown IOCTL: 0x%08x\n", cmd);
 		err = -ENOIOCTLCMD;
 		break;
 	}
@@ -1497,7 +1497,7 @@ static long lsm6ds3h_compat_ioctl(struct file *file,
 				GSENSOR_IOCTL_READ_SENSORDATA,
 				(unsigned long)arg32);
 		if (err) {
-			pr_info("[accel] GSENSOR_IOCTL_READ_SENSORDATA unlocked_ioctl failed.");
+			pr_debug("[accel] GSENSOR_IOCTL_READ_SENSORDATA unlocked_ioctl failed.");
 			return err;
 		}
 		break;
@@ -1512,7 +1512,7 @@ static long lsm6ds3h_compat_ioctl(struct file *file,
 		    file->f_op->unlocked_ioctl(file, GSENSOR_IOCTL_SET_CALI,
 				(unsigned long)arg32);
 		if (err) {
-			pr_info("[accel] GSENSOR_IOCTL_SET_CALI unlocked_ioctl failed.");
+			pr_debug("[accel] GSENSOR_IOCTL_SET_CALI unlocked_ioctl failed.");
 			return err;
 		}
 		break;
@@ -1527,7 +1527,7 @@ static long lsm6ds3h_compat_ioctl(struct file *file,
 		    file->f_op->unlocked_ioctl(file, GSENSOR_IOCTL_GET_CALI,
 				(unsigned long)arg32);
 		if (err) {
-			pr_info("[accel] GSENSOR_IOCTL_GET_CALI unlocked_ioctl failed.");
+			pr_debug("[accel] GSENSOR_IOCTL_GET_CALI unlocked_ioctl failed.");
 			return err;
 		}
 		break;
@@ -1542,13 +1542,13 @@ static long lsm6ds3h_compat_ioctl(struct file *file,
 		    file->f_op->unlocked_ioctl(file, GSENSOR_IOCTL_CLR_CALI,
 				(unsigned long)arg32);
 		if (err) {
-			pr_info("[accel] GSENSOR_IOCTL_CLR_CALI unlocked_ioctl failed.");
+			pr_debug("[accel] GSENSOR_IOCTL_CLR_CALI unlocked_ioctl failed.");
 			return err;
 		}
 		break;
 
 	default:
-		pr_info("[accel] unknown IOCTL: 0x%08x\n", cmd);
+		pr_debug("[accel] unknown IOCTL: 0x%08x\n", cmd);
 		err = -ENOIOCTLCMD;
 		break;
 
@@ -1585,18 +1585,18 @@ static int bmi160_factory_enable_sensor(bool enabledisable,
 #if 0
 	err = bmi160_acc_enable_nodata(enabledisable == true ? 1 : 0);
 	if (err) {
-		pr_info("[accel] %s enable sensor failed!\n", __func__);
+		pr_debug("[accel] %s enable sensor failed!\n", __func__);
 		return -1;
 	}
 	err = bmi160_acc_batch(0, sample_periods_ms * 1000000, 0);
 	if (err) {
-		pr_info("[accel] %s enable set batch failed!\n", __func__);
+		pr_debug("[accel] %s enable set batch failed!\n", __func__);
 		return -1;
 	}
 #endif
 	err = LSM6DS3H_init_client(lsm6ds3h_acc_i2c_client, 0);
 	if (err) {
-		pr_info("[accel] initialize client fail!!\n");
+		pr_debug("[accel] initialize client fail!!\n");
 		return -1;
 	}
 	return 0;
@@ -1612,7 +1612,7 @@ static int bmi160_factory_get_data(int32_t data[3], int *status)
 	if (sensor_power == false) {
 		err = LSM6DS3H_SetPowerMode(lsm6ds3h_acc_i2c_client, true);
 		if (err)
-			pr_info("[accel] Power on lsm6ds3h error %d!\n", err);
+			pr_debug("[accel] Power on lsm6ds3h error %d!\n", err);
 
 		msleep(50);
 	}
@@ -1645,7 +1645,7 @@ static int bmi160_factory_clear_cali(void)
 	/* err = BMI160_ACC_ResetCalibration(obj_data); */
 	err = LSM6DS3H_ResetCalibration(lsm6ds3h_acc_i2c_client);
 	if (err) {
-		pr_info("[accel] lsm6ds3h_ResetCalibration failed!\n");
+		pr_debug("[accel] lsm6ds3h_ResetCalibration failed!\n");
 		return -1;
 	}
 	return 0;
@@ -1669,7 +1669,7 @@ static int bmi160_factory_set_cali(int32_t data[3])
 	cali[LSM6DS3H_AXIS_Z] = data[2];
 	err = LSM6DS3H_WriteCalibration(lsm6ds3h_acc_i2c_client, cali);
 	if (err) {
-		pr_info("[accel] LSM6DS3H_WriteCalibration failed!\n");
+		pr_debug("[accel] LSM6DS3H_WriteCalibration failed!\n");
 		return -1;
 	}
 	return 0;
@@ -1682,7 +1682,7 @@ static int bmi160_factory_get_cali(int32_t data[3])
 #if 0
 	err = BMI160_ACC_ReadCalibration(obj_data, cali);
 	if (err) {
-		pr_info("[accel] bmi160_ReadCalibration failed!\n");
+		pr_debug("[accel] bmi160_ReadCalibration failed!\n");
 		return -1;
 	}
 	data[0] = cali[BMI160_ACC_AXIS_X]
@@ -1694,7 +1694,7 @@ static int bmi160_factory_get_cali(int32_t data[3])
 #endif
 	err = LSM6DS3H_ReadCalibration(lsm6ds3h_acc_i2c_client, cali);
 	if (err) {
-		pr_info("[accel] LSM6DS3H_ReadCalibration failed!\n");
+		pr_debug("[accel] LSM6DS3H_ReadCalibration failed!\n");
 		return -1;
 	}
 	data[0] = cali[LSM6DS3H_AXIS_X];
@@ -1735,14 +1735,14 @@ static int lsm6ds3h_suspend(struct device *dev)
 	int err = 0;
 
 	if (obj == NULL) {
-		pr_info("[accel] null pointer!!\n");
+		pr_debug("[accel] null pointer!!\n");
 		return -EINVAL;
 	}
 	atomic_set(&obj->suspend, 1);
 
 	err = LSM6DS3H_SetPowerMode(obj->client, false);
 	if (err) {
-		pr_info("[accel] write power control fail!!\n");
+		pr_debug("[accel] write power control fail!!\n");
 		return err;
 	}
 
@@ -1763,14 +1763,14 @@ static int lsm6ds3h_resume(struct device *dev)
 	GSE_FUN();
 
 	if (obj == NULL) {
-		pr_info("[accel] null pointer!!\n");
+		pr_debug("[accel] null pointer!!\n");
 		return -1;
 	}
 
 	LSM6DS3H_power(obj->hw, 1);
 	err = LSM6DS3H_SetPowerMode(obj->client, enable_status);
 	if (err) {
-		pr_info("[accel] initialize client fail! err code %d!\n", err);
+		pr_debug("[accel] initialize client fail! err code %d!\n", err);
 		return err;
 	}
 	atomic_set(&obj->suspend, 0);
@@ -1790,7 +1790,7 @@ static int lsm6ds3h_i2c_probe(struct i2c_client *client,
 
 	err = get_accel_dts_func(client->dev.of_node, hw);
 	if (err) {
-		pr_info("[accel] get dts info fail\n");
+		pr_debug("[accel] get dts info fail\n");
 		err = -EFAULT;
 		goto exit;
 	}
@@ -1810,7 +1810,7 @@ static int lsm6ds3h_i2c_probe(struct i2c_client *client,
 	/*atomic_set(&obj->layout, obj->hw->direction);*/
 	err = hwmsen_get_convert(obj->hw->direction, &obj->cvt);
 	if (err) {
-		pr_info("[accel] invalid direction: %d\n", obj->hw->direction);
+		pr_debug("[accel] invalid direction: %d\n", obj->hw->direction);
 		goto exit_kfree;
 	}
 
@@ -1831,7 +1831,7 @@ static int lsm6ds3h_i2c_probe(struct i2c_client *client,
 	/* err = misc_register(&lsm6ds3h_acc_device); */
 	err = accel_factory_device_register(&lsm6ds3ha_factory_device);
 	if (err) {
-		pr_info("[accel] acc_factory register failed!\n");
+		pr_debug("[accel] acc_factory register failed!\n");
 		goto exit_misc_device_register_failed;
 	}
 
@@ -1853,7 +1853,7 @@ static int lsm6ds3h_i2c_probe(struct i2c_client *client,
 	ctl_path.is_support_batch = obj->hw->is_batch_supported;
 	err = acc_register_control_path(&ctl_path);
 	if (err) {
-		pr_info("[accel] register acc control path err\n");
+		pr_debug("[accel] register acc control path err\n");
 		goto exit_init_failed;
 	}
 
@@ -1861,7 +1861,7 @@ static int lsm6ds3h_i2c_probe(struct i2c_client *client,
 	data_path.vender_div = 1000;
 	err = acc_register_data_path(&data_path);
 	if (err) {
-		pr_info("[accel] register acc data path err= %d\n", err);
+		pr_debug("[accel] register acc data path err= %d\n", err);
 		goto exit_init_failed;
 	}
 /*mutex_unlock(&lsm6ds3h_init_mutex);*/
@@ -1878,7 +1878,7 @@ exit_kfree:
 	kfree(obj);
 exit:
 	lsm6ds3h_init_flag = -1;
-	pr_info("[accel] %s: err = %d\n", __func__, err);
+	pr_debug("[accel] %s: err = %d\n", __func__, err);
 	return err;
 }
 
@@ -1893,7 +1893,7 @@ static int lsm6ds3h_i2c_remove(struct i2c_client *client)
 	err = lsm6ds3h_delete_attr(
 		&(lsm6ds3h_init_info.platform_diver_addr->driver));
 	if (err)
-		pr_info("[accel] %s fail: %d\n", __func__, err);
+		pr_debug("[accel] %s fail: %d\n", __func__, err);
 
 
 	/*misc_deregister(&lsm6ds3h_acc_device); */
@@ -1924,11 +1924,11 @@ static int lsm6ds3h_local_init(void)
 #endif
 
 	if (i2c_add_driver(&lsm6ds3h_i2c_driver)) {
-		pr_info("[accel] add driver error\n");
+		pr_debug("[accel] add driver error\n");
 		return -1;
 	}
 	if (lsm6ds3h_init_flag == -1) {
-		pr_info("[accel] %s init failed!\n", __func__);
+		pr_debug("[accel] %s init failed!\n", __func__);
 		return -1;
 	}
 

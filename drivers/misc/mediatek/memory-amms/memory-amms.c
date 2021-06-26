@@ -69,7 +69,7 @@ static void amms_work_handler(struct work_struct *work)
 			0, 0, 0, 0);
 		if (pfn_valid(__phys_to_pfn(addr)) &&
 			pfn_valid(__phys_to_pfn(addr + length - 1))) {
-			pr_info("%s:addr = 0x%pa length=0x%pa\n",
+			pr_debug("%s:addr = 0x%pa length=0x%pa\n",
 				__func__, &addr, &length);
 			free_reserved_memory(addr, addr+length);
 			amms_static_free = true;
@@ -93,7 +93,7 @@ static int __init amms_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	pr_info("amms irq num %d.\n", irq_num);
+	pr_debug("amms irq num %d.\n", irq_num);
 
 	if (request_irq(irq_num, (irq_handler_t)amms_irq_handler,
 			   IRQF_TRIGGER_NONE,

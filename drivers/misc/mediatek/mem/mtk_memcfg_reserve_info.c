@@ -53,7 +53,7 @@ int freed_reserved_memory_count;
 
 void mtk_memcfg_record_freed_reserved(phys_addr_t start, phys_addr_t end)
 {
-	pr_info("free_reserved_memory: 0x%lx ~ 0x%lx\n", (unsigned long)start,
+	pr_debug("free_reserved_memory: 0x%lx ~ 0x%lx\n", (unsigned long)start,
 			(unsigned long)end);
 	if (freed_reserved_memory_count < MAX_FREE_RESERVED) {
 		freed_reserved_memory[freed_reserved_memory_count].start
@@ -62,7 +62,7 @@ void mtk_memcfg_record_freed_reserved(phys_addr_t start, phys_addr_t end)
 			= end;
 		freed_reserved_memory_count++;
 	} else {
-		pr_info("freed_reserved_memory_count over limit %d\n",
+		pr_debug("freed_reserved_memory_count over limit %d\n",
 				MAX_FREE_RESERVED);
 	}
 }
@@ -169,8 +169,8 @@ int memcfg_remove_free_mem(struct reserved_mem_ext *rmem, int count)
 		end = mem->base + mem->size;
 
 		if (start > end) {
-			pr_info("start %lx > end %lx\n", start, end);
-			pr_info("reserved_mem: %s, base: %llu, size: %llu, nomap: %d\n",
+			pr_debug("start %lx > end %lx\n", start, end);
+			pr_debug("reserved_mem: %s, base: %llu, size: %llu, nomap: %d\n",
 					mem->name,
 					mem->base,
 					mem->size,
@@ -254,7 +254,7 @@ static int mtk_memcfg_reserve_memory_show(struct seq_file *m, void *v)
 	reserve_count = get_reserved_mem_count();
 	ret = memcfg_get_reserve_info(reserved_mem, reserve_count);
 	if (ret) {
-		pr_info("Can't get reserve memory.\n");
+		pr_debug("Can't get reserve memory.\n");
 		kfree(reserved_mem);
 		return 0;
 	}
@@ -333,7 +333,7 @@ int __init mtk_memcfg_reserve_info_init(struct proc_dir_entry *mtk_memcfg_dir)
 	struct proc_dir_entry *entry = NULL;
 
 	if (!mtk_memcfg_dir) {
-		pr_info("/proc/mtk_memcfg not exist");
+		pr_debug("/proc/mtk_memcfg not exist");
 		return 0;
 	}
 
@@ -341,13 +341,13 @@ int __init mtk_memcfg_reserve_info_init(struct proc_dir_entry *mtk_memcfg_dir)
 			    0644, mtk_memcfg_dir,
 			    &mtk_memcfg_total_reserve_operations);
 	if (!entry)
-		pr_info("create total_reserve_memory proc entry failed\n");
+		pr_debug("create total_reserve_memory proc entry failed\n");
 
 	entry = proc_create("reserve_memory",
 			    0644, mtk_memcfg_dir,
 			    &mtk_memcfg_reserve_memory_operations);
 	if (!entry)
-		pr_info("create reserve_memory proc entry failed\n");
+		pr_debug("create reserve_memory proc entry failed\n");
 
 	return 0;
 }

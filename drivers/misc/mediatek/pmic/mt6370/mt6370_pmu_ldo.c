@@ -56,7 +56,7 @@ struct mt6370_pmu_ldo_platform_data {
 
 static irqreturn_t mt6370_pmu_ldo_oc_irq_handler(int irq, void *data)
 {
-	pr_info("%s: IRQ triggered\n", __func__);
+	pr_debug("%s: IRQ triggered\n", __func__);
 	return IRQ_HANDLED;
 }
 

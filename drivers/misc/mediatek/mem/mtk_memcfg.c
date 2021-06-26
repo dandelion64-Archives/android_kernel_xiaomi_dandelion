@@ -105,7 +105,7 @@ static int mtk_memcfg_memory_layout_show(struct seq_file *m, void *v)
 
 	ret = memcfg_get_reserve_info(reserved_mem, count);
 	if (ret) {
-		pr_info("reserved_mem over limit!\n");
+		pr_debug("reserved_mem over limit!\n");
 		kfree(reserved_mem);
 		goto debug_info;
 	}
@@ -363,7 +363,7 @@ void mtk_memcfg_inform_vmpressure(void)
 		return;
 
 	/* Trigger AEE warning */
-	pr_info("%s: vmpressure trigger kernel warning\n", __func__);
+	pr_debug("%s: vmpressure trigger kernel warning\n", __func__);
 
 #ifdef CONFIG_MTK_AEE_FEATURE
 	aee_kernel_warning_api("LMK", 0,
@@ -400,7 +400,7 @@ static int __init mtk_memcfg_late_init(void)
 	mtk_memcfg_dir = proc_mkdir("mtk_memcfg", NULL);
 
 	if (!mtk_memcfg_dir) {
-		pr_info("[%s]: mkdir /proc/mtk_memcfg failed\n", __func__);
+		pr_debug("[%s]: mkdir /proc/mtk_memcfg failed\n", __func__);
 	} else {
 		/* display kernel memory layout */
 		entry = proc_create("memory_layout",
@@ -408,7 +408,7 @@ static int __init mtk_memcfg_late_init(void)
 				    &mtk_memcfg_memory_layout_operations);
 
 		if (!entry)
-			pr_info("create memory_layout proc entry failed\n");
+			pr_debug("create memory_layout proc entry failed\n");
 
 		mtk_memcfg_reserve_info_init(mtk_memcfg_dir);
 
@@ -418,8 +418,8 @@ static int __init mtk_memcfg_late_init(void)
 				mtk_memcfg_dir,
 				&mtk_memcfg_memblock_reserved_operations);
 		if (!entry)
-			pr_info("create memblock_reserved proc entry failed\n");
-		pr_info("create memblock_reserved proc entry success!!!!!\n");
+			pr_debug("create memblock_reserved proc entry failed\n");
+		pr_debug("create memblock_reserved proc entry success!!!!!\n");
 
 
 #ifdef CONFIG_SLUB_DEBUG
@@ -429,7 +429,7 @@ static int __init mtk_memcfg_late_init(void)
 				    &proc_slabtrace_operations);
 
 		if (!entry)
-			pr_info("create slabtrace proc entry failed\n");
+			pr_debug("create slabtrace proc entry failed\n");
 #endif
 #endif /* end of CONFIG_MTK_ENG_BUILD */
 	}

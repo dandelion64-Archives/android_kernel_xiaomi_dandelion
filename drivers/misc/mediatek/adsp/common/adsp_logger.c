@@ -73,7 +73,7 @@ ssize_t adsp_A_log_read(char __user *data, size_t len)
 
 	/* debug for logger pos fail */
 	if (r_pos >= dram_buf_len) {
-		pr_info("[ADSP] %s(): r_pos >= dram_buf_len,%x,%x\n", __func__,
+		pr_debug("[ADSP] %s(): r_pos >= dram_buf_len,%x,%x\n", __func__,
 			r_pos, ADSP_A_log_ctl->buff_ofs);
 		return 0;
 	}
@@ -321,7 +321,7 @@ static ssize_t adsp_A_trax_show(struct device *kobj,
 					 struct device_attribute *attr,
 					 char *buf)
 {
-	pr_info("[ADSP] %s initiated=%d, done=%d, length=%d\n",
+	pr_debug("[ADSP] %s initiated=%d, done=%d, length=%d\n",
 		__func__, pADSP_A_trax_ctl->initiated, pADSP_A_trax_ctl->done,
 		pADSP_A_trax_ctl->length);
 
@@ -417,11 +417,11 @@ static void adsp_logger_init_ws(struct work_struct *ws)
 	mem_info[3] = adsp_get_reserve_mem_size(ADSP_A_CORE_DUMP_MEM_ID);
 	mem_info[4] = adsp_get_reserve_mem_phys(ADSP_A_DEBUG_DUMP_MEM_ID);
 	mem_info[5] = adsp_get_reserve_mem_size(ADSP_A_DEBUG_DUMP_MEM_ID);
-	pr_info("[ADSP] logger addr 0x%x, size 0x%x\n",
+	pr_debug("[ADSP] logger addr 0x%x, size 0x%x\n",
 			mem_info[0], mem_info[1]);
-	pr_info("[ADSP] coredump addr 0x%x, size 0x%x\n",
+	pr_debug("[ADSP] coredump addr 0x%x, size 0x%x\n",
 			mem_info[2], mem_info[3]);
-	pr_info("[ADSP] debugdump addr 0x%x, size 0x%x\n",
+	pr_debug("[ADSP] debugdump addr 0x%x, size 0x%x\n",
 			mem_info[4], mem_info[5]);
 
 	adsp_register_feature(ADSP_LOGGER_FEATURE_ID);
@@ -444,10 +444,10 @@ static void adsp_trax_init_ws(struct work_struct *ws)
 	unsigned int phys_u32;
 
 	reserved_phys_trax = adsp_get_reserve_mem_phys(ADSP_A_TRAX_MEM_ID);
-	pr_info("[ADSP]reserved_phys_trax=0x%llx, size=%lu\n",
+	pr_debug("[ADSP]reserved_phys_trax=0x%llx, size=%lu\n",
 		reserved_phys_trax, sizeof(reserved_phys_trax));
 	phys_u32 = (unsigned int)reserved_phys_trax;
-	pr_info("[ADSP]phys_u32=0x%x, size=%lu\n", phys_u32, sizeof(phys_u32));
+	pr_debug("[ADSP]phys_u32=0x%x, size=%lu\n", phys_u32, sizeof(phys_u32));
 
 	adsp_register_feature(ADSP_LOGGER_FEATURE_ID);
 
@@ -490,7 +490,7 @@ int adsp_logger_init(void)
 	dram_buf_len =
 		adsp_get_reserve_mem_size(ADSP_A_LOGGER_MEM_ID) - last_ofs;
 	ADSP_A_log_ctl->buff_size = dram_buf_len;
-	pr_info("[ADSP] logger dram_buf_len=0x%x\n", dram_buf_len);
+	pr_debug("[ADSP] logger dram_buf_len=0x%x\n", dram_buf_len);
 
 	ADSP_A_buf_info = (struct buffer_info_s *)
 			  (((unsigned char *) ADSP_A_log_ctl) +

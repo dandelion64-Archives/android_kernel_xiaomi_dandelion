@@ -575,7 +575,7 @@ static void __fill_pasr_on_by_chconfig(int downgrade, struct pasrvec *pasrvec,
 	channel_batch = channel_count >> downgrade;
 	element_size = channel_segnum >> downgrade;
 
-	pr_info(
+	pr_debug(
 	"%s: downgrade[%d] opon[%lx] chgrp_clone_max[%d] channel_batch[%d] element_size[%d]\n",
 	__func__, downgrade, opon, chgrp_clone_max,
 	channel_batch, element_size);
@@ -619,7 +619,7 @@ static void __fill_pasr_on_by_chconfig(int downgrade, struct pasrvec *pasrvec,
 #ifdef DEBUG_FOR_CHANNEL_SWITCH
 	for (chgrp = 0; chgrp < chgrp_clone_max; chgrp++)
 		for (clone = 0; clone < chgrp_clone_max; clone++)
-			pr_info("(a)%s: [%d][%d] = %x\n", __func__,
+			pr_debug("(a)%s: [%d][%d] = %x\n", __func__,
 					chgrp, clone, element[chgrp][clone]);
 #endif
 	/* Copy to other channel group */
@@ -630,7 +630,7 @@ static void __fill_pasr_on_by_chconfig(int downgrade, struct pasrvec *pasrvec,
 #ifdef DEBUG_FOR_CHANNEL_SWITCH
 	for (chgrp = 0; chgrp < chgrp_clone_max; chgrp++)
 		for (clone = 0; clone < chgrp_clone_max; clone++)
-			pr_info("(b)%s: [%d][%d] = %x\n", __func__,
+			pr_debug("(b)%s: [%d][%d] = %x\n", __func__,
 					chgrp, clone, element[chgrp][clone]);
 #endif
 	/* Mapping translation */
@@ -647,7 +647,7 @@ static void __fill_pasr_on_by_chconfig(int downgrade, struct pasrvec *pasrvec,
 #ifdef DEBUG_FOR_CHANNEL_SWITCH
 	for (chgrp = 0; chgrp < chgrp_clone_max; chgrp++)
 		for (clone = 0; clone < chgrp_clone_max; clone++)
-			pr_info("(c)%s: [%d][%d] = %x\n", __func__,
+			pr_debug("(c)%s: [%d][%d] = %x\n", __func__,
 					chgrp, clone, element[chgrp][clone]);
 #endif
 	/* Fill PASR vector (by channel_batch) */
@@ -663,7 +663,7 @@ static void __fill_pasr_on_by_chconfig(int downgrade, struct pasrvec *pasrvec,
 			mask = (0x1 << fill_element_bits) - 1;
 
 #ifdef DEBUG_FOR_CHANNEL_SWITCH
-			pr_info(
+			pr_debug(
 			"(+)%s: rank[%d] fill_element_bits[%d] mask[%x]\n",
 			__func__, rank, fill_element_bits, mask);
 #endif
@@ -681,7 +681,7 @@ static void __fill_pasr_on_by_chconfig(int downgrade, struct pasrvec *pasrvec,
 			}
 
 #ifdef DEBUG_FOR_CHANNEL_SWITCH
-			pr_info(
+			pr_debug(
 			"(.)%s: chgrp[%d] clone[%d] accu_element_bits[%d] tmp[%x]\n",
 			__func__, chgrp, clone, accu_element_bits, tmp);
 #endif
@@ -692,7 +692,7 @@ static void __fill_pasr_on_by_chconfig(int downgrade, struct pasrvec *pasrvec,
 				tmp = 0x0;
 
 #ifdef DEBUG_FOR_CHANNEL_SWITCH
-			pr_info("(.)%s: tmp[%x]\n", __func__, tmp);
+			pr_debug("(.)%s: tmp[%x]\n", __func__, tmp);
 #endif
 			/* Update PASR vector */
 			which_channel = chgrp * channel_batch;

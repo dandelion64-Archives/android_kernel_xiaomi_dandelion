@@ -47,7 +47,7 @@ static int chrdet_inform_psy_changed(enum charger_type chg_type,
 	int ret = 0;
 	union power_supply_propval propval;
 
-	pr_info("charger type: %s: online = %d, type = %d\n", __func__,
+	pr_debug("charger type: %s: online = %d, type = %d\n", __func__,
 		chg_online, chg_type);
 
 	/* Inform chg det power supply */
@@ -96,7 +96,7 @@ void do_charger_detect(void)
 {
 	if (!mt_usb_is_device()) {
 		g_chr_type = CHARGER_UNKNOWN;
-		pr_info("charger type: Now is usb host mode. Skip detection\n");
+		pr_debug("charger type: Now is usb host mode. Skip detection\n");
 		return;
 	}
 
@@ -111,11 +111,11 @@ void do_charger_detect(void)
 	mutex_lock(&chrdet_lock);
 
 	if (pmic_get_register_value(PMIC_RGS_CHRDET)) {
-		pr_info("charger type: charger IN\n");
+		pr_debug("charger type: charger IN\n");
 		g_chr_type = hw_charging_get_charger_type();
 		chrdet_inform_psy_changed(g_chr_type, 1);
 	} else {
-		pr_info("charger type: charger OUT\n");
+		pr_debug("charger type: charger OUT\n");
 		g_chr_type = CHARGER_UNKNOWN;
 		chrdet_inform_psy_changed(g_chr_type, 0);
 	}
@@ -140,7 +140,7 @@ void chrdet_int_handler(void)
 
 		if (boot_mode == KERNEL_POWER_OFF_CHARGING_BOOT
 		    || boot_mode == LOW_POWER_OFF_CHARGING_BOOT) {
-			pr_info("[%s] Unplug Charger/USB\n", __func__);
+			pr_debug("[%s] Unplug Charger/USB\n", __func__);
 #ifndef CONFIG_TCPC_CLASS
 			mt_power_off();
 #else

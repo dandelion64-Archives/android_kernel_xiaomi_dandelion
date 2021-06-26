@@ -65,7 +65,7 @@ static unsigned int pmic_read_device(unsigned int RegNum,
 	return_value = pwrap_read((RegNum), &rdata);
 	pmic_reg = rdata;
 	if (return_value != 0) {
-		pr_info("[%s] err ret=%d, Reg[0x%x] pmic_wrap read data fail, MASK=0x%x, SHIFT=%d\n"
+		pr_debug("[%s] err ret=%d, Reg[0x%x] pmic_wrap read data fail, MASK=0x%x, SHIFT=%d\n"
 			, __func__, return_value, RegNum, MASK, SHIFT);
 		return return_value;
 	}
@@ -95,7 +95,7 @@ static unsigned int pmic_write_device(unsigned int RegNum,
 	return_value = pwrap_read((RegNum), &rdata);
 	pmic_reg = rdata;
 	if (return_value != 0) {
-		pr_info("[%s] err ret=%d, Reg[0x%x] pmic_wrap read data fail, val=0x%x, MASK=0x%x, SHIFT=%d\n"
+		pr_debug("[%s] err ret=%d, Reg[0x%x] pmic_wrap read data fail, val=0x%x, MASK=0x%x, SHIFT=%d\n"
 			, __func__, return_value, RegNum, val, MASK, SHIFT);
 		return return_value;
 	}
@@ -108,7 +108,7 @@ static unsigned int pmic_write_device(unsigned int RegNum,
 
 	return_value = pwrap_write((RegNum), pmic_reg);
 	if (return_value != 0) {
-		pr_info("[%s] err ret=%d, Reg[0x%x]=0x%x pmic_wrap write data fail, val=0x%x, MASK=0x%x, SHIFT=%d\n"
+		pr_debug("[%s] err ret=%d, Reg[0x%x]=0x%x pmic_wrap write data fail, val=0x%x, MASK=0x%x, SHIFT=%d\n"
 			, __func__, return_value, RegNum, pmic_reg,
 			 val, MASK, SHIFT);
 		return return_value;
@@ -117,7 +117,7 @@ static unsigned int pmic_write_device(unsigned int RegNum,
 #else /*---IPIMB---*/
 	return_value = pmic_ipi_config_interface(RegNum, val, MASK, SHIFT, 1);
 	if (return_value)
-		pr_info("[%s]IPIMB write data fail with ret = %d, (0x%x,0x%x,0x%x,%d)\n"
+		pr_debug("[%s]IPIMB write data fail with ret = %d, (0x%x,0x%x,0x%x,%d)\n"
 			, __func__, return_value, RegNum, val, MASK, SHIFT);
 	else
 		PMICLOG("[%s]IPIMB write data =(0x%x,0x%x,0x%x,%d)\n"
@@ -185,14 +185,14 @@ unsigned short pmic_set_register_value(PMU_FLAGS_LIST_ENUM flagname,
 	unsigned int ret = 0;
 
 	if (pFlag->flagname != flagname) {
-		pr_info("[%s]pmic flag idx error\n", __func__);
+		pr_debug("[%s]pmic flag idx error\n", __func__);
 		return 1;
 	}
 
 	ret = pmic_config_interface((unsigned int)(pFlag->offset), val,
 		(unsigned int)(pFlag->mask), (unsigned int)(pFlag->shift));
 	if (ret != 0) {
-		pr_info("[%s] error ret: %d when set Reg[0x%x]=0x%x\n",
+		pr_debug("[%s] error ret: %d when set Reg[0x%x]=0x%x\n",
 			__func__, ret, (pFlag->offset), val);
 		return ret;
 	}
@@ -209,7 +209,7 @@ unsigned short pmic_get_register_value(PMU_FLAGS_LIST_ENUM flagname)
 	ret = pmic_read_interface((unsigned int)pFlag->offset, &val,
 		(unsigned int)(pFlag->mask), (unsigned int)(pFlag->shift));
 	if (ret != 0) {
-		pr_info("[%s] error ret: %d when get Reg[0x%x]\n", __func__,
+		pr_debug("[%s] error ret: %d when get Reg[0x%x]\n", __func__,
 			ret, (pFlag->offset));
 		return ret;
 	}
@@ -224,14 +224,14 @@ unsigned short pmic_set_register_value_nolock(PMU_FLAGS_LIST_ENUM flagname,
 	unsigned int ret = 0;
 
 	if (pFlag->flagname != flagname) {
-		pr_info("[%s]pmic flag idx error\n", __func__);
+		pr_debug("[%s]pmic flag idx error\n", __func__);
 		return 1;
 	}
 
 	ret = pmic_config_interface_nolock((unsigned int)(pFlag->offset), val,
 		(unsigned int)(pFlag->mask), (unsigned int)(pFlag->shift));
 	if (ret != 0) {
-		pr_info("[%s] error ret: %d when set Reg[0x%x]=0x%x\n",
+		pr_debug("[%s] error ret: %d when set Reg[0x%x]=0x%x\n",
 			__func__, ret, (pFlag->offset), val);
 		return ret;
 	}
@@ -248,7 +248,7 @@ unsigned short pmic_get_register_value_nolock(PMU_FLAGS_LIST_ENUM flagname)
 	ret = pmic_read_interface_nolock((unsigned int)pFlag->offset, &val,
 		(unsigned int)(pFlag->mask), (unsigned int)(pFlag->shift));
 	if (ret != 0) {
-		pr_info("[%s] error ret: %d when get Reg[0x%x]\n", __func__,
+		pr_debug("[%s] error ret: %d when get Reg[0x%x]\n", __func__,
 			ret, (pFlag->offset));
 		return ret;
 	}
@@ -622,7 +622,7 @@ static int __init pmic_mt_init(void)
 
 	ret = platform_driver_register(&pmic_mt_driver);
 	if (ret) {
-		pr_info("****[%s] Unable to register driver (%d)\n"
+		pr_debug("****[%s] Unable to register driver (%d)\n"
 			, __func__, ret);
 		return ret;
 	}

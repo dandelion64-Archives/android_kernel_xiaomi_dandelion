@@ -75,7 +75,7 @@
 
 void __attribute__((weak)) arch_reset(char mode, const char *cmd)
 {
-	pr_info("arch_reset is not ready\n");
+	pr_debug("arch_reset is not ready\n");
 }
 
 /* Global variable */
@@ -414,7 +414,7 @@ void wake_up_pmic(void)
 		pmic_wake_lock(&pmicThread_lock);
 		wake_up_process(pmic_thread_handle);
 	} else {
-		pr_info(PMICTAG "[%s] pmic_thread_handle not ready\n", __func__)
+		pr_debug(PMICTAG "[%s] pmic_thread_handle not ready\n", __func__)
 			;
 		return;
 	}
@@ -436,10 +436,10 @@ void pmic_enable_interrupt(enum PMIC_IRQ_ENUM intNo, unsigned int en, char *str)
 	no = intNo % PMIC_INT_WIDTH;
 
 	if (shift >= interrupts_size) {
-		pr_info(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
+		pr_debug(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
 		return;
 	} else if (en != 0 && en != 1) {
-		pr_info(PMICTAG "[%s] error argument en=%d\n", __func__, en);
+		pr_debug(PMICTAG "[%s] error argument en=%d\n", __func__, en);
 		return;
 	}
 	PMICLOG("[%s] intno=%d en=%d str=%s shf=%d no=%d [0x%x]=0x%x\r\n"
@@ -466,7 +466,7 @@ void pmic_mask_interrupt(enum PMIC_IRQ_ENUM intNo, char *str)
 	no = intNo % PMIC_INT_WIDTH;
 
 	if (shift >= interrupts_size) {
-		pr_info(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
+		pr_debug(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
 		return;
 	}
 	PMICLOG("[%s] intno=%d str=%s shf=%d no=%d [0x%x]=0x%x\r\n"
@@ -490,7 +490,7 @@ void pmic_unmask_interrupt(enum PMIC_IRQ_ENUM intNo, char *str)
 	no = intNo % PMIC_INT_WIDTH;
 
 	if (shift >= interrupts_size) {
-		pr_info(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
+		pr_debug(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
 		return;
 	}
 	PMICLOG("[%s] intno=%d str=%s shf=%d no=%d [0x%x]=0x%x\r\n"
@@ -515,10 +515,10 @@ void pmic_register_interrupt_callback(enum PMIC_IRQ_ENUM intNo
 	no = intNo % PMIC_INT_WIDTH;
 
 	if (shift >= interrupts_size) {
-		pr_info(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
+		pr_debug(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
 		return;
 	} else if (interrupts[shift].interrupts[no].callback != NULL) {
-		pr_info(PMICTAG "[%s] register callback conflict intno=%d\n"
+		pr_debug(PMICTAG "[%s] register callback conflict intno=%d\n"
 			, __func__, intNo);
 		return;
 	}
@@ -537,7 +537,7 @@ void pmic_register_oc_interrupt_callback(enum PMIC_IRQ_ENUM intNo)
 	no = intNo % PMIC_INT_WIDTH;
 
 	if (shift >= interrupts_size) {
-		pr_info(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
+		pr_debug(PMICTAG "[%s] fail intno=%d\r\n", __func__, intNo);
 		return;
 	}
 	interrupts[shift].interrupts[no].oc_callback = oc_int_handler;
@@ -578,7 +578,7 @@ static void pmic_int_handler(void)
 
 		int_status_val = upmu_get_reg_value(interrupts[i].address);
 		if (int_status_val) {
-			pr_info(PMICTAG "[PMIC_INT] addr[0x%x]=0x%x\n"
+			pr_debug(PMICTAG "[PMIC_INT] addr[0x%x]=0x%x\n"
 				, interrupts[i].address, int_status_val);
 			upmu_set_reg_value(interrupts[i].address
 					   , int_status_val);
@@ -671,7 +671,7 @@ static void irq_thread_init(void)
 					    (void *)NULL, "pmic_thread");
 	if (IS_ERR(pmic_thread_handle)) {
 		pmic_thread_handle = NULL;
-		pr_info(PMICTAG "[pmic_thread_kthread] creation fails\n");
+		pr_debug(PMICTAG "[pmic_thread_kthread] creation fails\n");
 	} else {
 		PMICLOG("[pmic_thread_kthread] kthread_create Done\n");
 	}
@@ -745,10 +745,10 @@ void PMIC_EINT_SETTING(struct platform_device *pdev)
 		ret = request_irq(g_pmic_irq, (irq_handler_t)mt_pmic_eint_irq,
 			IRQF_TRIGGER_NONE, "pmic-eint", NULL);
 		if (ret > 0)
-			pr_info(PMICTAG "EINT IRQ NOT AVAILABLE\n");
+			pr_debug(PMICTAG "EINT IRQ NOT AVAILABLE\n");
 		enable_irq_wake(g_pmic_irq);
 	} else
-		pr_info(PMICTAG "can't find compatible node\n");
+		pr_debug(PMICTAG "can't find compatible node\n");
 
 	PMICLOG("[CUST_EINT] CUST_EINT_MT_PMIC_MT6355_NUM=%d\n"
 		, g_eint_pmic_num);

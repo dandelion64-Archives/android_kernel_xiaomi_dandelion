@@ -3544,7 +3544,7 @@ static int kbase_platform_device_remove(struct platform_device *pdev)
 #endif
 
 	if (mtk_common_deinit(pdev, kbdev))
-		pr_info("[MTK] fail to mtk_common_deinit\n");
+		pr_debug("[MTK] fail to mtk_common_deinit\n");
 
 	if (kbdev->inited_subsys & inited_dev_list) {
 		dev_list = kbase_dev_list_get();

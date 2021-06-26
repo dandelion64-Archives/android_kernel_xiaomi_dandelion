@@ -20,12 +20,12 @@
 /* #define KH_DEBUG */
 
 #ifdef KH_DEBUG
-#define kh_info(fmt, ...)  pr_info(fmt, ##__VA_ARGS__)
+#define kh_info(fmt, ...)  pr_debug(fmt, ##__VA_ARGS__)
 #else
 #define kh_info(fmt, ...)
 #endif
 
-#define kh_err(fmt, ...)  pr_info(fmt, ##__VA_ARGS__)
+#define kh_err(fmt, ...)  pr_debug(fmt, ##__VA_ARGS__)
 
 int kh_register(struct kh_dev *dev, unsigned int key_bits,
 		unsigned int key_slot)

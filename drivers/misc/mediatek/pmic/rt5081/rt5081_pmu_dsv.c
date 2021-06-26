@@ -116,20 +116,20 @@ struct rt5081_pmu_dsv_platform_data {
 
 static irqreturn_t rt5081_pmu_dsv_vneg_ocp_irq_handler(int irq, void *data)
 {
-	/* Use pr_info()  instead of dev_info */
-	pr_info("%s: IRQ triggered\n", __func__);
+	/* Use pr_debug()  instead of dev_info */
+	pr_debug("%s: IRQ triggered\n", __func__);
 	return IRQ_HANDLED;
 }
 
 static irqreturn_t rt5081_pmu_dsv_vpos_ocp_irq_handler(int irq, void *data)
 {
-	pr_info("%s: IRQ triggered\n", __func__);
+	pr_debug("%s: IRQ triggered\n", __func__);
 	return IRQ_HANDLED;
 }
 
 static irqreturn_t rt5081_pmu_dsv_bst_ocp_irq_handler(int irq, void *data)
 {
-	pr_info("%s: IRQ triggered\n", __func__);
+	pr_debug("%s: IRQ triggered\n", __func__);
 	return IRQ_HANDLED;
 }
 
@@ -138,7 +138,7 @@ static irqreturn_t rt5081_pmu_dsv_vneg_scp_irq_handler(int irq, void *data)
 	struct rt5081_pmu_dsv_data *dsv_data = data;
 	int ret;
 
-	pr_info("%s: IRQ triggered\n", __func__);
+	pr_debug("%s: IRQ triggered\n", __func__);
 	ret = rt5081_pmu_reg_read(dsv_data->chip, RT5081_PMU_REG_DBSTAT);
 	if (ret&0x40)
 		regulator_notifier_call_chain(
@@ -151,7 +151,7 @@ static irqreturn_t rt5081_pmu_dsv_vpos_scp_irq_handler(int irq, void *data)
 	struct rt5081_pmu_dsv_data *dsv_data = data;
 	int ret;
 
-	pr_info("%s: IRQ triggered\n", __func__);
+	pr_debug("%s: IRQ triggered\n", __func__);
 	ret = rt5081_pmu_reg_read(dsv_data->chip, RT5081_PMU_REG_DBSTAT);
 	if (ret&0x80)
 		regulator_notifier_call_chain(
@@ -240,7 +240,7 @@ static int rt5081_dsv_enable(struct regulator_dev *rdev)
 {
 	struct rt5081_pmu_dsv_data *info = rdev_get_drvdata(rdev);
 
-	pr_info("%s, id = %d\n", __func__, rdev->desc->id);
+	pr_debug("%s, id = %d\n", __func__, rdev->desc->id);
 	return rt5081_pmu_reg_set_bit(info->chip,
 		rt5081_dsv_regulators[rdev->desc->id].enable_reg,
 		rt5081_dsv_regulators[rdev->desc->id].enable_bit);
@@ -250,7 +250,7 @@ static int rt5081_dsv_disable(struct regulator_dev *rdev)
 {
 	struct rt5081_pmu_dsv_data *info = rdev_get_drvdata(rdev);
 
-	pr_info("%s, id = %d\n", __func__, rdev->desc->id);
+	pr_debug("%s, id = %d\n", __func__, rdev->desc->id);
 	return rt5081_pmu_reg_clr_bit(info->chip,
 		rt5081_dsv_regulators[rdev->desc->id].enable_reg,
 		rt5081_dsv_regulators[rdev->desc->id].enable_bit);

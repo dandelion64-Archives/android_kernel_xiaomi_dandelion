@@ -132,7 +132,7 @@ void vmd1_pmic_setting_on(void)
 #else
 	if (pmic_get_register_value(PMIC_DA_VMODEM_VOSEL) != 0x40)
 #endif
-		pr_info("%s vmodem vosel = 0x%x, da_vosel = 0x%x"
+		pr_debug("%s vmodem vosel = 0x%x, da_vosel = 0x%x"
 			, __func__
 			, pmic_get_register_value(PMIC_RG_BUCK_VMODEM_VOSEL)
 			, pmic_get_register_value(PMIC_DA_VMODEM_VOSEL));
@@ -144,7 +144,7 @@ void vmd1_pmic_setting_on(void)
 #else
 	if (pmic_get_register_value(PMIC_DA_QI_VSRAM_MD_VOSEL) != 0x42)
 #endif
-		pr_info("%s vsram_md vosel = 0x%x, da_vosel = 0x%x"
+		pr_debug("%s vsram_md vosel = 0x%x, da_vosel = 0x%x"
 			, __func__
 			, pmic_get_register_value(PMIC_RG_LDO_VSRAM_MD_VOSEL)
 			, pmic_get_register_value(PMIC_DA_QI_VSRAM_MD_VOSEL));
@@ -215,7 +215,7 @@ unsigned int pmic_scp_set_vcore(unsigned int voltage)
 	unsigned short read_val = 0;
 
 	if (voltage > max_uV || voltage < min_uV) {
-		pr_info("[PMIC]Set Wrong buck voltage for %s, range (%duV - %duV)\n"
+		pr_debug("[PMIC]Set Wrong buck voltage for %s, range (%duV - %duV)\n"
 			, name, min_uV, max_uV);
 		return voltage;
 	}
@@ -231,12 +231,12 @@ unsigned int pmic_scp_set_vcore(unsigned int voltage)
 		if (read_val == value)
 			PMICLOG("Set %s Voltage to %duV pass\n", name, voltage);
 		else {
-			pr_info("[PMIC] Set %s Voltage fail with step = %d, read voltage = %duV\n"
+			pr_debug("[PMIC] Set %s Voltage fail with step = %d, read voltage = %duV\n"
 				, name, value, (read_val * uV_step + min_uV));
 			return voltage;
 		}
 	} else {
-		pr_info("[PMIC] Set %s Votage to %duV fail, due to buck non-enable\n"
+		pr_debug("[PMIC] Set %s Votage to %duV fail, due to buck non-enable\n"
 				, name, voltage);
 		return voltage;
 	}
@@ -256,7 +256,7 @@ unsigned int pmic_scp_set_vsram_vcore(unsigned int voltage)
 	unsigned short read_val = 0;
 
 	if (voltage > max_uV || voltage < min_uV) {
-		pr_info("[PMIC]Set Wrong buck voltage for %s, range (%duV - %duV)\n"
+		pr_debug("[PMIC]Set Wrong buck voltage for %s, range (%duV - %duV)\n"
 			, name, min_uV, max_uV);
 		return voltage;
 	}
@@ -273,12 +273,12 @@ unsigned int pmic_scp_set_vsram_vcore(unsigned int voltage)
 		if (read_val == value)
 			PMICLOG("Set %s Voltage to %duV pass\n", name, voltage);
 		else {
-			pr_info("[PMIC] Set %s Voltage fail with step = %d, read voltage = %duV\n"
+			pr_debug("[PMIC] Set %s Voltage fail with step = %d, read voltage = %duV\n"
 				, name, value, (read_val * uV_step + min_uV));
 			return voltage;
 		}
 	} else {
-		pr_info("[PMIC] Set %s Votage to %duV fail, due to buck non-enable\n"
+		pr_debug("[PMIC] Set %s Votage to %duV fail, due to buck non-enable\n"
 				, name, voltage);
 		return voltage;
 	}
@@ -299,14 +299,14 @@ unsigned int enable_vsram_vcore_hw_tracking(unsigned int en)
 	pmic_config_interface(MT6355_LDO_TRACKING_CON0, wdata, 0x7, 0);
 	pmic_read_interface(MT6355_LDO_TRACKING_CON0, &rdata, 0x7, 0);
 	if (!(rdata ^ wdata)) {
-		pr_info("[PMIC][%s] %s HW TRACKING success\n"
+		pr_debug("[PMIC][%s] %s HW TRACKING success\n"
 			, __func__, (en == 1) ? "enable" : "disable");
 		/*By AP, LP DE Give*/
 		/*if (en == 0)*/	/* set VSRAM_VCORE to 1.0V*/
 		/*pmic_set_register_value(PMIC_RG_VSRAM_CORE_VOSEL, 0x60);*/
 		return 0;
 	}
-	pr_info("[PMIC][%s] %s HW TRACKING fail\n"
+	pr_debug("[PMIC][%s] %s HW TRACKING fail\n"
 		, __func__, (en == 1) ? "enable" : "disable");
 	return 1;
 }

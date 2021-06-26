@@ -133,7 +133,7 @@ static inline int sync_pt_get_status(struct sync_pt *pt)
 		if (pfnDumpDebugPrintf) { \
 			pfnDumpDebugPrintf(pvDumpDebugFile, fmt, __VA_ARGS__); \
 		} else { \
-			pr_info("pvr_sync2: " fmt, __VA_ARGS__); \
+			pr_debug("pvr_sync2: " fmt, __VA_ARGS__); \
 		} \
 	} while (0)
 

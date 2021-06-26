@@ -17,7 +17,7 @@
 #define IN_RANGE(s, e, rs, re)	(s >= rs && e <= re)
 
 /* Print wrapper */
-#define MTKPASR_PRINT(args...)	do {} while (0) /* pr_info(args) */
+#define MTKPASR_PRINT(args...)	do {} while (0) /* pr_debug(args) */
 
 /*-- Data structures */
 

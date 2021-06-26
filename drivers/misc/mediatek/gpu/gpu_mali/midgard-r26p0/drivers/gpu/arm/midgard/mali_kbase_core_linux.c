@@ -3722,7 +3722,7 @@ static int kbase_platform_device_probe(struct platform_device *pdev)
 	const struct list_head *dev_list;
 	int err = 0;
 
-	pr_info("[MALI] Midgard r26p0-01rel0 DDK kernel device driver. GPU probe() begin.\n");
+	pr_debug("[MALI] Midgard r26p0-01rel0 DDK kernel device driver. GPU probe() begin.\n");
 
 	kbdev = kbase_device_alloc();
 	if (!kbdev) {
@@ -3982,7 +3982,7 @@ static int kbase_platform_device_probe(struct platform_device *pdev)
 	dev_info(kbdev->dev,
 			"Probed as %s\n", dev_name(kbdev->mdev.this_device));
 
-	pr_info("[MALI] Midgard r26p0-01rel0 DDK kernel device driver. GPU probe() end.\n");
+	pr_debug("[MALI] Midgard r26p0-01rel0 DDK kernel device driver. GPU probe() end.\n");
 
 	kbase_dev_nr++;
 #endif /* MALI_KBASE_BUILD */

@@ -47,7 +47,7 @@
 #else
 #define LCM_LOGI(fmt, args...)      pr_notice("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #define LCM_LOGD(fmt, args...)      pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
-#define LCM_LOGE(fmt, args...)      pr_info("[KERNEL/"LOG_TAG"]"fmt, ##args)
+#define LCM_LOGE(fmt, args...)      pr_debug("[KERNEL/"LOG_TAG"]"fmt, ##args)
 #endif
 
 // --------------------------------------------------------------------------

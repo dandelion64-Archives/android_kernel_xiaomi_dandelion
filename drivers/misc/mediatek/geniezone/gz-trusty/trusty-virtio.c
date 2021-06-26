@@ -502,7 +502,7 @@ static int trusty_set_tee_name(struct trusty_ctx *tctx,
 
 	of_property_read_string(node, "tee-name", (const char **)&str);
 	strncpy(cfg->dev_name.tee_name, str, MAX_MINOR_NAME_LEN);
-	pr_info("[%s] set tee_name: %s\n", __func__, cfg->dev_name.tee_name);
+	pr_debug("[%s] set tee_name: %s\n", __func__, cfg->dev_name.tee_name);
 
 	return 0;
 }
@@ -594,7 +594,7 @@ static int trusty_parse_device_descr(struct trusty_ctx *tctx,
 	return 0;
 
 err_wrong_tee_id:
-	pr_info("Raise a panic, cannot resume.");
+	pr_debug("Raise a panic, cannot resume.");
 	return 0;
 }
 
@@ -722,7 +722,7 @@ static int bind_big_core(struct cpumask *mask)
 				i = kstrtoint(compat_val + (compat_len - 2), 10,
 					      &cpu_type);
 				if (i < 0) {
-					pr_info("[%s] Parse cpu_type error\n",
+					pr_debug("[%s] Parse cpu_type error\n",
 						__func__);
 					break;
 				}
@@ -915,7 +915,7 @@ static int __init trusty_virtio_init(void)
 
 err_nebula_virtio_driver:
 err_trusty_virtio_driver:
-	pr_info("Platform driver register failed");
+	pr_debug("Platform driver register failed");
 	return -ENODEV;
 }
 

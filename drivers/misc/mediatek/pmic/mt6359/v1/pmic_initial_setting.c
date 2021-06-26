@@ -254,6 +254,6 @@ void PMIC_LP_INIT_SETTING(void)
 		pmic_set_register_value(PMIC_RG_LDO_VUSB_LP, 1);
 	}
 
-	pr_info("[%s] Chip Ver = %d\n", __func__, g_pmic_chip_version);
+	pr_debug("[%s] Chip Ver = %d\n", __func__, g_pmic_chip_version);
 #endif /*LP_INIT_SETTING_VERIFIED*/
 }

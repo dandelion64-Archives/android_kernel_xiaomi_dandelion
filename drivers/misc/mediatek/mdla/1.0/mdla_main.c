@@ -293,7 +293,7 @@ static void mdla_reset(int res)
 {
 	const char *str = mdla_get_reason_str(res);
 
-	pr_info("%s: MDLA RESET: %s(%d)\n", __func__,
+	pr_debug("%s: MDLA RESET: %s(%d)\n", __func__,
 		str, res);
 
 	// Enable Bus prot, start to turn off, set bus protect - step 1:0
@@ -512,7 +512,7 @@ static int mdla_probe(struct platform_device *pdev)
 		return rc;
 	}
 	apu_mdla_gsm_base = (void *) apu_mdla_gsm->start;
-	pr_info("%s: apu_mdla_gsm_top: %p, apu_mdla_gsm_base: %p\n",
+	pr_debug("%s: apu_mdla_gsm_top: %p, apu_mdla_gsm_base: %p\n",
 		__func__, apu_mdla_gsm_top, apu_mdla_gsm_base);
 
 	apu_conn_top = ioremap_nocache(apu_conn->start,

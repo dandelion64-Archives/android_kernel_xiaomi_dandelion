@@ -198,7 +198,7 @@ void PMIC_LP_INIT_SETTING(void)
 	pmic_ldo_vusb_lp(SRCLKEN2, 1, HW_LP);
 	pmic_ldo_vbif28_lp(SRCLKEN2, 1, HW_OFF);
 
-	pr_info("[%s] Chip Ver = %d\n", __func__, g_pmic_chip_version);
+	pr_debug("[%s] Chip Ver = %d\n", __func__, g_pmic_chip_version);
 #endif /*LP_INIT_SETTING_VERIFIED*/
 
 }

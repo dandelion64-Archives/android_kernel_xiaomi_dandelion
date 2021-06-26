@@ -250,7 +250,7 @@ static void zmc_memory_lowpower_init(struct cma *zmc_cma)
 
 #ifdef MEMORY_LOWPOWER_FULLNESS
 	/* try to grab the last pageblock */
-	pr_info("%s: memory-lowpower-fullness\n", __func__);
+	pr_debug("%s: memory-lowpower-fullness\n", __func__);
 	if (cma != NULL)
 		memory_lowpower_fullness(memory_lowpower_base(),
 					memory_lowpower_size());

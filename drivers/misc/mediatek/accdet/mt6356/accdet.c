@@ -40,8 +40,8 @@
 #define ACCDET_ERROR(format, args...) pr_debug_ratelimited(format, ##args)
 #endif
 #define ACCDET_DEBUG(format, args...) pr_debug(format, ##args)
-#define ACCDET_INFO(format, args...) pr_info(format, ##args)
-#define ACCDET_ERROR(format, args...) pr_info(format, ##args)
+#define ACCDET_INFO(format, args...) pr_debug(format, ##args)
+#define ACCDET_ERROR(format, args...) pr_debug(format, ##args)
 
 static void send_accdet_status_event(int cable_type, int status);
 

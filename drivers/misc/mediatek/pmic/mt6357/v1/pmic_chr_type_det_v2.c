@@ -53,7 +53,7 @@ static int chrdet_inform_psy_changed(enum charger_type chg_type,
 	int ret = 0;
 	union power_supply_propval propval;
 
-	pr_info("charger type: %s: online = %d, type = %d\n", __func__,
+	pr_debug("charger type: %s: online = %d, type = %d\n", __func__,
 		chg_online, chg_type);
 
 	/* Inform chg det power supply */
@@ -110,17 +110,17 @@ static void hw_bc11_init(void)
 	if (first_connect == true) {
 		/* add make sure USB Ready */
 		if (is_usb_rdy() == false) {
-			pr_info("CDP, block\n");
+			pr_debug("CDP, block\n");
 			while (is_usb_rdy() == false && timeout > 0) {
 				msleep(100);
 				timeout--;
 			}
 			if (timeout == 0)
-				pr_info("CDP, timeout\n");
+				pr_debug("CDP, timeout\n");
 			else
-				pr_info("CDP, free\n");
+				pr_debug("CDP, free\n");
 		} else
-			pr_info("CDP, PASS\n");
+			pr_debug("CDP, PASS\n");
 		first_connect = false;
 	}
 
@@ -239,7 +239,7 @@ static unsigned int hw_bc11_stepB2(void)
 	bc11_set_register_value(PMIC_RG_BC11_CMP_EN, 0x0);
 	if (wChargerAvail == 1) {
 		bc11_set_register_value(PMIC_RG_BC11_VSRC_EN, 0x2);
-		pr_info("charger type: DCP, keep DM voltage source in stepB2\n");
+		pr_debug("charger type: DCP, keep DM voltage source in stepB2\n");
 	}
 	return wChargerAvail;
 
@@ -266,31 +266,31 @@ static void dump_charger_name(enum charger_type type)
 {
 	switch (type) {
 	case CHARGER_UNKNOWN:
-		pr_info("charger type: %d, CHARGER_UNKNOWN\n", type);
+		pr_debug("charger type: %d, CHARGER_UNKNOWN\n", type);
 		break;
 	case STANDARD_HOST:
-		pr_info("charger type: %d, Standard USB Host\n", type);
+		pr_debug("charger type: %d, Standard USB Host\n", type);
 		break;
 	case CHARGING_HOST:
-		pr_info("charger type: %d, Charging USB Host\n", type);
+		pr_debug("charger type: %d, Charging USB Host\n", type);
 		break;
 	case NONSTANDARD_CHARGER:
-		pr_info("charger type: %d, Non-standard Charger\n", type);
+		pr_debug("charger type: %d, Non-standard Charger\n", type);
 		break;
 	case STANDARD_CHARGER:
-		pr_info("charger type: %d, Standard Charger\n", type);
+		pr_debug("charger type: %d, Standard Charger\n", type);
 		break;
 	case APPLE_2_1A_CHARGER:
-		pr_info("charger type: %d, APPLE_2_1A_CHARGER\n", type);
+		pr_debug("charger type: %d, APPLE_2_1A_CHARGER\n", type);
 		break;
 	case APPLE_1_0A_CHARGER:
-		pr_info("charger type: %d, APPLE_1_0A_CHARGER\n", type);
+		pr_debug("charger type: %d, APPLE_1_0A_CHARGER\n", type);
 		break;
 	case APPLE_0_5A_CHARGER:
-		pr_info("charger type: %d, APPLE_0_5A_CHARGER\n", type);
+		pr_debug("charger type: %d, APPLE_0_5A_CHARGER\n", type);
 		break;
 	default:
-		pr_info("charger type: %d, Not Defined!!!\n", type);
+		pr_debug("charger type: %d, Not Defined!!!\n", type);
 		break;
 	}
 }
@@ -301,7 +301,7 @@ int hw_charging_get_charger_type(void)
 
 #ifdef CONFIG_MTK_USB2JTAG_SUPPORT
 	if (usb2jtag_mode()) {
-		pr_info("[USB2JTAG] in usb2jtag mode, skip charger detection\n");
+		pr_debug("[USB2JTAG] in usb2jtag mode, skip charger detection\n");
 		return STANDARD_HOST;
 	}
 #endif
@@ -330,14 +330,14 @@ int hw_charging_get_charger_type(void)
 	if (CHR_Type_num != STANDARD_CHARGER)
 		hw_bc11_done();
 	else
-		pr_info("charger type: skip bc11 release for BC12 DCP SPEC\n");
+		pr_debug("charger type: skip bc11 release for BC12 DCP SPEC\n");
 
 	dump_charger_name(CHR_Type_num);
 
 
 #ifdef __FORCE_USB_TYPE__
 	CHR_Type_num = STANDARD_HOST;
-	pr_info("charger type: Froce to STANDARD_HOST\n");
+	pr_debug("charger type: Froce to STANDARD_HOST\n");
 #endif
 
 	return CHR_Type_num;
@@ -351,12 +351,12 @@ void nostandard_detect_retry(void)
 		for (loop = 0; loop < 2; loop ++) {
 			msleep(800);
 			g_chr_type = hw_charging_get_charger_type();
-			pr_info("charger type: NONSTANDARD,LOOP = %d\n", loop);
+			pr_debug("charger type: NONSTANDARD,LOOP = %d\n", loop);
 			if (g_chr_type != NONSTANDARD_CHARGER)
 				break;
 		}
 	}
-	pr_info("[nostand_detect_retry] charger type = %d\n", g_chr_type);
+	pr_debug("[nostand_detect_retry] charger type = %d\n", g_chr_type);
 }
 
 void mtk_pmic_enable_chr_type_det(bool en)
@@ -364,7 +364,7 @@ void mtk_pmic_enable_chr_type_det(bool en)
 #ifndef CONFIG_TCPC_CLASS
 	if (!mt_usb_is_device()) {
 		g_chr_type = CHARGER_UNKNOWN;
-		pr_info("charger type: UNKNOWN, Now is usb host mode. Skip detection\n");
+		pr_debug("charger type: UNKNOWN, Now is usb host mode. Skip detection\n");
 		return;
 	}
 #endif
@@ -378,13 +378,13 @@ void mtk_pmic_enable_chr_type_det(bool en)
 			g_chr_type = STANDARD_HOST;
 			chrdet_inform_psy_changed(g_chr_type, 1);
 		} else {
-			pr_info("charger type: charger IN\n");
+			pr_debug("charger type: charger IN\n");
 			g_chr_type = hw_charging_get_charger_type();
 			nostandard_detect_retry();
 			chrdet_inform_psy_changed(g_chr_type, 1);
 		}
 	} else {
-		pr_info("charger type: charger OUT\n");
+		pr_debug("charger type: charger OUT\n");
 		g_chr_type = CHARGER_UNKNOWN;
 		chrdet_inform_psy_changed(g_chr_type, 0);
 	}
@@ -417,7 +417,7 @@ void chrdet_int_handler(void)
 
 		if (boot_mode == KERNEL_POWER_OFF_CHARGING_BOOT
 		    || boot_mode == LOW_POWER_OFF_CHARGING_BOOT) {
-			pr_info("[chrdet_int_handler] Unplug Charger/USB\n");
+			pr_debug("[chrdet_int_handler] Unplug Charger/USB\n");
 
 //add for power off charging Unplug Charger/USB show battery logo begin
 			kpd_pwrkey_pmic_handler(0x1);
@@ -427,7 +427,7 @@ void chrdet_int_handler(void)
 //add for power off charging Unplug Charger/USB show battery logo end
 
 #ifndef CONFIG_TCPC_CLASS
-			pr_info("%s: system_state=%d\n", __func__,
+			pr_debug("%s: system_state=%d\n", __func__,
 				system_state);
 			if (system_state != SYSTEM_POWER_OFF)
 				kernel_power_off();

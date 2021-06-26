@@ -219,10 +219,10 @@ static void LSM6DS3H_power(struct gyro_hw *hw, unsigned int on)
 			pr_debug("[gyro] ignore power control: %d\n", on);
 		else if (on) {	/* power on*/
 			if (!hwPowerOn(hw->power_id, hw->power_vol, "LSM6DS3H"))
-				pr_info("[gyro] power on fails!!\n");
+				pr_debug("[gyro] power on fails!!\n");
 		} else {	/* power off*/
 			if (!hwPowerDown(hw->power_id, "LSM6DS3H"))
-				pr_info("[gyro] power off fail!!\n");
+				pr_debug("[gyro] power off fail!!\n");
 		}
 	}
 #endif
@@ -304,7 +304,7 @@ static int LSM6DS3H_gyro_WriteCalibration(struct i2c_client *client,
 
 	GYRO_FUN();
 	if (!obj || !dat) {
-		pr_info("[gyro] null ptr!!\n");
+		pr_debug("[gyro] null ptr!!\n");
 		return -EINVAL;
 	}
 	cali[obj->cvt.map[LSM6DS3H_AXIS_X]] =
@@ -343,12 +343,12 @@ static int LSM6DS3H_gyro_SetPowerMode(struct i2c_client *client, bool enable)
 #ifdef LSM6DS3H_ACCESS_BY_GSE_I2C
 	res = LSM6DS3H_hwmsen_read_block(LSM6DS3H_CTRL2_G, databuf, 0x01);
 	if (res < 0) {
-		pr_info("[gyro] read power ctl register err!\n");
+		pr_debug("[gyro] read power ctl register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 #else
 	if (hwmsen_read_byte(client, LSM6DS3H_CTRL2_G, databuf)) {
-		pr_info("[gyro] read lsm6ds3h power ctl register err!\n");
+		pr_debug("[gyro] read lsm6ds3h power ctl register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 #endif
@@ -403,12 +403,12 @@ static int LSM6DS3H_Set_RegInc(struct i2c_client *client, bool inc)
 #ifdef LSM6DS3H_ACCESS_BY_GSE_I2C
 	res = LSM6DS3H_hwmsen_read_block(LSM6DS3H_CTRL3_C, databuf, 0x1);
 	if (res < 0) {
-		pr_info("[gyro] 1 read LSM6DS3H_CTRL1_XL err!\n");
+		pr_debug("[gyro] 1 read LSM6DS3H_CTRL1_XL err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 #else
 	if (hwmsen_read_byte(client, LSM6DS3H_CTRL3_C, databuf)) {
-		pr_info("[gyro] 2 read LSM6DS3H_CTRL1_XL err!\n");
+		pr_debug("[gyro] 2 read LSM6DS3H_CTRL1_XL err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 #endif
@@ -429,7 +429,7 @@ static int LSM6DS3H_Set_RegInc(struct i2c_client *client, bool inc)
 		res = i2c_master_send(client, databuf, 0x2);
 #endif
 		if (res <= 0) {
-			pr_info("[gyro] write full scale register err!\n");
+			pr_debug("[gyro] write full scale register err!\n");
 			return LSM6DS3H_ERR_I2C;
 		}
 	}
@@ -446,12 +446,12 @@ static int LSM6DS3H_gyro_SetFullScale(struct i2c_client *client, u8 gyro_fs)
 #ifdef LSM6DS3H_ACCESS_BY_GSE_I2C
 	res = LSM6DS3H_hwmsen_read_block(LSM6DS3H_CTRL2_G, databuf, 0x1);
 	if (res < 0) {
-		pr_info("[gyro] read LSM6DS3H_CTRL2_G err!\n");
+		pr_debug("[gyro] read LSM6DS3H_CTRL2_G err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 #else
 	if (hwmsen_read_byte(client, LSM6DS3H_CTRL2_G, databuf)) {
-		pr_info("[gyro] read LSM6DS3H_CTRL2_G err!\n");
+		pr_debug("[gyro] read LSM6DS3H_CTRL2_G err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 #endif
@@ -472,7 +472,7 @@ static int LSM6DS3H_gyro_SetFullScale(struct i2c_client *client, u8 gyro_fs)
 	res = i2c_master_send(client, databuf, 0x2);
 #endif
 	if (res <= 0) {
-		pr_info("[gyro] write full scale register err!\n");
+		pr_debug("[gyro] write full scale register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 
@@ -493,12 +493,12 @@ static int LSM6DS3H_gyro_SetSampleRate(struct i2c_client *client,
 #ifdef LSM6DS3H_ACCESS_BY_GSE_I2C
 	res = LSM6DS3H_hwmsen_read_block(LSM6DS3H_CTRL2_G, databuf, 0x1);
 	if (res < 0) {
-		pr_info("[gyro] read gyro data format register err!\n");
+		pr_debug("[gyro] read gyro data format register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 #else
 	if (hwmsen_read_byte(client, LSM6DS3H_CTRL2_G, databuf)) {
-		pr_info("[gyro] read gyro data format register err!\n");
+		pr_debug("[gyro] read gyro data format register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 #endif
@@ -519,7 +519,7 @@ static int LSM6DS3H_gyro_SetSampleRate(struct i2c_client *client,
 	res = i2c_master_send(client, databuf, 0x2);
 #endif
 	if (res <= 0) {
-		pr_info("[gyro] write sample rate register err!\n");
+		pr_debug("[gyro] write sample rate register err!\n");
 		return LSM6DS3H_ERR_I2C;
 	}
 
@@ -585,7 +585,7 @@ static int LSM6DS3H_ReadGyroData(struct i2c_client *client,
 
 
 	if (hwmsen_read_block(client, LSM6DS3H_OUTX_L_G, databuf, 6)) {
-		pr_info("[gyro] LSM6DS3H read gyroscope data  error\n");
+		pr_debug("[gyro] LSM6DS3H read gyroscope data  error\n");
 		return -2;
 	}
 	obj->data[LSM6DS3H_AXIS_X] =
@@ -709,7 +709,7 @@ static ssize_t show_chipinfo_value(struct device_driver *ddri, char *buf)
 	char strbuf[LSM6DS3H_BUFSIZE];
 
 	if (client == NULL) {
-		pr_info("[gyro] i2c client is null!!\n");
+		pr_debug("[gyro] i2c client is null!!\n");
 		return 0;
 	}
 
@@ -724,7 +724,7 @@ static ssize_t show_sensordata_value(struct device_driver *ddri, char *buf)
 	char strbuf[LSM6DS3H_BUFSIZE];
 
 	if (client == NULL) {
-		pr_info("[gyro] i2c client is null!!\n");
+		pr_debug("[gyro] i2c client is null!!\n");
 		return 0;
 	}
 
@@ -740,7 +740,7 @@ static ssize_t show_trace_value(struct device_driver *ddri, char *buf)
 	struct lsm6ds3h_gyro_i2c_data *obj = obj_i2c_data;
 
 	if (obj == NULL) {
-		pr_info("[gyro] i2c_data obj is null!!\n");
+		pr_debug("[gyro] i2c_data obj is null!!\n");
 		return 0;
 	}
 
@@ -756,14 +756,14 @@ static ssize_t store_trace_value(struct device_driver *ddri,
 	struct lsm6ds3h_gyro_i2c_data *obj = obj_i2c_data;
 
 	if (obj == NULL) {
-		pr_info("[gyro] i2c_data obj is null!!\n");
+		pr_debug("[gyro] i2c_data obj is null!!\n");
 		return count;
 	}
 
 	if (sscanf(buf, "0x%x", &trace) == 1)
 		atomic_set(&obj->trace, trace);
 	else
-		pr_info("[gyro] invalid content: '%s', length = %zu\n",
+		pr_debug("[gyro] invalid content: '%s', length = %zu\n",
 			buf, count);
 
 
@@ -777,7 +777,7 @@ static ssize_t show_status_value(struct device_driver *ddri, char *buf)
 	struct lsm6ds3h_gyro_i2c_data *obj = obj_i2c_data;
 
 	if (obj == NULL) {
-		pr_info("[gyro] i2c_data obj is null!!\n");
+		pr_debug("[gyro] i2c_data obj is null!!\n");
 		return 0;
 	}
 
@@ -827,7 +827,7 @@ static int lsm6ds3h_create_attr(struct device_driver *driver)
 	for (idx = 0; idx < num; idx++) {
 		err = driver_create_file(driver, LSM6DS3H_attr_list[idx]);
 		if (err != 0) {
-			pr_info("[gyro] driver_create_file (%s) = %d\n",
+			pr_debug("[gyro] driver_create_file (%s) = %d\n",
 				    LSM6DS3H_attr_list[idx]->attr.name, err);
 			break;
 		}
@@ -917,7 +917,7 @@ static int lsm6ds3h_gyro_enable_nodata(int en)
 	struct lsm6ds3h_gyro_i2c_data *priv = obj_i2c_data;
 
 	if (priv == NULL) {
-		pr_info("[gyro] obj_i2c_data is NULL!\n");
+		pr_debug("[gyro] obj_i2c_data is NULL!\n");
 		return -1;
 	}
 
@@ -949,7 +949,7 @@ static int lsm6ds3h_gyro_set_delay(u64 ns)
 	value = (int)ns / 1000 / 1000;
 
 	if (priv == NULL) {
-		pr_info("[gyro] obj_i2c_data is NULL!\n");
+		pr_debug("[gyro] obj_i2c_data is NULL!\n");
 		return -1;
 	}
 
@@ -964,7 +964,7 @@ static int lsm6ds3h_gyro_set_delay(u64 ns)
 
 	err = LSM6DS3H_gyro_SetSampleRate(priv->client, sample_delay);
 	if (err != LSM6DS3H_SUCCESS)
-		pr_info("[gyro] Set delay parameter error!\n");
+		pr_debug("[gyro] Set delay parameter error!\n");
 
 #if 0
 	if (value >= 50) {
@@ -1008,7 +1008,7 @@ static int lsm6ds3h_gyro_get_data(int *x, int *y, int *z, int *status)
 #endif
 
 	if (priv == NULL) {
-		pr_info("[gyro] obj_i2c_data is NULL!\n");
+		pr_debug("[gyro] obj_i2c_data is NULL!\n");
 		return -1;
 	}
 
@@ -1040,18 +1040,18 @@ static int lsm6ds3hg_factory_enable_sensor(bool enabledisable,
 #if 0
 	err = bmi160_gyro_enable_nodata(enabledisable == true ? 1 : 0);
 	if (err) {
-		pr_info("[gyro] %s enable failed!\n", __func__);
+		pr_debug("[gyro] %s enable failed!\n", __func__);
 		return -1;
 	}
 	err = bmi160_gyro_batch(0, sample_periods_ms * 1000000, 0);
 	if (err) {
-		pr_info("[gyro] %s set batch failed!\n", __func__);
+		pr_debug("[gyro] %s set batch failed!\n", __func__);
 		return -1;
 	}
 #endif
 	err = lsm6ds3h_gyro_init_client(lsm6ds3h_i2c_client, enabledisable);
 	if (err)
-		pr_info("[gyro] %s init_client failed!\n", __func__);
+		pr_debug("[gyro] %s init_client failed!\n", __func__);
 	else
 		msleep(350);
 	return 0;
@@ -1066,7 +1066,7 @@ static int lsm6ds3hg_factory_get_data(int32_t data[3], int *status)
 	if (false == sensor_power) {
 		err = LSM6DS3H_gyro_SetPowerMode(lsm6ds3h_i2c_client, true);
 		if (err != 0)
-			pr_info("[gyro] MPU6515_SetPowerMode fail\n");
+			pr_debug("[gyro] MPU6515_SetPowerMode fail\n");
 		msleep(350);
 	}
 	err = lsm6ds3h_gyro_get_data(&data[0], &data[1], &data[2], status);
@@ -1088,7 +1088,7 @@ static int lsm6ds3hg_factory_get_raw_data(int32_t data[3])
 
 	LSM6DS3H_ReadGyroData(lsm6ds3h_i2c_client, strbuf, LSM6DS3H_BUFSIZE);
 	if (sscanf(strbuf, "%x %x %x", &data[0], &data[1], &data[2]) != 3)
-		pr_info("[gyro] sscanf parsing fail\n");
+		pr_debug("[gyro] sscanf parsing fail\n");
 
 	kfree(strbuf);
 	data[0] = (int32_t) (data[0] / 1000);
@@ -1211,7 +1211,7 @@ int LSM6DS3H_gyro_operate(void *self, uint32_t command,
 	switch (command) {
 	case SENSOR_DELAY:
 		if ((buff_in == NULL) || (size_in < sizeof(int))) {
-			pr_info("[gyro] Set delay parameter error!\n");
+			pr_debug("[gyro] Set delay parameter error!\n");
 			err = -EINVAL;
 		} else {
 
@@ -1220,7 +1220,7 @@ int LSM6DS3H_gyro_operate(void *self, uint32_t command,
 
 	case SENSOR_ENABLE:
 		if ((buff_in == NULL) || (size_in < sizeof(int))) {
-			pr_info("[gyro] Enable gyroscope parameter error!\n");
+			pr_debug("[gyro] Enable gyroscope parameter error!\n");
 			err = -EINVAL;
 		} else {
 			value = *(int *)buff_in;
@@ -1245,7 +1245,7 @@ int LSM6DS3H_gyro_operate(void *self, uint32_t command,
 	case SENSOR_GET_DATA:
 		if ((buff_out == NULL)
 			|| (size_out < sizeof(hwm_sensor_data))) {
-			pr_info("[gyro] get gyroscope data parameter error!\n");
+			pr_debug("[gyro] get gyroscope data parameter error!\n");
 			err = -EINVAL;
 		} else {
 			gyro_data = (hwm_sensor_data *) buff_out;
@@ -1260,7 +1260,7 @@ int LSM6DS3H_gyro_operate(void *self, uint32_t command,
 		}
 		break;
 	default:
-		pr_info("[gyro] gyroscope operate function no this parameter %d!\n",
+		pr_debug("[gyro] gyroscope operate function no this parameter %d!\n",
 			command);
 		err = -1;
 		break;
@@ -1279,7 +1279,7 @@ static int lsm6ds3h_open(struct inode *inode, struct file *file)
 	file->private_data = lsm6ds3h_i2c_client;
 
 	if (file->private_data == NULL) {
-		pr_info("[gyro] null pointer!!\n");
+		pr_debug("[gyro] null pointer!!\n");
 		return -EINVAL;
 	}
 	return nonseekable_open(inode, file);
@@ -1307,14 +1307,14 @@ static long lsm6ds3h_gyro_compat_ioctl(struct file *file,
 	switch (cmd) {
 	case COMPAT_GYROSCOPE_IOCTL_INIT:
 		if (arg32 == NULL) {
-			pr_info("[gyro] invalid argument.");
+			pr_debug("[gyro] invalid argument.");
 			return -EINVAL;
 		}
 
 		ret = file->f_op->unlocked_ioctl(file, GYROSCOPE_IOCTL_INIT,
 				(unsigned long)arg32);
 		if (ret) {
-			pr_info("[gyro] GYROSCOPE_IOCTL_INIT unlocked_ioctl failed.");
+			pr_debug("[gyro] GYROSCOPE_IOCTL_INIT unlocked_ioctl failed.");
 			return ret;
 		}
 
@@ -1322,14 +1322,14 @@ static long lsm6ds3h_gyro_compat_ioctl(struct file *file,
 
 	case COMPAT_GYROSCOPE_IOCTL_SET_CALI:
 		if (arg32 == NULL) {
-			pr_info("[gyro] invalid argument.");
+			pr_debug("[gyro] invalid argument.");
 			return -EINVAL;
 		}
 
 		ret = file->f_op->unlocked_ioctl(file, GYROSCOPE_IOCTL_SET_CALI,
 						 (unsigned long)arg32);
 		if (ret) {
-			pr_info("[gyro] GYROSCOPE_IOCTL_SET_CALI unlocked_ioctl failed.");
+			pr_debug("[gyro] GYROSCOPE_IOCTL_SET_CALI unlocked_ioctl failed.");
 			return ret;
 		}
 
@@ -1337,14 +1337,14 @@ static long lsm6ds3h_gyro_compat_ioctl(struct file *file,
 
 	case COMPAT_GYROSCOPE_IOCTL_CLR_CALI:
 		if (arg32 == NULL) {
-			pr_info("[gyro] invalid argument.");
+			pr_debug("[gyro] invalid argument.");
 			return -EINVAL;
 		}
 
 		ret = file->f_op->unlocked_ioctl(file, GYROSCOPE_IOCTL_CLR_CALI,
 						 (unsigned long)arg32);
 		if (ret) {
-			pr_info("[gyro] GYROSCOPE_IOCTL_CLR_CALI unlocked_ioctl failed.");
+			pr_debug("[gyro] GYROSCOPE_IOCTL_CLR_CALI unlocked_ioctl failed.");
 			return ret;
 		}
 
@@ -1352,14 +1352,14 @@ static long lsm6ds3h_gyro_compat_ioctl(struct file *file,
 
 	case COMPAT_GYROSCOPE_IOCTL_GET_CALI:
 		if (arg32 == NULL) {
-			pr_info("[gyro] invalid argument.");
+			pr_debug("[gyro] invalid argument.");
 			return -EINVAL;
 		}
 
 		ret = file->f_op->unlocked_ioctl(file, GYROSCOPE_IOCTL_GET_CALI,
 						 (unsigned long)arg32);
 		if (ret) {
-			pr_info("[gyro] GYROSCOPE_IOCTL_GET_CALI unlocked_ioctl failed.");
+			pr_debug("[gyro] GYROSCOPE_IOCTL_GET_CALI unlocked_ioctl failed.");
 			return ret;
 		}
 
@@ -1367,7 +1367,7 @@ static long lsm6ds3h_gyro_compat_ioctl(struct file *file,
 
 	case COMPAT_GYROSCOPE_IOCTL_READ_SENSORDATA:
 		if (arg32 == NULL) {
-			pr_info("[gyro] invalid argument.");
+			pr_debug("[gyro] invalid argument.");
 			return -EINVAL;
 		}
 
@@ -1375,14 +1375,14 @@ static long lsm6ds3h_gyro_compat_ioctl(struct file *file,
 				GYROSCOPE_IOCTL_READ_SENSORDATA,
 				(unsigned long)arg32);
 		if (ret) {
-			pr_info("[gyro] GYROSCOPE_IOCTL_READ_SENSORDATA unlocked_ioctl failed.");
+			pr_debug("[gyro] GYROSCOPE_IOCTL_READ_SENSORDATA unlocked_ioctl failed.");
 			return ret;
 		}
 
 		break;
 
 	default:
-		pr_info("[gyro] %s not supported = 0x%04x", __func__, cmd);
+		pr_debug("[gyro] %s not supported = 0x%04x", __func__, cmd);
 		return -ENOIOCTLCMD;
 
 	}
@@ -1415,7 +1415,7 @@ static long lsm6ds3h_gyro_unlocked_ioctl(struct file *file,
 
 
 	if (err) {
-		pr_info("[gyro] access error: %08X, (%2d, %2d)\n",
+		pr_debug("[gyro] access error: %08X, (%2d, %2d)\n",
 			cmd, _IOC_DIR(cmd), _IOC_SIZE(cmd));
 		return -EFAULT;
 	}
@@ -1437,7 +1437,7 @@ static long lsm6ds3h_gyro_unlocked_ioctl(struct file *file,
 
 		if (copy_cnt) {
 			err = -EFAULT;
-			pr_info("[gyro] copy gyro data to user failed!\n");
+			pr_debug("[gyro] copy gyro data to user failed!\n");
 		}
 		pr_debug("[gyro] copy gyro data to user OK: %d!\n", copy_cnt);
 		break;
@@ -1456,7 +1456,7 @@ static long lsm6ds3h_gyro_unlocked_ioctl(struct file *file,
 
 /*enlarged 100 times in kernel level, need to shrink it in factory case */
 			if (sscanf(strbuf, "%x %x %x", &x, &y, &z) != 3)
-				pr_info("[gyro] ioctl readGyro error!\n");
+				pr_debug("[gyro] ioctl readGyro error!\n");
 			sprintf(strbuf, "%x %x %x",
 				x / 1000, y / 1000, z / 1000);
 		}
@@ -1523,7 +1523,7 @@ static long lsm6ds3h_gyro_unlocked_ioctl(struct file *file,
 		break;
 
 	default:
-		pr_info("[gyro] unknown IOCTL: 0x%08x\n", cmd);
+		pr_debug("[gyro] unknown IOCTL: 0x%08x\n", cmd);
 		err = -ENOIOCTLCMD;
 		break;
 	}
@@ -1557,13 +1557,13 @@ static int lsm6ds3h_gyro_suspend(struct device *dev)
 	int err = 0;
 
 	if (obj == NULL) {
-		pr_info("[gyro] null pointer!!\n");
+		pr_debug("[gyro] null pointer!!\n");
 		return -1;
 	}
 	atomic_set(&obj->suspend, 1);
 	err = LSM6DS3H_gyro_SetPowerMode(obj->client, false);
 	if (err) {
-		pr_info("[gyro] write power control fail!!\n");
+		pr_debug("[gyro] write power control fail!!\n");
 		return err;
 	}
 
@@ -1582,7 +1582,7 @@ static int lsm6ds3h_gyro_resume(struct device *dev)
 	int err;
 
 	if (obj == NULL) {
-		pr_info("[gyro] null pointer!!\n");
+		pr_debug("[gyro] null pointer!!\n");
 		return -EINVAL;
 	}
 
@@ -1593,7 +1593,7 @@ static int lsm6ds3h_gyro_resume(struct device *dev)
 
 	err = LSM6DS3H_gyro_SetPowerMode(obj->client, enable_status);
 	if (err) {
-		pr_info("[gyro] initialize client fail! err code %d!\n", err);
+		pr_debug("[gyro] initialize client fail! err code %d!\n", err);
 		return err;
 	}
 	atomic_set(&obj->suspend, 0);
@@ -1614,13 +1614,13 @@ static void lsm6ds3h_gyro_early_suspend(struct early_suspend *h)
 	GYRO_FUN();
 
 	if (obj == NULL) {
-		pr_info("[gyro] null pointer!!\n");
+		pr_debug("[gyro] null pointer!!\n");
 		return;
 	}
 	atomic_set(&obj->suspend, 1);
 	err = LSM6DS3H_gyro_SetPowerMode(obj->client, false);
 	if (err) {
-		pr_info("[gyro] write power control fail!!\n");
+		pr_debug("[gyro] write power control fail!!\n");
 		return;
 	}
 	if (err <= 0)
@@ -1642,14 +1642,14 @@ static void lsm6ds3h_gyro_late_resume(struct early_suspend *h)
 	GYRO_FUN();
 
 	if (obj == NULL) {
-		pr_info("[gyro] null pointer!!\n");
+		pr_debug("[gyro] null pointer!!\n");
 		return;
 	}
 
 	LSM6DS3H_power(obj->hw, 1);
 	err = LSM6DS3H_gyro_SetPowerMode(obj->client, enable_status);
 	if (err) {
-		pr_info("[gyro] initialize client fail! err code %d!\n", err);
+		pr_debug("[gyro] initialize client fail! err code %d!\n", err);
 		return;
 	}
 	atomic_set(&obj->suspend, 0);
@@ -1680,7 +1680,7 @@ static int lsm6ds3h_gyro_i2c_probe(struct i2c_client *client,
 	/*GYRO_FUN();*/
 	err = get_gyro_dts_func(client->dev.of_node, hw);
 	if (err) {
-		pr_info("[gyro] get dts info fail\n");
+		pr_debug("[gyro] get dts info fail\n");
 		err = -EFAULT;
 		goto exit;
 	}
@@ -1697,7 +1697,7 @@ static int lsm6ds3h_gyro_i2c_probe(struct i2c_client *client,
 
 	err = hwmsen_get_convert(obj->hw->direction, &obj->cvt);
 	if (err) {
-		pr_info("[gyro] invalid direction: %d\n", obj->hw->direction);
+		pr_debug("[gyro] invalid direction: %d\n", obj->hw->direction);
 		goto exit_kfree;
 	}
 
@@ -1735,7 +1735,7 @@ static int lsm6ds3h_gyro_i2c_probe(struct i2c_client *client,
 	/*err = misc_register(&lsm6ds3h_gyro_device); */
 	err = gyro_factory_device_register(&lsm6ds3hg_factory_device);
 	if (err) {
-		pr_info("[gyro] lsm6ds3h_gyro_device misc register failed!\n");
+		pr_debug("[gyro] lsm6ds3h_gyro_device misc register failed!\n");
 		goto exit_misc_device_register_failed;
 	}
 #endif
@@ -1744,7 +1744,7 @@ static int lsm6ds3h_gyro_i2c_probe(struct i2c_client *client,
 	err = lsm6ds3h_create_attr(
 		&(lsm6ds3h_gyro_init_info.platform_diver_addr->driver));
 	if (err) {
-		pr_info("[gyro] lsm6ds3h create attribute err = %d\n", err);
+		pr_debug("[gyro] lsm6ds3h create attribute err = %d\n", err);
 		goto exit_create_attr_failed;
 	}
 
@@ -1759,7 +1759,7 @@ static int lsm6ds3h_gyro_i2c_probe(struct i2c_client *client,
 
 	err = gyro_register_control_path(&ctl);
 	if (err) {
-		pr_info("[gyro] register gyro control path err\n");
+		pr_debug("[gyro] register gyro control path err\n");
 		goto exit_kfree;
 	}
 
@@ -1767,7 +1767,7 @@ static int lsm6ds3h_gyro_i2c_probe(struct i2c_client *client,
 	data.vender_div = DEGREE_TO_RAD;
 	err = gyro_register_data_path(&data);
 	if (err) {
-		pr_info("[gyro] gyro_register_data_path fail = %d\n", err);
+		pr_debug("[gyro] gyro_register_data_path fail = %d\n", err);
 		goto exit_kfree;
 	}
 
@@ -1785,7 +1785,7 @@ exit_kfree:
 	kfree(obj);
 exit:
 	lsm6ds3h_gyro_init_flag = -1;
-	pr_info("[gyro] %s: err = %d\n", __func__, err);
+	pr_debug("[gyro] %s: err = %d\n", __func__, err);
 	return err;
 }
 
@@ -1798,7 +1798,7 @@ static int lsm6ds3h_gyro_i2c_remove(struct i2c_client *client)
 
 	err = lsm6ds3h_delete_attr(&lsm6ds3h_driver.driver);
 	if (err)
-		pr_info("[gyro] %s fail: %d\n", __func__, err);
+		pr_debug("[gyro] %s fail: %d\n", __func__, err);
 
 #if 1
 	/*misc_deregister(&lsm6ds3h_gyro_device); */
@@ -1819,11 +1819,11 @@ static int lsm6ds3h_gyro_local_init(struct platform_device *pdev)
 
 
 	if (i2c_add_driver(&lsm6ds3h_gyro_i2c_driver)) {
-		pr_info("[gyro] add driver error\n");
+		pr_debug("[gyro] add driver error\n");
 		return -1;
 	}
 	if (lsm6ds3h_gyro_init_flag == -1) {
-		pr_info("[gyro] %s init failed!\n", __func__);
+		pr_debug("[gyro] %s init failed!\n", __func__);
 		return -1;
 	}
 	return 0;

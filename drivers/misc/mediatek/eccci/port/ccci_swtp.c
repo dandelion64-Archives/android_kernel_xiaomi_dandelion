@@ -240,7 +240,7 @@ int swtp_init(int md_id)
 		pr_err("swtp_init: input_register_device fail rc=%d\n", ret);
 		return -1;
 	}
-	pr_info("swtp_init: input_register_device success \n");
+	pr_debug("swtp_init: input_register_device success \n");
 
 	swtp_data[md_id].md_id = md_id;
 	spin_lock_init(&swtp_data[md_id].spinlock);

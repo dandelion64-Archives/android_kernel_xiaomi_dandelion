@@ -172,19 +172,19 @@ static int lastbus_probe(struct platform_device *pdev)
 	else {
 		lastbus_ctrl->infra_base = of_iomap(pdev->dev.of_node, 0);
 		if (!lastbus_ctrl->infra_base) {
-			pr_info("can't of_iomap for infra lastbus!!\n");
+			pr_debug("can't of_iomap for infra lastbus!!\n");
 			return -ENOMEM;
 		}
 
 		lastbus_ctrl->peri_base = of_iomap(pdev->dev.of_node, 1);
 		if (!lastbus_ctrl->peri_base) {
-			pr_info("can't of_iomap for peri lastbus!!\n");
+			pr_debug("can't of_iomap for peri lastbus!!\n");
 			return -ENOMEM;
 		}
 
 		lastbus_ctrl->spm_flag_base = of_iomap(pdev->dev.of_node, 2);
 		if (!lastbus_ctrl->peri_base) {
-			pr_info("can't of_iomap for peri lastbus!!\n");
+			pr_debug("can't of_iomap for peri lastbus!!\n");
 			return -ENOMEM;
 		}
 	}
@@ -200,7 +200,7 @@ static int lastbus_probe(struct platform_device *pdev)
 			&driver_attr_lastbus_timeout);
 
 	if (ret)
-		pr_info("last bus create file failed\n");
+		pr_debug("last bus create file failed\n");
 
 	return 0;
 }

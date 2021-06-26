@@ -421,7 +421,7 @@ static void md_oc_int_handler(enum PMIC_IRQ_ENUM intNo, const char *int_name)
 	pmic_enable_interrupt(intNo, 0, "PMIC");
 	pr_notice(PMICTAG "[PMIC_INT] disable OC interrupt: %s\n"
 		  , int_name);
-	pr_info("[%s]Send msg pass\n", __func__);
+	pr_debug("[%s]Send msg pass\n", __func__);
 }
 #endif
 
@@ -499,7 +499,7 @@ void pmic_enable_interrupt(enum PMIC_IRQ_ENUM intNo, unsigned int en, char *str)
 			pr_notice(PMICTAG "[%s] fail intNo=%d\n"
 				, __func__, intNo);
 		else
-			pr_info(PMICTAG "[%s] disable intNo=%d\n"
+			pr_debug(PMICTAG "[%s] disable intNo=%d\n"
 				, __func__, intNo);
 		return;
 	}

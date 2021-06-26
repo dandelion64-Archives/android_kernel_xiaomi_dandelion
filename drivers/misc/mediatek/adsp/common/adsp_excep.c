@@ -278,7 +278,7 @@ static u32 adsp_crash_dump(struct MemoryDump *pMemoryDump,
 			       CRASH_CFG_REG_SIZE);
 
 	if (n != sizeof(struct MemoryDump))
-		pr_info("%s(), size not match n(%x) != MemoryDump(%zd)",
+		pr_debug("%s(), size not match n(%x) != MemoryDump(%zd)",
 			__func__, n, sizeof(struct MemoryDump));
 
 	mutex_unlock(&adsp_sw_reset_mutex);
@@ -378,7 +378,7 @@ void adsp_aed(enum adsp_excep_id type, enum adsp_core_id id)
 	    (atomic_read(&adsp_reset_status) == ADSP_RESET_STATUS_START ||
 	     adsp_recovery_flag[ADSP_A_ID] == ADSP_RECOVERY_START)) {
 		/*complete adsp ee, if adsp reset by wdt or awake fail*/
-		pr_info("[ADSP]aed finished, complete it\n");
+		pr_debug("[ADSP]aed finished, complete it\n");
 		complete(&adsp_sys_reset_cp);
 
 	}
@@ -551,7 +551,7 @@ static ssize_t adsp_A_ramdump(char *buf, loff_t offset, size_t size)
 	    (atomic_read(&adsp_reset_status) == ADSP_RESET_STATUS_START ||
 	     adsp_recovery_flag[ADSP_A_ID] == ADSP_RECOVERY_START)) {
 		/*complete scp ee, if scp reset by wdt or awake fail*/
-		pr_info("[ADSP]aed finished, complete it\n");
+		pr_debug("[ADSP]aed finished, complete it\n");
 		complete(&adsp_sys_reset_cp);
 	}
 #endif

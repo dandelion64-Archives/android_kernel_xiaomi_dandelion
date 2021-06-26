@@ -144,7 +144,7 @@ int pmic_dump_exception_reg(void)
 	udelay(200);
 	ret_val = pmic_set_register_value(PMIC_CLR_JUST_RST, 0x0);
 	udelay(200);
-	pr_info(PMICTAG "[pmic_boot_status] JUST_PWRKEY_RST=0x%x\n",
+	pr_debug(PMICTAG "[pmic_boot_status] JUST_PWRKEY_RST=0x%x\n",
 		pmic_get_register_value(PMIC_JUST_PWRKEY_RST));
 
 	/* clear WDTRSTB_STATUS */

@@ -986,7 +986,7 @@ static const struct file_operations tm_fps_fops = {
  *
  *	_d = debugfs_create_dir("clfps", NULL);
  *	if (IS_ERR_OR_NULL(_d)) {
- *		pr_info("unable to create debugfs directory\n");
+ *		pr_debug("unable to create debugfs directory\n");
  *		return;
  *	}
  *

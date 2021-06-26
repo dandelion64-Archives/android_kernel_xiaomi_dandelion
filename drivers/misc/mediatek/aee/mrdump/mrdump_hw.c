@@ -23,7 +23,7 @@
 static void mrdump_set_sram_lastpc_flag(void)
 {
 	if (set_sram_flag_lastpc_valid() == 0)
-		pr_info("OK: set sram flag lastpc valid.\n");
+		pr_debug("OK: set sram flag lastpc valid.\n");
 }
 
 static void mrdump_wd_mcu_cache_preserve(bool enabled)
@@ -109,7 +109,7 @@ int __init mrdump_hw_init(void)
 	mrdump_wd_mcu_cache_preserve(true);
 	mrdump_set_sram_lastpc_flag();
 #endif /* CONFIG_MTK_LASTPC_V2 */
-	pr_info("%s: init_done.\n", __func__);
+	pr_debug("%s: init_done.\n", __func__);
 	return 0;
 }
 

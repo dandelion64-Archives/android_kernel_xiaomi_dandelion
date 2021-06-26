@@ -122,17 +122,17 @@ static void hw_bc11_init(void)
 	if (first_connect == true) {
 		/* add make sure USB Ready */
 		if (is_usb_rdy() == false) {
-			pr_info("CDP, block\n");
+			pr_debug("CDP, block\n");
 			while (is_usb_rdy() == false && timeout > 0) {
 				msleep(100);
 				timeout--;
 			}
 			if (timeout == 0)
-				pr_info("CDP, timeout\n");
+				pr_debug("CDP, timeout\n");
 			else
-				pr_info("CDP, free\n");
+				pr_debug("CDP, free\n");
 		} else
-			pr_info("CDP, PASS\n");
+			pr_debug("CDP, PASS\n");
 		first_connect = false;
 	}
 
@@ -358,7 +358,7 @@ void mtk_pmic_enable_chr_type_det(bool en)
 #ifndef CONFIG_TCPC_CLASS
 	if (!mt_usb_is_device()) {
 		g_chr_type = CHARGER_UNKNOWN;
-		pr_info("charger type: UNKNOWN, Now is usb host mode. Skip detection\n");
+		pr_debug("charger type: UNKNOWN, Now is usb host mode. Skip detection\n");
 		return;
 	}
 #endif
@@ -372,12 +372,12 @@ void mtk_pmic_enable_chr_type_det(bool en)
 			g_chr_type = STANDARD_HOST;
 			chrdet_inform_psy_changed(g_chr_type, 1);
 		} else {
-			pr_info("charger type: charger IN\n");
+			pr_debug("charger type: charger IN\n");
 			g_chr_type = hw_charging_get_charger_type();
 			chrdet_inform_psy_changed(g_chr_type, 1);
 		}
 	} else {
-		pr_info("charger type: charger OUT\n");
+		pr_debug("charger type: charger OUT\n");
 		g_chr_type = CHARGER_UNKNOWN;
 		chrdet_inform_psy_changed(g_chr_type, 0);
 	}
@@ -410,7 +410,7 @@ void chrdet_int_handler(void)
 
 		if (boot_mode == KERNEL_POWER_OFF_CHARGING_BOOT
 		    || boot_mode == LOW_POWER_OFF_CHARGING_BOOT) {
-			pr_info("[%s] Unplug Charger/USB\n", __func__);
+			pr_debug("[%s] Unplug Charger/USB\n", __func__);
 #ifndef CONFIG_TCPC_CLASS
 			mt_power_off();
 #else

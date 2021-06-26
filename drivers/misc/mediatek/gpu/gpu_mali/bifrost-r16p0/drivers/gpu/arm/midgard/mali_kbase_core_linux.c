@@ -3651,7 +3651,7 @@ static int kbase_platform_device_remove(struct platform_device *pdev)
 #endif
 
 	if (mtk_common_deinit(pdev, kbdev))
-		pr_info("[MALI] fail to mtk_common_deinit\n");
+		pr_debug("[MALI] fail to mtk_common_deinit\n");
 
 	if (kbdev->inited_subsys & inited_dev_list) {
 		dev_list = kbase_dev_list_get();
@@ -3831,7 +3831,7 @@ static int kbase_platform_device_probe(struct platform_device *pdev)
 	err |= mtk_common_init(pdev, kbdev);
 	err |= mtk_platform_init(pdev, kbdev);
 	if (err) {
-		pr_info("[MALI] GPU: mtk_platform_init fail!\n");
+		pr_debug("[MALI] GPU: mtk_platform_init fail!\n");
 		return err;
 	}
 	/********/

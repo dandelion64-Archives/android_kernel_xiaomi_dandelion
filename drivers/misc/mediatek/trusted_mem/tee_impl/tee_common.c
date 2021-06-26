@@ -87,13 +87,13 @@ u32 get_tee_mem_type(void *peer_priv)
 void get_tee_peer_priv_data(enum TEE_MEM_TYPE tee_mem_type, void **peer_priv)
 {
 	if (tee_mem_type == TEE_MEM_SVP) {
-		pr_info("TEE_MEM_SVP_PRIV_DATA\n");
+		pr_debug("TEE_MEM_SVP_PRIV_DATA\n");
 		*peer_priv = &tee_svp_secmem_op_cmd_mappings;
 	} else if (tee_mem_type == TEE_MEM_WFD) {
-		pr_info("TEE_MEM_WFD_PRIV_DATA\n");
+		pr_debug("TEE_MEM_WFD_PRIV_DATA\n");
 		*peer_priv = &tee_wfd_smem_op_cmd_mappings;
 	} else if (tee_mem_type == TEE_MEM_SDSP_SHARED) {
-		pr_info("TEE_MEM_SDSP_PRIV_DATA\n");
+		pr_debug("TEE_MEM_SDSP_PRIV_DATA\n");
 		*peer_priv = &tee_sdsp_smem_op_cmd_mappings;
 	} else {
 		pr_err("invalid tee memory type\n");

@@ -75,19 +75,19 @@ bool mtk_kbase_dump_gpu_memory_usage(void)
 	int i = 0;
 
 	/* output the total memory usage and cap for this device */
-	pr_info("%10s\t%16s\n", "PID", "GPU Memory by Page");
-	pr_info("============================\n");
+	pr_debug("%10s\t%16s\n", "PID", "GPU Memory by Page");
+	pr_debug("============================\n");
 
 	for (i = 0; (i < MTK_MEMINFO_SIZE) && (g_mtk_gpu_meminfo[i].pid != 0); i++) {
-		pr_info("%10d\t%16d\n", g_mtk_gpu_meminfo[i].pid,
+		pr_debug("%10d\t%16d\n", g_mtk_gpu_meminfo[i].pid,
 										g_mtk_gpu_meminfo[i].used_pages);
 		}
 
-	pr_info("============================\n");
-	pr_info("%10s\t%16u\n",
+	pr_debug("============================\n");
+	pr_debug("%10s\t%16u\n",
 			"Total",
 			g_mtk_gpu_total_memory_usage_in_pages_debugfs);
-	pr_info("============================\n");
+	pr_debug("============================\n");
 	return true;
 }
 
@@ -404,7 +404,7 @@ static void aee_Handle(struct work_struct *_psWork)
 }
 void mtk_trigger_aee_report(const char *msg)
 {
-	pr_info("trigger aee: %s (aee warnning)", msg);
+	pr_debug("trigger aee: %s (aee warnning)", msg);
 	if (g_aee_called == 0) {
 		if (g_aee_workqueue) {
 			g_aee_called = 1;
@@ -421,7 +421,7 @@ static void pa_Handle(struct work_struct *_psWork)
 void mtk_trigger_emi_report(u64 pa)
 {
 	g_pa = pa;
-	pr_info("emi mpu violation: pa: 0x%llx, dump registers and trigger check_pa", pa);
+	pr_debug("emi mpu violation: pa: 0x%llx, dump registers and trigger check_pa", pa);
 	queue_work(g_aee_workqueue, &g_pa_work);
 }
 
@@ -491,7 +491,7 @@ int mtk_set_mt_gpufreq_target(int freq_id)
 
 	return ret;
 #else
-	pr_info("MALI: GPU DVFS doesn't support\n");
+	pr_debug("MALI: GPU DVFS doesn't support\n");
 #endif /* ENABLE_COMMON_DVFS */
 
 	return 0;

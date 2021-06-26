@@ -42,7 +42,7 @@
 #include "internal.h"
 
 /* Print wrapper */
-#define MLPT_PRINT(args...)	do {} while (0) /* pr_info(args) */
+#define MLPT_PRINT(args...)	do {} while (0) /* pr_debug(args) */
 #define MLPT_PRERR(args...)	do {} while (0) /* pr_notice(args) */
 
 /* Profile Timing */
@@ -655,7 +655,7 @@ retry:
 	}
 out:
 	__end_ns = sched_clock();
-	pr_info("elapsed %llu ns\n", (__end_ns - __start_ns));
+	pr_debug("elapsed %llu ns\n", (__end_ns - __start_ns));
 
 	return NOTIFY_OK;
 }

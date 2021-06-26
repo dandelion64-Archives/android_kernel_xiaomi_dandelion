@@ -90,11 +90,11 @@ static int __init init_get_max_DRAM_size(void)
 {
 	if (!phone_dram_sz && !kernel_mem_sz) {
 		if (of_scan_flat_dt(dt_scan_memory, NULL)) {
-			pr_info("init_get_max_DRAM_size done. phone_dram_sz: 0x%llx, kernel_mem_sz: 0x%llx\n",
+			pr_debug("init_get_max_DRAM_size done. phone_dram_sz: 0x%llx, kernel_mem_sz: 0x%llx\n",
 				 (unsigned long long)phone_dram_sz,
 				 (unsigned long long)kernel_mem_sz);
 		} else {
-			pr_info("init_get_max_DRAM_size fail\n");
+			pr_debug("init_get_max_DRAM_size fail\n");
 			BUG();
 		}
 	}
@@ -104,7 +104,7 @@ static int __init init_get_max_DRAM_size(void)
 phys_addr_t get_max_DRAM_size(void)
 {
 	if (!phone_dram_sz && !kernel_mem_sz) {
-		pr_info("%s is called too early\n", __func__);
+		pr_debug("%s is called too early\n", __func__);
 		BUG();
 	}
 	return phone_dram_sz ?

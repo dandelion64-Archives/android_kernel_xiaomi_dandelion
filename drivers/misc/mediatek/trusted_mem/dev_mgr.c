@@ -67,7 +67,7 @@ static inline void run_ut_with_memory_leak_check(u64 cmd, u64 param1,
 
 #ifdef TCORE_MEMORY_LEAK_DETECTION_SUPPORT
 	if (mld_stamp_check(start_size) == MLD_CHECK_PASS)
-		pr_info("memory leak check is passed!!!\n");
+		pr_debug("memory leak check is passed!!!\n");
 	else
 		pr_err("trusted memory core exists memory leak!\n");
 #endif
@@ -124,7 +124,7 @@ create_trusted_mem_device(enum TRUSTED_MEM_TYPE register_type,
 		goto err_create_profile_mgr_desc;
 #endif
 
-	pr_info("trusted mem device:%d created\n", register_type);
+	pr_debug("trusted mem device:%d created\n", register_type);
 	return t_device;
 
 #ifdef TCORE_PROFILING_SUPPORT
@@ -252,7 +252,7 @@ int register_trusted_mem_device(enum TRUSTED_MEM_TYPE register_type,
 #endif
 
 exit:
-	pr_info("trusted mem type '%s' %d registered!\n", tmem_device->name,
+	pr_debug("trusted mem type '%s' %d registered!\n", tmem_device->name,
 		register_type);
 	return TMEM_OK;
 }
@@ -292,7 +292,7 @@ static int __init trusted_mem_subsys_init(void)
 {
 	int idx;
 
-	pr_info("%s:%d\n", __func__, __LINE__);
+	pr_debug("%s:%d\n", __func__, __LINE__);
 
 #ifdef TCORE_MEMORY_LEAK_DETECTION_SUPPORT
 	mld_init();
@@ -303,7 +303,7 @@ static int __init trusted_mem_subsys_init(void)
 		tmem_dev[idx].device = NULL;
 	}
 
-	pr_info("%s:%d (end)\n", __func__, __LINE__);
+	pr_debug("%s:%d (end)\n", __func__, __LINE__);
 	return TMEM_OK;
 }
 
@@ -311,7 +311,7 @@ static void __exit trusted_mem_subsys_exit(void)
 {
 	int idx;
 
-	pr_info("%s:%d\n", __func__, __LINE__);
+	pr_debug("%s:%d\n", __func__, __LINE__);
 
 	for (idx = 0; idx < TRUSTED_MEM_MAX; idx++) {
 		if (VALID_MEM_TYPE(tmem_dev[idx].mem_type)

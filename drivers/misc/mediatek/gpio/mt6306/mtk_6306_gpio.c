@@ -23,7 +23,7 @@
 #define MT6306_GPIOLOG(fmt, arg...)   \
 	pr_debug(MT6306_GPIOTAG"[%04d][%s]:"fmt, __LINE__, __func__, ##arg)
 #define MT6306_GPIOMSG(fmt, arg...)   \
-	pr_info(MT6306_GPIOTAG"[%04d][%s]:"fmt, __LINE__, __func__, ##arg)
+	pr_debug(MT6306_GPIOTAG"[%04d][%s]:"fmt, __LINE__, __func__, ##arg)
 
 #define MT6306_I2C_NUMBER			0
 #define ERR_MT6306_CLIENT_INVALID		0xFF

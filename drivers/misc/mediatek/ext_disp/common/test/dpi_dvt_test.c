@@ -1562,7 +1562,7 @@ int dvt_copy_file_data(void *ptr, unsigned int resolution)
 		set_fs(KERNEL_DS);
 		fd = filp_open("/data/Gene_1280x720.bmp", O_RDONLY, 0);
 		if (IS_ERR(fd)) {
-			pr_info
+			pr_debug
 			    ("EXTD: open Gene_1280x720.bmp fail ! ret %ld\n",
 			     PTR_ERR(fd));
 			set_fs(fs);
@@ -1577,7 +1577,7 @@ int dvt_copy_file_data(void *ptr, unsigned int resolution)
 		set_fs(KERNEL_DS);
 		fd = filp_open("/data/PDA0026_720x480.bmp", O_RDONLY, 0);
 		if (IS_ERR(fd)) {
-			pr_info
+			pr_debug
 			    ("EXTD: open PDA0026_720x480.bmp fail ! ret %ld\n",
 			     PTR_ERR(fd));
 			set_fs(fs);
@@ -1593,7 +1593,7 @@ int dvt_copy_file_data(void *ptr, unsigned int resolution)
 		set_fs(KERNEL_DS);
 		fd = filp_open("/data/Venice_1920x1080.bmp", O_RDONLY, 0);
 		if (IS_ERR(fd)) {
-			pr_info
+			pr_debug
 			    ("EXTD: open Venice_1920x1080.bmp fail ! ret %ld\n",
 			     PTR_ERR(fd));
 			set_fs(fs);
@@ -1611,7 +1611,7 @@ int dvt_copy_file_data(void *ptr, unsigned int resolution)
 			set_fs(KERNEL_DS);
 			fd = filp_open("/data/picture_4k.yuv", O_RDONLY, 0);
 			if (IS_ERR(fd)) {
-				pr_info
+				pr_debug
 				    ("EXTD: open picture_4k.yuv fail ! %ld\n",
 				     PTR_ERR(fd));
 				set_fs(fs);
@@ -1628,7 +1628,7 @@ int dvt_copy_file_data(void *ptr, unsigned int resolution)
 			set_fs(KERNEL_DS);
 			fd = filp_open("/data/picture_4k.bmp", O_RDONLY, 0);
 			if (IS_ERR(fd)) {
-				pr_info
+				pr_debug
 				    ("EXTD: open picture_4k.bmp fail ! %ld\n",
 				     PTR_ERR(fd));
 				set_fs(fs);
