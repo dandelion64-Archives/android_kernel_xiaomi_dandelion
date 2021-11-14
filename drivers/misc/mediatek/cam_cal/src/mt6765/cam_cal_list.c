@@ -22,12 +22,15 @@ struct stCAM_CAL_LIST_STRUCT g_camCalList[] = {
 	{HYNIX_HI1337_I_SENSOR_ID, 0xA8, Common_read_region},
 	{HYNIX_HI1337_II_SENSOR_ID, 0xB0, Common_read_region},
 	{HYNIX_HI1337_III_SENSOR_ID, 0xA8, Common_read_region},
+	{HYNIX_HI1337_IIII_SENSOR_ID, 0xA8, Common_read_region},
 	{GC_GC5035_I_SENSOR_ID, 0xA2, Common_read_region},
 	{GC_GC5035_II_SENSOR_ID, 0xA2, Common_read_region},
 	{GC_GC5035_III_SENSOR_ID, 0xA2, Common_read_region},
+	{GC_GC5035_IIII_SENSOR_ID, 0xA2, Common_read_region},
 	{HYNIX_HI259_I_SENSOR_ID, 0xA0, Common_read_region},
 	{HYNIX_HI259_II_SENSOR_ID, 0xA0, Common_read_region},
 	{HYNIX_HI259_III_SENSOR_ID, 0xA4, Common_read_region},
+	{HYNIX_HI259_IV_SENSOR_ID, 0xA4, Common_read_region},
 	/*  ADD before this line */
 	{0, 0, 0}       /*end of list */
 };
