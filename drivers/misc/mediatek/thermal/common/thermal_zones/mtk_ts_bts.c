@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2017 MediaTek Inc.
+ * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -61,7 +62,7 @@ static kgid_t gid = KGIDT_INIT(1000);
 static DEFINE_SEMAPHORE(sem_mutex);
 
 static unsigned int interval = 1;	/* seconds, 0 : no auto polling */
-static int trip_temp[10] = { 120000, 110000, 100000, 90000, 80000,
+static int trip_temp[10] = { 100000, 96000, 95000, 90000, 80000,
 				70000, 65000, 60000, 55000, 50000 };
 
 static struct thermal_zone_device *thz_dev;
@@ -69,8 +70,8 @@ static int mtkts_bts_debug_log;
 static int kernelmode;
 static int g_THERMAL_TRIP[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-static int num_trip;
-static char g_bind0[20] = {"mtktsAP-sysrst"};
+static int num_trip = 1;
+static char g_bind0[20] = "mtktsAP-sysrst";
 static char g_bind1[20] = { 0 };
 static char g_bind2[20] = { 0 };
 static char g_bind3[20] = { 0 };
@@ -93,7 +94,9 @@ static int polling_factor1 = 5000;
 static int polling_factor2 = 10000;
 
 int bts_cur_temp = 1;
-
+//2020.01.19 longcheer zhaoxingxiang add for lcd ntc start
+extern int IMM_GetOneChannelValue_Cali(int Channel, int *voltage);
+//2020.01.19 longcheer zhaoxingxiang add for lcd ntc end
 
 #define MTKTS_BTS_TEMP_CRIT 60000	/* 60.000 degree Celsius */
 
@@ -597,6 +600,87 @@ static __s16 mtk_ts_bts_volt_to_temp(__u32 dwVolt)
 
 	return BTS_TMP;
 }
+
+//2020.01.19 longcheer zhaoxingxiang add for lcd ntc end
+/* convert register to temperature  */
+static __s16 mtkts_bts_lcd_thermistor_conver_temp(__s32 Res)
+{
+	int i = 0;
+	int asize = 0;
+	__s32 RES1 = 0, RES2 = 0;
+	__s32 TAP_Value = -200, TMP1 = 0, TMP2 = 0;
+	BTS_Temperature_Table = BTS_Temperature_Table7;
+	ntc_tbl_size = sizeof(BTS_Temperature_Table7);
+	asize = (ntc_tbl_size / sizeof(struct BTS_TEMPERATURE));
+
+	mtkts_bts_dprintk("asize = %d, Res = %d\n",asize,Res);
+	if (Res >= BTS_Temperature_Table[0].TemperatureR) {
+		TAP_Value = -40;	/* min */
+	} else if (Res <= BTS_Temperature_Table[asize - 1].TemperatureR) {
+		TAP_Value = 125;	/* max */
+	} else {
+		RES1 = BTS_Temperature_Table[0].TemperatureR;
+		TMP1 = BTS_Temperature_Table[0].BTS_Temp;
+
+		for (i = 0; i < asize; i++) {
+			if (Res >= BTS_Temperature_Table[i].TemperatureR) {
+				RES2 = BTS_Temperature_Table[i].TemperatureR;
+				TMP2 = BTS_Temperature_Table[i].BTS_Temp;
+				break;
+			}
+			RES1 = BTS_Temperature_Table[i].TemperatureR;
+			TMP1 = BTS_Temperature_Table[i].BTS_Temp;
+		}
+
+		TAP_Value = (((Res - RES2) * TMP1) + ((RES1 - Res) * TMP2))
+								/ (RES1 - RES2);
+	}
+	return TAP_Value;
+}
+
+static __s16 mtk_ts_bts_lcd_volt_to_temp(__u32 dwVolt)
+{
+	__s32 TRes;
+	__u64 dwVCriAP = 0;
+	__s32 BTS_TMP = -100;
+	__u64 dwVCriAP2 = 0;
+
+	dwVCriAP = ((__u64)g_TAP_over_critical_low *
+		(__u64)g_RAP_pull_up_voltage);
+	dwVCriAP2 = (g_TAP_over_critical_low + g_RAP_pull_up_R);
+	do_div(dwVCriAP, dwVCriAP2);
+
+	mtkts_bts_dprintk("id_volt = %d,dwVCriAP = %lld\n",dwVolt,dwVCriAP);
+	dwVolt = dwVolt/1000;
+
+	if (dwVolt > ((__u32)dwVCriAP)) {
+		TRes = g_TAP_over_critical_low;
+	} else {
+		TRes = (g_RAP_pull_up_R * dwVolt) /
+					(g_RAP_pull_up_voltage - dwVolt);
+	}
+	/* ------------------------------------------------------------------ */
+	g_AP_TemperatureR = TRes;
+
+	/* convert register to temperature */
+	BTS_TMP = mtkts_bts_lcd_thermistor_conver_temp(TRes);
+
+	return BTS_TMP;
+}
+int lcd_thermal_zone_get_temp(void)
+{
+	int ret = 0,ret_temp = 0,temperature =0;
+	ret = IMM_GetOneChannelValue_Cali(4,&ret_temp);
+	if (ret != 0)
+		mtkts_bts_dprintk("id_volt read fail\n");
+	else
+		mtkts_bts_dprintk("id_volt = %d\n",ret_temp);
+	temperature = mtk_ts_bts_lcd_volt_to_temp(ret_temp);
+	return temperature;
+
+}
+EXPORT_SYMBOL(lcd_thermal_zone_get_temp);
+//2020.01.19 longcheer zhaoxingxiang add for lcd ntc end
 
 static int get_hw_bts_temp(void)
 {
