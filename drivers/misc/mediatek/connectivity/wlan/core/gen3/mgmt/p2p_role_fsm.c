@@ -735,6 +735,13 @@ VOID p2pRoleFsmRunEventStartAP(IN P_ADAPTER_T prAdapter, IN P_MSG_HDR_T prMsgHdr
 			prP2pConnReqInfo->eConnRequest = P2P_CONNECTION_TYPE_GO;
 		}
 
+		/*clear list to ensure no client staRec*/
+		if (bssGetClientCount(prAdapter, prP2pBssInfo) != 0) {
+			DBGLOG(P2P, WARN,
+				"Clear list to ensure no empty/client staRec\n");
+			bssInitializeClientList(prAdapter, prP2pBssInfo);
+		}
+
 		prP2pBssInfo->eHiddenSsidType = prP2pStartAPMsg->eHiddenSsidType;
 
 		if ((prP2pBssInfo->eCurrentOPMode != OP_MODE_ACCESS_POINT) ||

@@ -1569,6 +1569,10 @@ BOOLEAN bssRemoveClient(IN P_ADAPTER_T prAdapter, IN P_BSS_INFO_T prBssInfo, IN 
 
 	LINK_FOR_EACH_ENTRY(prCurrStaRec, prClientList, rLinkEntry, STA_RECORD_T) {
 
+		/*Beak to check client list*/
+		if (!prCurrStaRec)
+			break;
+
 		if (prCurrStaRec == prStaRec) {
 
 			LINK_REMOVE_KNOWN_ENTRY(prClientList, &prStaRec->rLinkEntry);

@@ -3653,8 +3653,8 @@ INT32 mtk_wcn_soc_rom_patch_dwn(UINT32 ip_ver, UINT32 fw_ver)
 			WMT_INFO_FUNC("[Rom Patch]Name=%s,EmiOffset=0x%x,Size=0x%x\n",
 					gFullPatchName, patchEmiOffset, patchSize);
 
-			if (type == WMTDRV_TYPE_WIFI && mtk_wcn_wlan_emi_mpu_set_protection)
-				(*mtk_wcn_wlan_emi_mpu_set_protection)(false);
+			if (type == WMTDRV_TYPE_WIFI)
+				wmt_lib_set_wlan_mpu_protection(false);
 
 			patchAddr = ioremap_nocache(emiInfo->emi_ap_phy_addr + patchEmiOffset, patchSize);
 			WMT_INFO_FUNC("physAddr=0x%x, size=%d virAddr=0x%p\n",
@@ -3683,8 +3683,8 @@ INT32 mtk_wcn_soc_rom_patch_dwn(UINT32 ip_ver, UINT32 fw_ver)
 					WMT_ERR_FUNC("ioremap_nocache fail\n");
 			}
 
-			if (type == WMTDRV_TYPE_WIFI && mtk_wcn_wlan_emi_mpu_set_protection)
-				(*mtk_wcn_wlan_emi_mpu_set_protection)(true);
+			if (type == WMTDRV_TYPE_WIFI)
+				wmt_lib_set_wlan_mpu_protection(true);
 		} else
 			WMT_ERR_FUNC("The rom patch is too big to overflow on EMI\n");
 
@@ -3726,8 +3726,7 @@ VOID mtk_wcn_soc_restore_wifi_cal_result(VOID)
 		return;
 	}
 	/* Disable Wi-Fi MPU to touch Wi-Fi calibration data */
-	if (mtk_wcn_wlan_emi_mpu_set_protection)
-		(*mtk_wcn_wlan_emi_mpu_set_protection)(false);
+	wmt_lib_set_wlan_mpu_protection(false);
 	WMT_STEP_DO_ACTIONS_FUNC(STEP_TRIGGER_POINT_BEFORE_RESTORE_CAL_RESULT);
 	/* Write Wi-Fi data to EMI */
 	if (gWiFiCalAddrOffset + gWiFiCalSize < emiInfo->emi_size) {
@@ -3741,8 +3740,7 @@ VOID mtk_wcn_soc_restore_wifi_cal_result(VOID)
 			WMT_ERR_FUNC("ioremap_nocache fail\n");
 		}
 	}
-	if (mtk_wcn_wlan_emi_mpu_set_protection)
-		(*mtk_wcn_wlan_emi_mpu_set_protection)(true);
+	wmt_lib_set_wlan_mpu_protection(true);
 #else
 	WMT_INFO_FUNC("Skip restore because it is not supported.\n");
 #endif
@@ -3840,11 +3838,9 @@ static INT32 mtk_wcn_soc_calibration_restore(void)
 	}
 
 restore_end:
-	if (mtk_wcn_wlan_emi_mpu_set_protection)
-		(*mtk_wcn_wlan_emi_mpu_set_protection)(false);
+	wmt_lib_set_wlan_mpu_protection(false);
 	WMT_STEP_DO_ACTIONS_FUNC(STEP_TRIGGER_POINT_AFTER_RESTORE_CAL_CMD);
-	if (mtk_wcn_wlan_emi_mpu_set_protection)
-		(*mtk_wcn_wlan_emi_mpu_set_protection)(true);
+	wmt_lib_set_wlan_mpu_protection(true);
 	osal_free(evtBuf);
 	return iRet;
 }
@@ -3943,8 +3939,7 @@ static INT32 mtk_wcn_soc_calibration_backup(void)
 		goto get_calibration_fail;
 	}
 	/* Before copy, disable Wi-Fi MPU to access EMI */
-	if (mtk_wcn_wlan_emi_mpu_set_protection)
-		(*mtk_wcn_wlan_emi_mpu_set_protection)(false);
+	wmt_lib_set_wlan_mpu_protection(false);
 	WMT_STEP_DO_ACTIONS_FUNC(
 		STEP_TRIGGER_POINT_POWER_ON_AFTER_BT_WIFI_CALIBRATION);
 	gWiFiCalAddrOffset = wifiOffset;
@@ -3960,8 +3955,7 @@ static INT32 mtk_wcn_soc_calibration_backup(void)
 		goto get_calibration_fail;
 	}
 	/* Enable Wi-Fi MPU after finished. */
-	if (mtk_wcn_wlan_emi_mpu_set_protection)
-		(*mtk_wcn_wlan_emi_mpu_set_protection)(true);
+	wmt_lib_set_wlan_mpu_protection(true);
 	WMT_INFO_FUNC("gBTCalResultSize=%d gWiFiCalResult=0x%p gWiFiCalSize=%d gWiFiCalAddrOffset=0x%x\n",
 		gBTCalResultSize,
 		gWiFiCalResult,
@@ -3992,8 +3986,7 @@ get_calibration_fail:
 	gWiFiCalSize = 0;
 	gWiFiCalAddrOffset = 0;
 	/* Enable Wi-Fi MPU after finished. */
-	if (mtk_wcn_wlan_emi_mpu_set_protection)
-		(*mtk_wcn_wlan_emi_mpu_set_protection)(true);
+	wmt_lib_set_wlan_mpu_protection(true);
 	osal_free(evtBuf);
 	return -1;
 }

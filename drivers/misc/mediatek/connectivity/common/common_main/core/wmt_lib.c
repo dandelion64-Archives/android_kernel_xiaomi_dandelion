@@ -3216,6 +3216,17 @@ VOID mtk_lib_set_mcif_mpu_protection(MTK_WCN_BOOL enable)
 	mtk_consys_set_mcif_mpu_protection(enable);
 }
 
+VOID wmt_lib_set_wlan_mpu_protection(MTK_WCN_BOOL enable)
+{
+	if (enable == false) {
+		if (mtk_wcn_wlan_emi_mpu_set_protection)
+			(*mtk_wcn_wlan_emi_mpu_set_protection)(false);
+	} else {
+		if (mtk_wcn_wlan_emi_mpu_set_protection)
+			(*mtk_wcn_wlan_emi_mpu_set_protection)(true);
+	}
+}
+
 static VOID wmt_lib_assert_work_cb(struct work_struct *work)
 {
 	struct assert_work_st *a = &wmt_assert_work;

@@ -2078,14 +2078,26 @@ VOID nicCmdEventQueryLteSafeChn(IN P_ADAPTER_T prAdapter, IN P_CMD_INFO_T prCmdI
 
 		prEvent = (P_EVENT_LTE_SAFE_CHN_T) pucEventBuf;	/* FW responsed data */
 
+		prP2pRoleFsmInfo = P2P_ROLE_INDEX_2_ROLE_FSM_INFO(prAdapter, 0);
+		if (prP2pRoleFsmInfo == NULL) {
+			DBGLOG(P2P, ERROR,
+				"Corresponding P2P Role FSM empty.\n");
+			return;
+		}
 		prLteSafeChnInfo = (P_PARAM_GET_CHN_INFO) prCmdInfo->pvInformationBuffer;
+		/*
+		* when p2p uninit,then turned on immediately,
+		* the new alloc memory will causes address error.
+		*/
+		if (prLteSafeChnInfo != &prP2pRoleFsmInfo->rLteSafeChnInfo) {
+			DBGLOG(P2P, ERROR, "prLteSafeChnInfo addr is wrong.\n");
+			return;
+		}
+
 		if (prLteSafeChnInfo->ucRoleIndex >= BSS_P2P_NUM) {
 			ASSERT(FALSE);
 			return;
 		}
-
-		prP2pRoleFsmInfo = P2P_ROLE_INDEX_2_ROLE_FSM_INFO(prAdapter,
-			prLteSafeChnInfo->ucRoleIndex);
 
 		/* Statistics from FW is valid */
 		if (prEvent->u4Flags & BIT(0)) {
